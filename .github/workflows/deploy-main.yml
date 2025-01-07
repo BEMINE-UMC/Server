@@ -13,12 +13,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check prisma has changes
+        uses: dorny/paths-filter@v3
+        id: paths-filter
+        with:
+          filters: |
+            prisma: ["prisma/**"]
+
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
           echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
+          
           cat >>~/.ssh/config <<END
           Host bemine
             HostName $EC2_HOST
@@ -40,6 +47,12 @@ jobs:
       - name: Install dependencies
         run: |
           ssh bemine 'npm install --prefix /opt/app/'
+          ssh bemine 'cd /opt/app; npm exec prisma generate'
+
+      - name: Apply prisma migrations
+        if: steps.paths-filter.outputs.prisma == 'true'
+        run: |
+          ssh bemine 'cd /opt/app; npm exec prisma migrate deploy'
 
       - name: Copy systemd service file
         run: |
@@ -50,7 +63,7 @@ jobs:
 
             [Service]
             User=${USER}
-            ExecStart=/usr/bin/npm run dev --prefix /opt/app/
+            ExecStart=/usr/bin/npm run start --prefix /opt/app/
             Restart=always
 
             [Install]
