@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.static('public'))
 app.use(express.json())
-app.use(express.urlencoded({ extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(
     "/docs",
     swaggerUiExpress.serve,
@@ -58,12 +58,17 @@ app.get("/openapi.json", async (req, res, next) => {
     };
     const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
     const routes = ["./src/index.js"];
+
+    // 요청의 host와 protocol을 동적으로 가져오기
+    const protocol = req.protocol; // http 또는 https
+    const host = req.get("host");
+
     const doc = {
         info: {
             title: "BEMINE",
             description: "BEMINE 프로젝트",
         },
-        host: `localhost:${3000}`,
+        host: `${protocol}://${host}`,
     };
 
     const result = await swaggerAutogen(options)(outputFile, routes, doc);
@@ -71,9 +76,11 @@ app.get("/openapi.json", async (req, res, next) => {
 });
 
 
-app.get('/',(req,res)=>{{
-    res.send("hello world!")
-}})
+app.get('/', (req, res) => {
+    {
+        res.send("hello world!")
+    }
+})
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
@@ -90,6 +97,6 @@ app.use((err, req, res, next) => {
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 })
