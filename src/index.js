@@ -3,6 +3,9 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import { handlerPostLikeCreate } from "./controllers/post.controller.js";
+import { handleFullTemplateLoad } from "./controllers/template.controller.js";
+import { handleOtherPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 
 
@@ -15,7 +18,6 @@ import {handlerUserHistory} from "./controllers/user.controller.js";
 import { handlerPostLikeCreate, handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
-
 
 
 dotenv.config();
@@ -110,6 +112,8 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 //게시물 좋아요 누르기
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
+//사용자가 작성한 다른 게시물 불러오기
+app.get('/users/:userId/posts', handleOtherPost);
 
 // 사용자 연혁 조회 API
 app.get('/api/v1/users/:userId/myHistory', handlerGetUserHistory);
