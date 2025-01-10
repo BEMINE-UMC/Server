@@ -13,3 +13,145 @@ export const handleFullTemplateLoad = async (req, res, next) => {
         next(error);
     }
 }
+
+// 템플릿 삭제 요청
+export const handleTemplateDelete = async (req, res, next) => {
+    /* 
+    #swagger.summary = '템플릿 삭제 API';
+    #swagger.responses[200] = {
+        description: "템플릿 삭제 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                templateId: { type: "number", example: 1 },
+                                message: { type: "string", example: "템플릿이 정상적으로 삭제되었습니다."}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        desciption: "템플릿 삭제 실패 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "T001" },
+                                reason: { type: "string", example: "유효하지 않은 templateId 입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        requestedTempalteId: { type: "number", example: 0 }
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+    */
+    try {
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// 템플릿 수정/생성 요청
+export const handleTemplateCreateAndModify = async (req, res, next) => {
+    /* 
+    #swagger.summary = '템플릿 수정/생성 API';
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        title: { type: "string", example: "New Title" },
+                        file: { type: "string", example: "https://example.com/new-file/template.pptx" },
+                        fileShareState: { type: "string", example: "private" },
+                        thumbnail: { type: "string", example: "https://example.com/new-image/thumb1.jpg"}
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[200] = {
+        description: "템플릿 수정/생성 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                templateId: { type: "number", example: 1 },
+                                userId: { type: "number", example: 1 },
+                                title: { type: "string", example: "New Title" },
+                                file: { type: "string", example: "https://example.com/new-file/template.pptx" },
+                                fileShareState: { type: "string", example: "private" },
+                                thumbnail: { type: "string", example: "https://example.com/new-image/thumb1.jpg" },
+                                createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        desciption: "템플릿 수정/생성 실패 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "T001" },
+                                reason: { type: "string", example: "유효하지 않은 templateId 입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        requestedTempalteId: { type: "number", example: 0 }
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+    */
+    try {
+
+    } catch (error) {
+        next(error);
+    }
+}
