@@ -1,6 +1,6 @@
 import { pool } from "../db.config.js";
 
-// 템플릿 정보 얻기
+// 템플릿 전체 불러오기 (정보 얻기)
 export const getTemplateInfo = async (templateId) => {
     const conn = await pool.getConnection();
 

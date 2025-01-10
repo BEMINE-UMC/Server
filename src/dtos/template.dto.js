@@ -1,3 +1,4 @@
+// 템플릿 전체 불러오기 DTO (service->controller)
 export const responseFromTemplate = (templateInfo) => {
     const createdAt = new Date(templateInfo.created_at);
     const updatedAt = new Date(templateInfo.updated_at);
