@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import { handlerPostLikeCreate } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad } from "./controllers/template.controller.js";
 
 
@@ -83,6 +84,9 @@ app.get('/', (req, res) => {
     }
 });
 app.get('/templates/:templateId', handleFullTemplateLoad);
+
+//게시물 좋아요 누르기
+app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
