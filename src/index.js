@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import {handlerUserHistory} from "./controllers/user.controller.js";
 
 
 dotenv.config();
@@ -81,6 +82,9 @@ app.get('/', (req, res) => {
         res.send("hello world!")
     }
 })
+
+// 사용자 연혁 조회 API
+app.get('/users/:userId/myHistory', handlerUserHistory);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
