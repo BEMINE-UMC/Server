@@ -72,6 +72,8 @@ export const handlerPostLikeCreate = async (req, res, next) => {
 export const handleViewAllPosts = async (req, res, next) => {
     /* 
     #swagger.summary = '게시물 전체 조회 API';
+    #swagger.tags = ['Get']
+    #swagger.description = '게시물 전체 조회를 하는 API입니다.'
     #swagger.responses[200] = {
         description: "게시물 전체 조회 성공 응답",
         content: {
@@ -114,7 +116,7 @@ export const handleViewAllPosts = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        desciption: "게시물 전체 조회 실패 응답",
+        description: "게시물 전체 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {

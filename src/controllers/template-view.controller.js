@@ -4,6 +4,8 @@ import { StatusCodes } from "http-status-codes";
 export const handleViewTemplate = async (req, resizeBy, next) => {
     /* 
     #swagger.summary = '템플릿 단일 조회 API';
+    #swagger.tags = ['Get']
+    #swagger.description = '템플릿 단일 조회 API입니다.'
     #swagger.responses[200] = {
         description: "템플릿 단일 조회 성공 응답",
         content: {
@@ -32,7 +34,7 @@ export const handleViewTemplate = async (req, resizeBy, next) => {
         }
     }
     #swagger.responses[400] = {
-        desciption: "템플릿 단일 조회 실패 응답",
+        description: "템플릿 단일 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {
