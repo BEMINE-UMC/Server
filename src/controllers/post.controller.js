@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { createUserLike } from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
 
+//게시물 좋아요 누르기
 export const handlerPostLike = async (req, res, next) => {
     console.log("게시물 좋아요 누르기 요청");
     
@@ -665,4 +666,82 @@ export const handlerPostScrapt = async (req,res) => {
         }
     }
     */
+}
+
+//게시물 검색하기
+export const handlerPostSearch = async (req,res) => {
+    /* 
+    #swagger.summary = '게시물 검색 API';
+    #swagger.tags = ['Get']
+    #swagger.description = '게시물을 검색하는 API입니다.'
+    #swagger.parameters['query'] = {
+        in: 'query',
+        required: true,
+        description: '검색 키워드',
+        schema: { type: 'string', example: 'Title' }
+    }
+    #swagger.responses[200] = {
+        description: "게시물 검색 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                data: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            postId: { type: "number", example: 1 },
+                                            userId: { type: "number", example: 1 },
+                                            categoryId: { type: "number", example: 1 },
+                                            title: { type: "string", example: "Title" },
+                                            body: { type: "string", example: "Body" },
+                                            picture: { type: "string", example: "url"},
+                                            createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                            updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        description: "게시물 검색 실패 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "P005" },
+                                reason: { type: "string", example: "검색어와 일치하는 게시물이 없습니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        searchWord: { type: "string", example: "Title" }
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+    */
+
 }

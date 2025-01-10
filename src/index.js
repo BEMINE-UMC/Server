@@ -4,7 +4,7 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { getPopularTemplates } from './controllers/popular.template.controller.js';
-import { handleOtherPost, handlerPostLike, handlerPostScrapt,  } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerPostLike, handlerPostScrapt, handlerPostSearch,  } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerGetTempleteView} from "./controllers/template.controller.js";
@@ -156,6 +156,9 @@ app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 �
 app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
 app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글 수정
 app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
+
+//게시물 검색 API
+app.get('/api/v1/posts/search',handlerPostSearch);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
