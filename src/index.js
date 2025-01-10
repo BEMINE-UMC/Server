@@ -3,6 +3,9 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+
+import { getPopularTemplates } from './controllers/popular.template.controller.js';
+
 import { handleOtherPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
@@ -11,7 +14,7 @@ import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
 import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
-import { getPopularTemplates } from './controllers/popular.template.controller.js';
+
 dotenv.config();
 
 const app = express();
@@ -90,6 +93,10 @@ app.get('/', (req, res) => {
 });
 
 
+
+//메인페이지 좋아요 많은순 템플릿 출력
+app.get('/api/templates/popular',getPopularTemplates);
+
 // 게시물 전체 조회 API
 app.get('/posts', handleViewAllPosts);
 
@@ -137,9 +144,6 @@ app.get('/users/login', handleLogin);
 
 //이메일 인증 API
 app.get('/users/checkEmail', handlecheckEmail);
-
-//메인페이지 좋아요 많은순 템플릿 출력
-app.get('/api/templates/popular', getPopularTemplates);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
