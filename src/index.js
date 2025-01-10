@@ -5,13 +5,6 @@ import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 
 import { handlerPostLikeCreate } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad } from "./controllers/template.controller.js";
-import { getPopularTemplates } from './controllers/popular.template.controller.js';
-
-
-
-
-
 import { handleOtherPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
@@ -20,6 +13,8 @@ import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
 import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
+
+import { getPopularTemplates } from './controllers/popular.template.controller.js';
 
 
 dotenv.config();
@@ -115,13 +110,6 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 //게시물 좋아요 누르기
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
 
-
-
-//메인페이지 좋아요 많은순 템플릿 출력
-app.get('/api/templates/popular', getPopularTemplates);
-
-
-
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/:userId/posts', handleOtherPost);
 
@@ -154,6 +142,10 @@ app.get('/users/login', handleLogin);
 
 //이메일 인증 API
 app.get('/users/checkEmail', handlecheckEmail);
+
+
+//메인페이지 좋아요 많은순 템플릿 출력
+app.get('/api/templates/popular', getPopularTemplates);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
