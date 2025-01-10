@@ -4,6 +4,7 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 
+
 import { handlerPostLikeCreate } from "./controllers/post.controller.js";
 import { handleOtherPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
@@ -14,7 +15,9 @@ import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndMo
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
 import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
 
+
 import { getPopularTemplates } from './controllers/popular.template.controller.js';
+
 
 
 dotenv.config();
@@ -142,6 +145,7 @@ app.get('/users/login', handleLogin);
 
 //이메일 인증 API
 app.get('/users/checkEmail', handlecheckEmail);
+
 
 
 //메인페이지 좋아요 많은순 템플릿 출력
