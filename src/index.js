@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import { getPopularTemplates } from './controllers/popular.template.controller.js';
 import { handleOtherPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
@@ -88,6 +89,11 @@ app.get('/', (req, res) => {
         res.send("hello world!")
     }
 });
+
+
+
+//메인페이지 좋아요 많은순 템플릿 출력
+app.get('/api/templates/popular',getPopularTemplates);
 
 
 // 게시물 전체 조회 API
