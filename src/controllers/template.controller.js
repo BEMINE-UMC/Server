@@ -283,3 +283,66 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
         next(error);
     }
 }
+
+export const handlerCreateTemplateLike = async (req, res, next) => {
+    /* 
+    #swagger.summary = '템플릿 좋아요 API';
+    #swagger.tags = ['Post']
+    #swagger.description = '템플릿 좋아요 하는 API입니다.'
+    #swagger.responses[200] = {
+        description: "템플릿 좋아요 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                templateId: { type: "number", example: 1 },
+                                userId: { type: "number", example: 1 },
+                                title: { type: "string", example: "Title" },
+                                file: { type: "string", example: "url" },
+                                fileShareState: { type: "string", example: "private" },
+                                thumbnail: { type: "string", example: "url" },
+                                createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        description: "템플릿 좋아요 실패 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "T003" },
+                                reason: { type: "string", example: "이미 좋아요 누른 템플릿입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        templateId: { type: "number", example: 1 },
+                                        userId:  { type: "number", example: 1 }
+                                    },
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+    */
+}

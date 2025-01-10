@@ -4,10 +4,10 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { getPopularTemplates } from './controllers/popular.template.controller.js';
-import { handleOtherPost } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrapt, handlerPostSearch,  } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
-import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
-import {handlerGetTempleteView} from "./controllers/template.controller.js";
+import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
+import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
@@ -113,8 +113,11 @@ app.delete('/templates/:templateId', handleTemplateDelete);
 // 템플릿 수정/생성 API
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
-//게시물 좋아요 누르기
-app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
+//게시물 좋아요 누르기 API
+app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
+
+//게시물 스크랩 누르기 API
+app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrapt);
 
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/:userId/posts', handleOtherPost);
@@ -154,6 +157,14 @@ app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글
 app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글 수정
 app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
 
+//게시물 검색 API
+app.get('/api/v1/posts/search',handlerPostSearch);
+
+//작성한 게시물 조회 API
+app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
+
+//템플릿 좋아요 누르기 API
+app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {
