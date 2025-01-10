@@ -6,6 +6,18 @@ import swaggerAutogen from "swagger-autogen";
 import { handlerPostLikeCreate } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad } from "./controllers/template.controller.js";
 import { handleOtherPost } from "./controllers/post.controller.js";
+import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+
+
+import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
+import {handleFullTemplateLoad, handlerGetTempleteView} from "./controllers/template.controller.js";
+
+
+import {handlerUserHistory} from "./controllers/user.controller.js";
+
+import { handlerPostLikeCreate, handleViewAllPosts } from "./controllers/post.controller.js";
+import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
+import { handleViewTemplate } from "./controllers/template-view.controller.js";
 
 
 dotenv.config();
@@ -84,12 +96,43 @@ app.get('/', (req, res) => {
         res.send("hello world!")
     }
 });
+
+
+// 게시물 전체 조회 API
+app.get('/posts', handleViewAllPosts);
+
+// 템플릿 전체 불러오기 API (템플릿 올리기 화면)
 app.get('/templates/:templateId', handleFullTemplateLoad);
+
+// 템플릿 삭제 API
+app.delete('/templates/:templateId', handleTemplateDelete);
+
+// 템플릿 수정/생성 API
+app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 //게시물 좋아요 누르기
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
 //사용자가 작성한 다른 게시물 불러오기
 app.get('/users/:userId/posts', handleOtherPost);
+
+// 사용자 연혁 조회 API
+app.get('/api/v1/users/:userId/myHistory', handlerGetUserHistory);
+
+// 최근 본 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/recentPost', handlerGetRecentPost)
+
+// 북마크한 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/bookMark', handlerGetScrapPost)
+
+// 프로필 사진 수정하기 API
+app.patch('/api/v1/users/:userId/profile/modify', handlerPatchMyProfile)
+
+// PPT 파일 불러오기 API
+app.get('/api/v1/template/view', handlerGetTempleteView)
+
+
+// 템플릿 단일 조회 API
+app.get('/templates/:templateId/view', handleViewTemplate);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
