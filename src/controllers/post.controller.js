@@ -67,3 +67,157 @@ export const handlerPostLikeCreate = async (req, res, next) => {
     }
     */
 };
+
+// 최근 본 게시물 조회
+export const handlerGetRecentPost = async (req, res) => {
+    /*
+      #swagger.summary = '최근 게시물 조회 API';
+      #swagger.tags = ['Post']
+      #swagger.parameters['userId'] = {
+        in: 'path',
+        description: '유저 ID',
+        required: true,
+        type: 'integer',
+      }
+
+      #swagger.responses[200] = {
+        description: "사용자 최근 게시물 조회 성공 응답",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                resultType: { type: "string", example: "SUCCESS" },
+                error: { type: "object", nullable: true, example: null },
+                success: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "number", example: 1 },
+                    post: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          postId: { type: "number", example: 1 },
+                          url: { type: "string", example: "링크주소" }
+                        }
+                      },
+                      example:[
+                        { postId: 1, url: "example1.png"},
+                        { postId: 2, url: "example2.png"}
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
+
+      #swagger.responses[400] = {
+        description: "사용자 최근 게시물 조회 실패 응답",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                resultType: { type: "string", example: "FAIL" },
+                error: {
+                  type: "object",
+                  properties: {
+                    errorCode: { type: "string", example: "P001" },
+                    reason: { type: "string", example: "해당 유저가 최근 본 게시물이 없습니다." },
+                    data: {
+                      type: "object",
+                      properties: {
+                        userId: { type: "number", example: 1 }
+                      }
+                    }
+                  }
+                },
+                success: { type: "object", nullable: true, example: null }
+              }
+            }
+          }
+        }
+      };
+    */
+}
+
+// 스크랩한 게시물 조회
+export const handlerGetScrapPost = async (req, res) => {
+    /*
+  #swagger.summary = '북마크 게시물 조회 API';
+  #swagger.tags = ['Post']
+  #swagger.parameters['userId'] = {
+    in: 'path',
+    description: '유저 ID',
+    required: true,
+    type: 'integer',
+  }
+
+  #swagger.responses[200] = {
+    description: "사용자 북마크 게시물 조회 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                userId: { type: "number", example: 1 },
+                post: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      postId: { type: "number", example: 1 },
+                      url: { type: "string", example: "링크주소" }
+                    }
+                  },
+                  example:[
+                    { postId: 1, url: "example1.png"},
+                    { postId: 2, url: "example2.png"}
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  #swagger.responses[400] = {
+    description: "사용자 북마크 게시물 조회 실패 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "P002" },
+                reason: { type: "string", example: "해당 유저가 스크랩한 게시물이 없습니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "number", example: 1 }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  };
+*/
+}

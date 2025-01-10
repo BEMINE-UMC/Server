@@ -3,11 +3,10 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 
-import {handlerUserHistory} from "./controllers/user.controller.js";
-
-import { handlerPostLikeCreate } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad } from "./controllers/template.controller.js";
+import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
+import {handleFullTemplateLoad, handlerGetTempleteView} from "./controllers/template.controller.js";
 
 
 
@@ -87,13 +86,27 @@ app.get('/', (req, res) => {
         res.send("hello world!")
     }
 });
+// 템플릿 전체 조회
 app.get('/templates/:templateId', handleFullTemplateLoad);
 
 //게시물 좋아요 누르기
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
 
 // 사용자 연혁 조회 API
-app.get('/users/:userId/myHistory', handlerUserHistory);
+app.get('/api/v1/users/:userId/myHistory', handlerGetUserHistory);
+
+// 최근 본 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/recentPost', handlerGetRecentPost)
+
+// 북마크한 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/bookMark', handlerGetScrapPost)
+
+// 프로필 사진 수정하기 API
+app.patch('/api/v1/users/:userId/profile/modify', handlerPatchMyProfile)
+
+// PPT 파일 불러오기 API
+app.get('/api/v1/template/view', handlerGetTempleteView)
+
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
