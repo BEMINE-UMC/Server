@@ -4,7 +4,7 @@ import {userHistory} from "../services/user.service.js";
 
 
 // 연혁 조회 요청
-export const handlerUserHistory = async (req, res) => {
+export const handlerGetUserHistory = async (req, res) => {
     console.log("연혁 조회 요청");
 
     const history = await userHistory(userToHistory(req.params));
@@ -86,5 +86,91 @@ export const handlerUserHistory = async (req, res) => {
     }
   };
 */
+
+}
+
+
+// 나의 프로필 사진 수정하기
+export const handlerPatchMyProfile = async (req, res) => {
+    /*
+      #swagger.summary = '사용자 프로필 사진 수정 API';
+      #swagger.tags = ['User']
+      #swagger.parameters['userId'] = {
+        in: 'path',
+        description: '사용자 ID',
+        required: true,
+        type: 'integer',
+      }
+
+      #swagger.requestBody = {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: {
+              type: "object",
+              properties: {
+                photoUrl: {
+                  type: "string",
+                  format: "binary",
+                  description: "업로드할 프로필 사진 파일"
+                }
+              },
+              required: ["photoUrl"]
+            }
+          }
+        }
+      }
+
+      #swagger.responses[200] = {
+        description: "사용자 프로필 사진 수정 성공 응답",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                resultType: { type: "string", example: "SUCCESS" },
+                error: { type: "object", nullable: true, example: null },
+                success: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "number", example: 1 },
+                    photoUrl: { type: "string", example: "프로필 사진 url" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
+
+      #swagger.responses[400] = {
+        description: "사용자 프로필 사진 수정 실패 응답",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                resultType: { type: "string", example: "FAIL" },
+                error: {
+                  type: "object",
+                  properties: {
+                    errorCode: { type: "string", example: "P003" },
+                    reason: { type: "string", example: "이미지 파일을 올려주세요" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        userId: { type: "number", example: 1 },
+                        photoUrl: { type: "string", example: "url" }
+                      }
+                    }
+                  }
+                },
+                success: { type: "object", nullable: true, example: null }
+              }
+            }
+          }
+        }
+      };
+    */
 
 }

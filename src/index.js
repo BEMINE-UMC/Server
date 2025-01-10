@@ -3,12 +3,19 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+
+
+import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
+import {handleFullTemplateLoad, handlerGetTempleteView} from "./controllers/template.controller.js";
+
 
 import {handlerUserHistory} from "./controllers/user.controller.js";
 
 import { handlerPostLikeCreate, handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
+
 
 
 dotenv.config();
@@ -88,6 +95,7 @@ app.get('/', (req, res) => {
     }
 });
 
+
 // 게시물 전체 조회 API
 app.get('/posts', handleViewAllPosts);
 
@@ -104,7 +112,20 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
 
 // 사용자 연혁 조회 API
-app.get('/users/:userId/myHistory', handlerUserHistory);
+app.get('/api/v1/users/:userId/myHistory', handlerGetUserHistory);
+
+// 최근 본 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/recentPost', handlerGetRecentPost)
+
+// 북마크한 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/bookMark', handlerGetScrapPost)
+
+// 프로필 사진 수정하기 API
+app.patch('/api/v1/users/:userId/profile/modify', handlerPatchMyProfile)
+
+// PPT 파일 불러오기 API
+app.get('/api/v1/template/view', handlerGetTempleteView)
+
 
 // 템플릿 단일 조회 API
 app.get('/templates/:templateId/view', handleViewTemplate);
