@@ -2,6 +2,7 @@ import { responseFromTemplate } from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError } from "../errors/template.error.js";
 import { getTemplateInfo } from "../repositories/template.repository.js";
 
+// 템플릿 전체 불러오기 
 export const fullTemplateLoad = async (templateId) => {
     const numericTemplateId = parseInt(templateId);
     if (isNaN(numericTemplateId) || numericTemplateId <= 0) {
