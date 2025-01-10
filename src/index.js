@@ -12,7 +12,12 @@ import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
 import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
-
+import { 
+    getPortfolioPostDetail,
+    createPortfolioPost,
+    updatePortfolioPost,
+    deletePortfolioPost
+} from './controllers/portfolio.post.controller.js';
 dotenv.config();
 
 const app = express();
@@ -143,6 +148,11 @@ app.get('/users/login', handleLogin);
 
 //이메일 인증 API
 app.get('/users/checkEmail', handlecheckEmail);
+
+app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
+app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
+app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글 수정
+app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
