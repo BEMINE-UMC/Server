@@ -5,6 +5,7 @@ import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { handlerPostLikeCreate } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad } from "./controllers/template.controller.js";
+import { handleOtherPost } from "./controllers/post.controller.js";
 
 
 dotenv.config();
@@ -87,6 +88,8 @@ app.get('/templates/:templateId', handleFullTemplateLoad);
 
 //게시물 좋아요 누르기
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
+//사용자가 작성한 다른 게시물 불러오기
+app.get('/users/:userId/posts', handleOtherPost);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {

@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { createUserLike } from "../services/post.service.js";
+import { getOtherPost } from "../services/post.service.js";
 
 export const handlerPostLikeCreate = async (req, res, next) => {
     console.log("게시물 좋아요 누르기 요청");
@@ -66,4 +67,13 @@ export const handlerPostLikeCreate = async (req, res, next) => {
         }
     }
     */
+};
+
+export const handleOtherPost = async (req, res, next) => {
+    console.log("사용자가 작성한 다른 게시물 조회 요청");
+    
+    const otherPost = await getOtherPost(req.params.userId);
+
+    res.status(StatusCodes.OK).success(otherPost);
+
 };
