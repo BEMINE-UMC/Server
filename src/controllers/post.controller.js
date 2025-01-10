@@ -70,14 +70,88 @@ export const handlerPostLikeCreate = async (req, res, next) => {
 };
 
 
+// 사용자가 작성한 다른 게시물 불러오기
 export const handleOtherPost = async (req, res, next) => {
-    console.log("사용자가 작성한 다른 게시물 조회 요청");
-    
-    const otherPost = await getOtherPost(req.params.userId);
 
-    res.status(StatusCodes.OK).success(otherPost);
+    /*
+     #swagger.summary = '사용자가 작성한 다른 게시물 조회 API';
+     #swagger.tags = ['Get']
+     #swagger.parameters['userId'] = {
+       in: 'path',
+       description: '유저 ID',
+       required: true,
+       type: 'integer',
+     }
+   
+     #swagger.responses[200] = {
+       description: "사용자가 작성한 다른 게시물 조회 성공 응답",
+       content: {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: {
+               resultType: { type: "string", example: "SUCCESS" },
+               error: { type: "object", nullable: true, example: null },
+               success: {
+                 type: "array",
+                 items: {
+                   type: "object",
+                   properties: {
+                     userId: { type: "integer", example: 1 },
+                     postId: { type: "integer", example: 1 },
+                     title: { type: "string", example: "첫 번째 게시물" },
+                     picture: { type: "string", example: "image1_url" }
+                   }
+                 },
+                 example: [
+                   { userId: 1, postId: 1, title: "첫 번째 게시물", picture: "image1_url" },
+                   { userId: 1, postId: 2, title: "두 번째 게시물", picture: "image2_url" },
+                   { userId: 1, postId: 3, title: "세 번째 게시물", picture: "image3_url" }
+                 ]
+               }
+             }
+           }
+         }
+       }
+     };
+   
+     #swagger.responses[400] = {
+       description: "사용자가 작성한 다른 게시물 조회 실패 응답",
+       content: {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: {
+               resultType: { type: "string", example: "FAIL" },
+               error: {
+                 type: "object",
+                 properties: {
+                   errorCode: { type: "string", example: "P002" },
+                   reason: { type: "string", example: "존재하지 않는 사용자입니다." },
+                   data: {
+                     type: "object",
+                     properties: {
+                       requestedUserId: { type: "number", example: 1 }
+                     }
+                   }
+                 }
+               },
+               success: { type: "object", nullable: true, example: null }
+             }
+           }
+         }
+       }
+     };
+*/
 
-};
+   
+       console.log("사용자가 작성한 다른 게시물 조회 요청");
+       
+       const otherPost = await getOtherPost(req.params.userId);
+   
+       res.status(StatusCodes.OK).success(otherPost);
+   
+   };
 
 
 // 최근 본 게시물 조회
@@ -314,4 +388,218 @@ export const handleViewAllPosts = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+// 좋아요 누른 게시물 조회
+export const handleGetPostLiked = async (req, res) => {
+    
+/*
+      #swagger.summary = '좋아요 누른 게시물 조회 API';
+      #swagger.tags = ['Get']
+
+      #swagger.responses[200] = {
+        description: "좋아요 누른 게시물 조회 성공 응답",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                resultType: { type: "string", example: "SUCCESS" },
+                error: { type: "object", nullable: true, example: null },
+                success: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      userId: { type: "number", example: 1 },
+                      postId: { type: "number", example: 1 },
+                      title: { type: "string", example: "첫 번째 게시물" },
+                      picture: { type: "string", example: "image1_url" }
+                    }
+                  },
+                  example: [
+                    { userId: 1, postId: 1, title: "첫 번째 게시물", picture: "image1_url" },
+                    { userId: 1, postId: 2, title: "두 번째 게시물", picture: "image2_url" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      };
+
+      #swagger.responses[400] = {
+        description: "좋아요 누른 게시물 조회 실패 응답",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                resultType: { type: "string", example: "FAIL" },
+                error: {
+                  type: "object",
+                  properties: {
+                    errorCode: { type: "string", example: "P002" },
+                    reason: { type: "string", example: "존재하지 않는 사용자입니다." },
+                    data: {
+                      type: "object",
+                      properties: {
+                        requestedUserId: { type: "number", example: 1 }
+                      }
+                    }
+                  }
+                },
+                success: { type: "object", nullable: true, example: null }
+              }
+            }
+          }
+        }
+      };
+*/
+
+}
+
+// 회원가입
+export const handleSignUp = async (req, res) => {
+    
+/*
+          #swagger.summary = '회원가입 API';
+          #swagger.tags = ['Post']
+
+          #swagger.responses[200] = {
+            description: "회원가입 성공 응답",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    resultType: { type: "string", example: "SUCCESS" },
+                    error: { type: "object", nullable: true, example: null },
+                    success: {
+                      type: "object",
+                      properties: {
+                        accessToken: { type: "string", example: "accessToken" },
+                        refreshToken: { type: "string", example: "refreshToken" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          };
+    */
+    
+    }
+
+// 로그인
+export const handleLogin = async (req, res) => {
+    
+    /*
+    #swagger.summary = '로그인 API';
+    #swagger.tags = ['Get']
+    
+    #swagger.responses[200] = {
+      description: "로그인 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  accessToken: { type: "string", example: "accessToken" },
+                  refreshToken: { type: "string", example: "refreshToken" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #swagger.responses[400] = {
+      description: "로그인 실패 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "L001" },
+                  reason: { type: "string", example: "로그인 실패" },
+                  data: { type: "object", nullable: true, example: {} }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+*/
+
+    
+}
+
+// 이메일 인증
+export const handlecheckEmail = async (req, res) => {
+    
+    /*
+    #swagger.summary = '이메일 인증 API';
+    #swagger.tags = ['Get']
+
+    #swagger.responses[200] = {
+      description: "이메일 인증 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  email: { type: "string", example: "user@example.com" },
+                  accessToken: { type: "string", example: "accessToken" },
+                  refreshToken: { type: "string", example: "refreshToken" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #swagger.responses[400] = {
+      description: "이메일 인증 실패 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "L003" },
+                  reason: { type: "string", example: "이메일 인증 실패" },
+                  data: { type: "object", nullable: true, example: {} }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+*/
+
+    
 }

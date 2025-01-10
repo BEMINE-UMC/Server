@@ -3,22 +3,14 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handlerPostLikeCreate } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad } from "./controllers/template.controller.js";
 import { handleOtherPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
-
-
 import {handlerGetRecentPost, handlerGetScrapPost, handlerPostLikeCreate} from "./controllers/post.controller.js";
-import {handleFullTemplateLoad, handlerGetTempleteView} from "./controllers/template.controller.js";
-
-
-import {handlerUserHistory} from "./controllers/user.controller.js";
-
-import { handlerPostLikeCreate, handleViewAllPosts } from "./controllers/post.controller.js";
+import {handlerGetTempleteView} from "./controllers/template.controller.js";
+import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
-
+import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
 
 dotenv.config();
 
@@ -112,7 +104,8 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 //게시물 좋아요 누르기
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLikeCreate);
-//사용자가 작성한 다른 게시물 불러오기
+
+//사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/:userId/posts', handleOtherPost);
 
 // 사용자 연혁 조회 API
@@ -130,9 +123,20 @@ app.patch('/api/v1/users/:userId/profile/modify', handlerPatchMyProfile)
 // PPT 파일 불러오기 API
 app.get('/api/v1/template/view', handlerGetTempleteView)
 
-
 // 템플릿 단일 조회 API
 app.get('/templates/:templateId/view', handleViewTemplate);
+
+//좋아요 누른 게시물 조회 API
+app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
+
+//회원가입 API
+app.get('/users/signup', handleSignUp);
+
+//로그인 API
+app.get('/users/login', handleLogin);
+
+//이메일 인증 API
+app.get('/users/checkEmail', handlecheckEmail);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
