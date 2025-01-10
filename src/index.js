@@ -3,7 +3,6 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-
 import { getPopularTemplates } from './controllers/popular.template.controller.js';
 
 import { handleOtherPost } from "./controllers/post.controller.js";
