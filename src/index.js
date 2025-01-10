@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import { handleFullTemplateLoad } from "./controllers/template.controller.js";
 
 
 dotenv.config();
@@ -80,7 +81,8 @@ app.get('/', (req, res) => {
     {
         res.send("hello world!")
     }
-})
+});
+app.get('/templates/:templateId', handleFullTemplateLoad);
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
