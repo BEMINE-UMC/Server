@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { fullTemplateLoad } from "../services/template.service.js";
 
+// 템플릿 전체 불러오기 요청
 export const handleFullTemplateLoad = async (req, res, next) => {
     try {
         console.log("\n템플릿 전체 불러오기를 요청했습니다!");

@@ -87,6 +87,8 @@ app.get('/', (req, res) => {
         res.send("hello world!")
     }
 });
+
+// 템플릿 전체 불러오기 API (템플릿 올리기 화면)
 app.get('/templates/:templateId', handleFullTemplateLoad);
 
 //게시물 좋아요 누르기
