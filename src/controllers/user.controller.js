@@ -12,7 +12,7 @@ export const handlerGetUserHistory = async (req, res) => {
     res.status(StatusCodes.OK).success(history);
     /*
   #swagger.summary = '사용자 히스토리 조회 API';
-  #swagger.tags = ['User']
+  #swagger.tags = ['Get']
   #swagger.parameters['userId'] = {
     in: 'path',
     description: '유저 ID',
@@ -94,7 +94,7 @@ export const handlerGetUserHistory = async (req, res) => {
 export const handlerPatchMyProfile = async (req, res) => {
     /*
       #swagger.summary = '사용자 프로필 사진 수정 API';
-      #swagger.tags = ['User']
+      #swagger.tags = ['Patch']
       #swagger.parameters['userId'] = {
         in: 'path',
         description: '사용자 ID',
