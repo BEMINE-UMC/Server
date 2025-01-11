@@ -114,7 +114,7 @@ app.get('/api/v1/posts/search',handlerPostSearch);
 app.get('/users/checkEmail', handlecheckEmail);
 
 //회원가입 API
-app.get('/users/signup', handleSignUp);
+app.post('/users/signup', handleSignUp);
 
 //로그인 API
 app.get('/users/login', handleLogin);
