@@ -159,7 +159,7 @@ export const handleOtherPost = async (req, res, next) => {
 export const handlerGetRecentPost = async (req, res) => {
     /*
       #swagger.summary = '최근 게시물 조회 API';
-      #swagger.tags = ['Post']
+      #swagger.tags = ['Get']
       #swagger.parameters['userId'] = {
         in: 'path',
         description: '유저 ID',
@@ -236,7 +236,7 @@ export const handlerGetRecentPost = async (req, res) => {
 export const handlerGetScrapPost = async (req, res) => {
     /*
   #swagger.summary = '북마크 게시물 조회 API';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['Get']
   #swagger.parameters['userId'] = {
     in: 'path',
     description: '유저 ID',

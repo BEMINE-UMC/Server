@@ -78,7 +78,7 @@ export const handleFullTemplateLoad = async (req, res, next) => {
 export const handlerGetTempleteView = async (req, res) => {
     /*
       #swagger.summary = '템플릿 조회 API';
-      #swagger.tags = ['Template']
+      #swagger.tags = ['Get']
       #swagger.parameters['templateId'] = {
         in: 'query',
         description: '조회할 템플릿 ID',
