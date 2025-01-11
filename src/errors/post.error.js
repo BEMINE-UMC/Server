@@ -1,8 +1,5 @@
-
-// 존재하지 않는 사용자일 경우
-export class NotExsistsUserError extends Error {
-    errorCode = "U001";
-
+export class NonExistUserError extends Error {
+    errorCode = "P002";
     constructor(reason, data) {
         super(reason);
         this.reason = reason;

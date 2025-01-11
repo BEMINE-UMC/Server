@@ -3,8 +3,21 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-
-
+import { getPopularTemplates } from './controllers/popular.template.controller.js';
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrapt, handlerPostSearch,  } from "./controllers/post.controller.js";
+import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
+import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";
+import { handleViewAllPosts } from "./controllers/post.controller.js";
+import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
+import { handleViewTemplate } from "./controllers/template-view.controller.js";
+import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
+import { 
+    getPortfolioPostDetail,
+    createPortfolioPost,
+    updatePortfolioPost,
+    deletePortfolioPost
+} from './controllers/portfolio.post.controller.js';
 dotenv.config();
 
 const app = express();
@@ -80,7 +93,79 @@ app.get('/', (req, res) => {
     {
         res.send("hello world!")
     }
-})
+});
+
+//메인페이지 좋아요 많은순 템플릿 출력
+app.get('/api/templates/popular',getPopularTemplates);
+
+// 게시물 전체 조회 API
+app.get('/posts', handleViewAllPosts);
+
+//게시물 좋아요 누르기 API
+app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
+
+//게시물 스크랩 누르기 API
+app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrapt);
+
+//게시물 검색 API
+app.get('/api/v1/posts/search',handlerPostSearch);
+
+//이메일 인증 API
+app.get('/users/checkEmail', handlecheckEmail);
+
+//회원가입 API
+app.get('/users/signup', handleSignUp);
+
+//로그인 API
+app.get('/users/login', handleLogin);
+
+// 사용자 연혁 조회 API
+app.get('/api/v1/users/:userId/myHistory', handlerGetUserHistory);
+
+//사용자가 작성한 다른 게시물 불러오기 API
+app.get('/users/:userId/posts', handleOtherPost);
+
+// 템플릿 전체 불러오기 API (템플릿 올리기 화면)
+app.get('/templates/:templateId', handleFullTemplateLoad);
+
+//작성한 게시물 조회 API
+app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
+
+// 최근 본 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/recentPost', handlerGetRecentPost)
+
+//좋아요 누른 게시물 조회 API
+app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
+
+// 북마크한 게시물 조회 API
+app.get('/api/v1/users/:userId/myPage/bookMark', handlerGetScrapPost)
+
+// 프로필 사진 수정하기 API
+app.patch('/api/v1/users/:userId/profile/modify', handlerPatchMyProfile)
+
+// PPT 파일 불러오기 API
+app.get('/api/v1/template/view', handlerGetTempleteView)
+
+//템플릿 좋아요 누르기 API
+app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
+
+app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
+
+app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글 수정
+
+app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
+
+// 템플릿 삭제 API
+app.delete('/templates/:templateId', handleTemplateDelete);
+
+// 템플릿 수정/생성 API
+app.put('/templates/:templateId', handleTemplateCreateAndModify);
+
+// 템플릿 단일 조회 API
+app.get('/templates/:templateId/view', handleViewTemplate);
+
+app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
+
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
