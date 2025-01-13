@@ -4,7 +4,7 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { getPopularTemplates } from './controllers/popular.template.controller.js';
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostScrapt, handlerPostSearch,  } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,  } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";

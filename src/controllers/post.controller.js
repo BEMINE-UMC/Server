@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { createUserLike } from "../services/post.service.js";
+import { createUserLike, createUserScrap } from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
 
 //게시물 좋아요 누르기
@@ -668,7 +668,9 @@ export const handlerPostScrap = async (req,res) => {
     */
     console.log("게시물 스크랩을 요청하였습니다.");
 
-    
+    const scrapedPost = await createUserScrap(req.params.userId,req.params.postId);
+
+    res.status(StatusCodes.OK).success(scrapedPost);
   }
 
 //게시물 검색하기

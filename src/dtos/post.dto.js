@@ -1,6 +1,9 @@
 export const createdPostLikedDTO = (likedPost) => {
-  return likedPost;
-};
+  return {
+    userId: likedPost.userId,
+    postId: likedPost.postId,
+  }
+}
 
 export const createdGetOtherPostDTO = (postInfo) => {
   return {
@@ -8,5 +11,12 @@ export const createdGetOtherPostDTO = (postInfo) => {
     postId: postInfo.id,
     title: postInfo.title || "",
     picture: postInfo.picture || "",
+  }
+};
+
+export const createdPostScrapedDTO = (scrapedPost) => {
+  return {
+    userId: scrapedPost.userId,
+    postId: scrapedPost.postId,
   }
 };

@@ -54,3 +54,34 @@ export const getUserOtherPost = async (userId) => {
         throw error;
     }
 };
+
+//게시물 스크랩 생성
+export const createUserPostScrap = async (userId, postId) => {
+    try {
+        const existPostScrap = await prisma.scrapPost.findFirst({
+            where: {
+                postId: parseInt(postId),
+                userId: parseInt(userId),
+            },
+        });
+
+        if (existPostScrap)
+            return null;
+
+        const createPostScrap = await prisma.scrapPost.create({
+            data: {
+                userId: parseInt(userId),
+                postId: parseInt(postId),
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        });
+
+        return createPostScrap;
+
+    } catch (error) {
+        console.error("Error in createUserPostScrap: ", error);
+        throw error;
+    }
+
+};
