@@ -4,7 +4,7 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { getPopularTemplates } from './controllers/popular.template.controller.js';
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrapt, handlerPostSearch,  } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostScrapt, handlerPostSearch,  } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";
@@ -105,7 +105,7 @@ app.get('/posts', handleViewAllPosts);
 app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
 
 //게시물 스크랩 누르기 API
-app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrapt);
+app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrap);
 
 //게시물 검색 API
 app.get('/api/v1/posts/search',handlerPostSearch);

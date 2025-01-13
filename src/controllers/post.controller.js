@@ -605,8 +605,8 @@ export const handlecheckEmail = async (req, res) => {
     
 }
 
-//포스트 스크랩 하기
-export const handlerPostScrapt = async (req,res) => {
+//게시물 스크랩 하기
+export const handlerPostScrap = async (req,res) => {
     /* 
     #swagger.summary = '게시물 스크랩 API'
     #swagger.tags = ['Post']
@@ -666,7 +666,10 @@ export const handlerPostScrapt = async (req,res) => {
         }
     }
     */
-}
+    console.log("게시물 스크랩을 요청하였습니다.");
+
+    
+  }
 
 //게시물 검색하기
 export const handlerPostSearch = async (req,res) => {
