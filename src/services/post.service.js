@@ -1,8 +1,7 @@
-import { createdPostLikedDTO } from "../dtos/post.dto.js";
+import { createdPostLikedDTO, createdPostScrapedDTO } from "../dtos/post.dto.js";
 import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
-import { alreadyExistPostLike } from "../error.js";
-import { NonExistUserError } from "../errors/post.error.js";
-import { createUserPostLike } from "../repositories/post.repository.js";
+import { alreadyExistPostLike, alreadyExistPostScrap, NonExistUserError } from "../errors/post.error.js";
+import { createUserPostLike, createUserPostScrap } from "../repositories/post.repository.js";
 import { getUserOtherPost } from "../repositories/post.repository.js";
 
 //사용자 게시물 좋아요 누르기
@@ -14,7 +13,7 @@ export const createUserLike = async (userId, postId) => {
             "User already liked this post",
             {
               userId: userId,
-              existingPostId: postId,
+              PostId: postId,
             }
         );
     }
@@ -38,4 +37,21 @@ export const getOtherPost = async (userId) => {
 
      return userOtherPosts.map(createdGetOtherPostDTO);
 
+};
+
+//사용자 게시물 스크랩 누르기
+export const createUserScrap = async (userId, postId) => {
+    const userScrapedPost = await createUserPostScrap(userId,postId);
+  
+    if (!userScrapedPost) {
+        throw new alreadyExistPostScrap(
+            "User already scraped this post",
+            {
+              userId: userId,
+              PostId: postId,
+            }
+        );
+    }
+
+    return createdPostScrapedDTO(userScrapedPost);
 };
