@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { createUserLike, createUserScrap } from "../services/post.service.js";
+import {createUserLike, createUserScrap, RecentViewPosts} from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
+import {postToRecent} from "../dtos/post.dto.js";
 
 //게시물 좋아요 누르기
 export const handlerPostLike = async (req, res, next) => {
@@ -230,6 +231,8 @@ export const handlerGetRecentPost = async (req, res) => {
         }
       };
     */
+    const posts = await RecentViewPosts(postToRecent(req.params))
+    res.status(StatusCodes.OK).success(posts)
 }
 
 // 스크랩한 게시물 조회
