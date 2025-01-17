@@ -120,7 +120,7 @@ app.get('/users/signup', handleSignUp);
 app.get('/users/login', handleLogin);
 
 // 사용자 연혁 조회 API
-app.get('/api/v1/users/:userId/myHistory', handlerGetUserHistory);
+app.get('/users/:userId/myHistory', handlerGetUserHistory);
 
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/:userId/posts', handleOtherPost);
@@ -132,19 +132,19 @@ app.get('/templates/:templateId', handleFullTemplateLoad);
 app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
 
 // 최근 본 게시물 조회 API
-app.get('/api/v1/users/:userId/myPage/recentPost', handlerGetRecentPost)
+app.get('/users/:userId/myPage/recentPost', handlerGetRecentPost)
 
 //좋아요 누른 게시물 조회 API
 app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
 
 // 북마크한 게시물 조회 API
-app.get('/api/v1/users/:userId/myPage/bookMark', handlerGetScrapPost)
+app.get('/users/:userId/myPage/bookMark', handlerGetScrapPost)
 
 // 프로필 사진 수정하기 API
-app.patch('/api/v1/users/:userId/profile/modify', handlerPatchMyProfile)
+app.patch('/users/:userId/profile/modify', handlerPatchMyProfile)
 
 // PPT 파일 불러오기 API
-app.get('/api/v1/template/view', handlerGetTempleteView)
+app.get('/template/view', handlerGetTempleteView)
 
 //템플릿 좋아요 누르기 API
 app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)

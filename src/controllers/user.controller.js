@@ -11,7 +11,7 @@ export const handlerGetUserHistory = async (req, res) => {
 
     res.status(StatusCodes.OK).success(history);
     /*
-  #swagger.summary = '사용자 히스토리 조회 API';
+  #swagger.summary = '사용자 연혁 조회 API';
   #swagger.tags = ['Get']
   #swagger.parameters['userId'] = {
     in: 'path',
@@ -21,7 +21,7 @@ export const handlerGetUserHistory = async (req, res) => {
   }
 
   #swagger.responses[200] = {
-    description: "사용자 히스토리 조회 성공 응답",
+    description: "사용자 연혁 조회 성공 응답",
     content: {
       "application/json": {
         schema: {
@@ -59,7 +59,7 @@ export const handlerGetUserHistory = async (req, res) => {
   };
 
   #swagger.responses[400] = {
-    description: "사용자 히스토리 조회 실패 응답",
+    description: "사용자 연혁 조회 실패 응답",
     content: {
       "application/json": {
         schema: {
