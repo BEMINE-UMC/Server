@@ -11,13 +11,15 @@ import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/t
 import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
 import { handleViewTemplate } from "./controllers/template-view.controller.js";
-import { handleGetPostLiked, handleSignUp, handleLogin, handlecheckEmail } from "./controllers/post.controller.js";
+import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
     getPortfolioPostDetail,
     createPortfolioPost,
     updatePortfolioPost,
     deletePortfolioPost
 } from './controllers/portfolio.post.controller.js';
+import { handleSignUp, handleLogin, handlecheckEmail } from "./controllers/auth.controller.js";
+
 dotenv.config();
 
 const app = express();
@@ -114,7 +116,7 @@ app.get('/api/v1/posts/search',handlerPostSearch);
 app.get('/users/checkEmail', handlecheckEmail);
 
 //회원가입 API
-app.get('/users/signup', handleSignUp);
+app.post('/users/signup', handleSignUp);
 
 //로그인 API
 app.get('/users/login', handleLogin);
