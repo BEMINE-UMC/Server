@@ -106,3 +106,23 @@ export const getRecentPosts = async (userId)=>{
     })
     return posts;
 }
+
+// 스크랩한 게시물 조회
+export const getScrapPosts = async (data)=>{
+    const posts = await prisma.scrapPost.findMany({
+        where:{userId: data.userId, status: true},
+        select:{
+            post:{
+                select:{
+                    id: true,
+                    thumbnail: true
+                }
+            }
+        },
+        orderBy:{
+            createdAt: 'desc'
+        },
+        take: 16
+    })
+    return posts;
+}

@@ -36,3 +36,18 @@ export const responseFromRecentPost = (userId,data)=>{
     post: data
   }
 }
+
+// 북마크한 게시물 조회 요청 DTO
+export const postToScrap = (params) =>{
+  return{
+    userId: parseInt(params.userId),
+  }
+}
+
+// 북마크한 게시물 조회 응답 DTO
+export const responseFromScrapPost = (userId,data) =>{
+  return{
+    userId: userId,
+    post: data
+  }
+}

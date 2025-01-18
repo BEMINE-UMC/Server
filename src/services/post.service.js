@@ -1,12 +1,22 @@
-import {createdPostLikedDTO, createdPostScrapedDTO, responseFromRecentPost} from "../dtos/post.dto.js";
+import {
+    createdPostLikedDTO,
+    createdPostScrapedDTO,
+    responseFromRecentPost,
+    responseFromScrapPost
+} from "../dtos/post.dto.js";
 import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
     NonExistUserError,
-    NotRecentPostsErrors
+    NotRecentPostsErrors, NotScrapPostsErrors
 } from "../errors/post.error.js";
-import {createUserPostLike, createUserPostScrap, getRecentPosts} from "../repositories/post.repository.js";
+import {
+    createUserPostLike,
+    createUserPostScrap,
+    getRecentPosts,
+    getScrapPosts
+} from "../repositories/post.repository.js";
 import { getUserOtherPost } from "../repositories/post.repository.js";
 
 //사용자 게시물 좋아요 누르기
@@ -62,7 +72,6 @@ export const createUserScrap = async (userId, postId) => {
 };
 
 
-
 // 최근 본 게시물 조회
 export const RecentViewPosts = async(data) =>{
     const recentPosts = await getRecentPosts(data.userId);
@@ -78,4 +87,20 @@ export const RecentViewPosts = async(data) =>{
     }))
 
     return responseFromRecentPost(userId, posts);
+}
+
+// 스크랩한 게시물 조회
+export const ScrapPosts = async (data) =>{
+    const scrapPosts = await getScrapPosts(data);
+    const userId = data.userId
+
+    if (scrapPosts.length === 0)
+        throw new NotScrapPostsErrors('해당 유저가 스크랩한 게시물이 없습니다.', data)
+
+    const posts = scrapPosts.map(item=>({
+        postId: item.post.id,
+        url:item.post.thumbnail
+    }))
+
+    return responseFromScrapPost(userId, posts);
 }
