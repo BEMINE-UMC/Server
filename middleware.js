@@ -1,4 +1,4 @@
-import { S3Client } from "@aws-sdk/client-s3"; // AWS SDK v3
+import {DeleteObjectCommand, S3Client} from "@aws-sdk/client-s3"; // AWS SDK v3
 import multer from "multer";
 import multerS3 from "multer-s3";
 import path from "path";
@@ -15,7 +15,7 @@ const s3 = new S3Client({
 });
 
 // 확장자 검사 목록
-const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".gif"];
+const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".gif",".TXT"];
 
 export const imageUploader = multer({
   storage: multerS3({
@@ -24,7 +24,7 @@ export const imageUploader = multer({
     contentType: multerS3.AUTO_CONTENT_TYPE, // Content-type, 자동으로 찾도록 설정
     key: (req, file, callback) => {
       // 파일명
-      const uploadDirectory = "memory_images"; // 디렉토리 path 설정을 위해서
+      const uploadDirectory = "bemine-images"; // 디렉토리 path 설정을 위해서
       const extension = path.extname(file.originalname); // 파일 이름 얻어오기
       const uuid = uuidv4(); // UUID 생성
 
@@ -66,4 +66,19 @@ export const configureMiddleware = (app) => {
   passport.deserializeUser((user, done) => {
     done(null, user);
   });
+};
+
+// 파일 삭제
+export const deleteImage = async (key) => {
+  try {
+    const command = new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: new URL(key).pathname.substring(1),
+    });
+    const response = await s3.send(command);
+    console.log("파일 삭제 성공:", response);
+    return response;
+  } catch (err) {
+    throw err;
+  }
 };
