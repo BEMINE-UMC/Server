@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import {createUserLike, createUserScrap, RecentViewPosts} from "../services/post.service.js";
+import {createUserLike, createUserScrap, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
-import {postToRecent} from "../dtos/post.dto.js";
+import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 
 //게시물 좋아요 누르기
 export const handlerPostLike = async (req, res, next) => {
@@ -310,6 +310,8 @@ export const handlerGetScrapPost = async (req, res) => {
     }
   };
 */
+    const posts = await ScrapPosts(postToScrap(req.params))
+    res.status(StatusCodes.OK).success(posts)
 }
 
 // // 게시물 전체 조회 요청
