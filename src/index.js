@@ -9,8 +9,7 @@ import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.c
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
-import { handleViewTemplate } from "./controllers/template-view.controller.js";
+import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
     getPortfolioPostDetail,
