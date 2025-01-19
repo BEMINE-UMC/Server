@@ -14,3 +14,12 @@ export const responseFromTemplate = (templateInfo) => {
         updatedAt, 
     };
 };
+
+// 템플릿 단일 조회 DTO (service->controller)
+export const responseFromTemplateAndLike = (templateViewInfo) => {
+    return {
+        filePDF: templateViewInfo.file_pdf,
+        fileShareState: templateViewInfo.file_share_state || "",
+        fileLikeStatus: templateViewInfo.like_status,
+    };
+};

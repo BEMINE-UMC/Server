@@ -348,7 +348,7 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
 }
 
 // 템플릿 단일 조회 요청
-export const handleViewTemplate = async (req, resizeBy, next) => {
+export const handleViewTemplate = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 단일 조회 API';
     #swagger.tags = ['Get']
@@ -413,8 +413,8 @@ export const handleViewTemplate = async (req, resizeBy, next) => {
         console.log(`요청된 유저 아이디입니다: ${req.params.userId}`);
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const template = await singleTemplateView(req.params.userId, req.params.templateId);
-        res.status(StatusCodes.OK).success(template);
+        const singleTemplate = await singleTemplateView(req.params.userId, req.params.templateId);
+        res.status(StatusCodes.OK).success(singleTemplate);
     } catch (error) {
         next(error);
     }
