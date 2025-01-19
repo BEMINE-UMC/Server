@@ -9,8 +9,7 @@ import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.c
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify } from "./controllers/template.controller.js";
-import { handleViewTemplate } from "./controllers/template-view.controller.js";
+import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
     getPortfolioPostDetail,
@@ -20,6 +19,7 @@ import {
 } from './controllers/portfolio.post.controller.js';
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
+import { imageUploader } from "../middleware.js";
 
 dotenv.config();
 
@@ -93,6 +93,7 @@ app.get("/openapi.json", async (req, res, next) => {
 
 
 app.get('/', (req, res) => {
+    // #swagger.ignore = true
     {
         res.send("hello world!")
     }
@@ -147,7 +148,7 @@ app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
 app.get('/users/:userId/myPage/bookMark', handlerGetScrapPost)
 
 // 프로필 사진 수정하기 API
-app.patch('/users/:userId/profile/modify', handlerPatchMyProfile)
+app.patch('/users/:userId/profile/modify', imageUploader.single('photo') ,handlerPatchMyProfile)
 
 // PPT 파일 불러오기 API
 app.get('/template/view', handlerGetTempleteView)
@@ -162,13 +163,13 @@ app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글
 app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
 
 // 템플릿 삭제 API
-app.delete('/templates/:templateId', handleTemplateDelete);
+app.patch('/templates/:templateId', handleTemplateDelete);
 
 // 템플릿 수정/생성 API
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 // 템플릿 단일 조회 API
-app.get('/templates/:templateId/view', handleViewTemplate);
+app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
 
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 

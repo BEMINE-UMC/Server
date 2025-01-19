@@ -1,6 +1,6 @@
 import {StatusCodes} from "http-status-codes";
-import {userToHistory} from "../dtos/user.dto.js";
-import {userHistory} from "../services/user.service.js";
+import {userToHistory, userToProfile} from "../dtos/user.dto.js";
+import {userHistory, userProfileModify} from "../services/user.service.js";
 
 
 // 연혁 조회 요청
@@ -86,7 +86,6 @@ export const handlerGetUserHistory = async (req, res) => {
     }
   };
 */
-
 }
 
 
@@ -109,13 +108,13 @@ export const handlerPatchMyProfile = async (req, res) => {
             schema: {
               type: "object",
               properties: {
-                photoUrl: {
+                photo: {
                   type: "string",
                   format: "binary",
                   description: "업로드할 프로필 사진 파일"
                 }
               },
-              required: ["photoUrl"]
+              required: ["photo"]
             }
           }
         }
@@ -154,13 +153,12 @@ export const handlerPatchMyProfile = async (req, res) => {
                 error: {
                   type: "object",
                   properties: {
-                    errorCode: { type: "string", example: "P003" },
-                    reason: { type: "string", example: "이미지 파일을 올려주세요" },
+                    errorCode: { type: "string", example: "U001" },
+                    reason: { type: "string", example: "존재하지 않는 사용자입니다." },
                     data: {
                       type: "object",
                       properties: {
                         userId: { type: "number", example: 1 },
-                        photoUrl: { type: "string", example: "url" }
                       }
                     }
                   }
@@ -172,5 +170,6 @@ export const handlerPatchMyProfile = async (req, res) => {
         }
       };
     */
-
+    const user = await userProfileModify(userToProfile(req.params,req.file))
+    res.status(StatusCodes.OK).success(user)
 }

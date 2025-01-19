@@ -1,10 +1,11 @@
 import {prisma} from "../db.config.js";
 
-
+// 유저 정보 조회
 export const getUserInfo = async (data) =>{
     const user = await prisma.user.findFirst({
         where: {id: data.userId}
     })
+
     return user;
 }
 
@@ -21,3 +22,16 @@ export const getUserHistory = async (data) => {
     })
     return history;
 }
+
+// 유저 프로필 수정
+export const patchUserProfile = async (data) => {
+    const user = await prisma.user.update({
+        where: {id: data.userId},
+        data:{
+            photo:data.photo
+        }
+    })
+
+    return user;
+}
+
