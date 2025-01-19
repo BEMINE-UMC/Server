@@ -15,6 +15,14 @@ export const responseFromTemplate = (templateInfo) => {
     };
 };
 
+
+// 템플릿 단일 조회 DTO (service->controller)
+export const responseFromTemplateAndLike = (templateViewInfo) => {
+    return {
+        filePDF: templateViewInfo.file_pdf,
+        fileShareState: templateViewInfo.file_share_state || "",
+        fileLikeStatus: templateViewInfo.like_status,
+
 // 템플릿 삭제 후 DTO (service->controller)
 export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
