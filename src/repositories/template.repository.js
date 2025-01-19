@@ -7,9 +7,6 @@ export const checkTemplateExists = async (templateId) => {
   try {
     const [templates] = await conn.query(`SELECT * FROM template WHERE id = ?;`, templateId);
 
-    console.log("\nDB에서 요청된 템플릿 정보를 얻습니다.");
-    console.log(templates);
-
     if (templates.length === 0) { // 조회된 템플릿 데이터가 없다면
       return null;
     }
@@ -57,14 +54,8 @@ export const getTemplateViewInfo = async (userId, templateId) => {
     /* PDF파일과 파일 저장 유무값을 불러오기 */
     const [templateInfo] = await conn.query(`SELECT file_pdf, file_share_state FROM template WHERE id = ?;`, [templateId]);
 
-    console.log("\nDB에서 요청된 템플릿의 PDF 정보와 파일 저장 유무값을 얻습니다");
-    console.log(templateInfo);
-
     /* 템플릿 좋아요 상태값을 불러오기 */
     const [templateLike] = await conn.query('SELECT status FROM liked_template WHERE user_id = ? AND template_id = ?', [userId, templateId]);
-
-    console.log("\nDB에서 요청된 템플릿의 좋아요 상태값을 얻습니다");
-    console.log(templateLike);
 
     if (templateLike.length === 0) { // 조회된 템플릿 좋아요 여부 데이터가 없다면
       return null;

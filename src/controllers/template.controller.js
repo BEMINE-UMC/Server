@@ -410,8 +410,6 @@ export const handleViewTemplate = async (req, res, next) => {
     */
     try {
         console.log("\n템플릿 단일 조회를 요청했습니다!");
-        console.log(`요청된 유저 아이디입니다: ${req.params.userId}`);
-        console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
         const singleTemplate = await singleTemplateView(req.params.userId, req.params.templateId);
         res.status(StatusCodes.OK).success(singleTemplate);
