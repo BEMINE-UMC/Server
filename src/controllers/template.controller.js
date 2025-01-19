@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { fullTemplateLoad } from "../services/template.service.js";
+import { fullTemplateLoad, singleTemplateView } from "../services/template.service.js";
 
 // 템플릿 전체 불러오기 요청
 export const handleFullTemplateLoad = async (req, res, next) => {
@@ -409,7 +409,11 @@ export const handleViewTemplate = async (req, resizeBy, next) => {
     }
     */
     try {
+        console.log("\n템플릿 단일 조회를 요청했습니다!");
+        console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
+        const template = await singleTemplateView(req.params.templateId);
+        res.status(StatusCodes.OK).success(template);
     } catch (error) {
         next(error);
     }
