@@ -18,7 +18,8 @@ import {
     updatePortfolioPost,
     deletePortfolioPost
 } from './controllers/portfolio.post.controller.js';
-import { handleSignUp, handleLogin, handlecheckEmail } from "./controllers/auth.controller.js";
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
+import { authenticateJWT } from "./auth.middleware.js";
 
 dotenv.config();
 
@@ -119,13 +120,16 @@ app.get('/users/checkEmail', handlecheckEmail);
 app.post('/users/signup', handleSignUp);
 
 //로그인 API
-app.get('/users/login', handleLogin);
+app.post('/users/login', handleLogin);
+
+// Access Token 재발급 API (Refresh Token 활용)
+app.post('/users/refresh', handleTokenRefresh);
 
 // 사용자 연혁 조회 API
 app.get('/users/:userId/myHistory', handlerGetUserHistory);
 
 //사용자가 작성한 다른 게시물 불러오기 API
-app.get('/users/:userId/posts', handleOtherPost);
+app.get('/users/posts/other', authenticateJWT, handleOtherPost);
 
 // 템플릿 전체 불러오기 API (템플릿 올리기 화면)
 app.get('/templates/:templateId', handleFullTemplateLoad);
