@@ -17,3 +17,13 @@ export class NonexistentTemplateError extends Error {
         this.data = data;
     }
 }
+
+// Inactive한 Template 다시 삭제하려 할 때 에러
+export class InactiveTemplateError extends Error {
+    errorCode = "T22";
+    constructor(reason, data){
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+    }
+}

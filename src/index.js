@@ -158,7 +158,7 @@ app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글
 app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
 
 // 템플릿 삭제 API
-app.delete('/templates/:templateId', handleTemplateDelete);
+app.patch('/templates/:templateId', handleTemplateDelete);
 
 // 템플릿 수정/생성 API
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
