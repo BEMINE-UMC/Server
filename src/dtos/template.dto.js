@@ -14,3 +14,13 @@ export const responseFromTemplate = (templateInfo) => {
         updatedAt, 
     };
 };
+
+// 템플릿 삭제 후 DTO (service->controller)
+export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
+    const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
+
+    return {
+        status: deletedTemplateInfo.status,
+        inactiveDate,
+    };
+};
