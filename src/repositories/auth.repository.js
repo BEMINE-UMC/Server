@@ -1,17 +1,13 @@
 import { prisma } from "../db.config.js";
 import { pool } from "../db.config.js";
-import { PasswordLengthError, ExistEmailError, ExistNameError } from "../errors/auth.error.js";
+import bcrypt from 'bcrypt';
+import { ExistEmailError, ExistNameError, UserNotExistError, InvalidPasswordError } from "../errors/auth.error.js";
 
 // 회원가입
 export const postUserInformation = async ({ name, email, password }) => {
     const conn = await pool.getConnection();
 
     try {
-        // 비밀번호 길이 검증
-        if (password.length < 8 || password.length > 15) {
-           throw new PasswordLengthError("비밀번호는 8자 이상, 15자 이하여야 합니다.");
-        }
-
         // 이메일 중복 검사
         const [existingUser] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
         if (existingUser.length > 0) {
@@ -33,6 +29,30 @@ export const postUserInformation = async ({ name, email, password }) => {
         return user[0];
     } catch (error) {
         console.error("Error in postUserInformation: ", error);
+        throw error;
+    }
+};
+
+// 로그인
+export const getUserInfo = async ({email, password}) => {
+    const conn = await pool.getConnection();
+
+    try {
+        const [user] = await conn.query('SELECT id, email, password, name, created_at FROM user WHERE email = ?;', [email]);
+
+        if (!user[0]) {
+            throw new UserNotExistError("해당 이메일을 가진 사용자가 존재하지 않습니다.", { email: email });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user[0].password);
+         if (!isPasswordValid) {
+             throw new InvalidPasswordError("비밀번호가 일치하지 않습니다.");
+         }
+
+        return user[0];
+
+    } catch (error) {
+        console.error("Error in getUserInfo: ", error);
         throw error;
     }
 };

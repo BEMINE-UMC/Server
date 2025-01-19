@@ -38,13 +38,13 @@ export const getUserOtherPost = async (userId) => {
 
     try {
         // 사용자가 존재하는지 먼저 확인
-        const [user] = await pool.query(`SELECT * FROM user WHERE id = ?;`, [userId]);
+        const [user] = await conn.query(`SELECT * FROM user WHERE id = ?;`, [userId]);
 
         if (user.length === 0) {
             throw new NonExistUserError("존재하지 않는 사용자입니다.", { requestedUserId: userId });
           }
 
-        const [posts] = await pool.query(`SELECT * FROM post WHERE user_id = ?;`, [userId]);
+        const [posts] = await conn.query(`SELECT * FROM post WHERE user_id = ?;`, [userId]);
 
         console.log(posts);
 
