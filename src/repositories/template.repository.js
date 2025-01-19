@@ -27,16 +27,11 @@ export const getFullTemplateInfo = async (templateId) => {
     const conn = await pool.getConnection();
 
     try {
-      const [templates] = await pool.query(`SELECT * FROM template WHERE id = ?;`, templateId);
-
-      console.log("\nDB에서 요청된 템플릿 정보를 얻습니다.");
-      console.log(templates);
-
-      if (templates.length === 0) { // 조회된 템플릿 데이터가 없다면
-        return null;
-      }
+      // 이후에 filePDF 제외시켜서 프론트에게 보낼 예정 (createdAt, updatedAt도 템플릿 수정/생성 API 개발 테스트 후에 제외시킬 예정)
+      const [templates] = await conn.query(`SELECT * FROM template WHERE id = ?;`, templateId); 
 
       return templates[0];
+
     } catch (err) {
       throw new Error (
         `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
