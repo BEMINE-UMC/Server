@@ -45,36 +45,34 @@ export const getTemplateInfo = async (templateId) => {
     }
 };
 
-// 템플릿 status 확인하기
-export const checkTemplateStatus = async (templateId) => {
+// 템플릿 삭제하기 
+export const deleteTemplate = async (templateId) => {
   const conn = await pool.getConnection();
-  
+
   try {
+    /* status값 확인하기 */
     const [templateStatus] = await conn.query(`SELECT status FROM template WHERE id = ?;`, [templateId]);
 
-    console.log(templateStatus[0].status);
-
-    if(templateStatus[0].status === "inactive"){ // 이미 삭제되어 inactive한 템플릿이라면
+    if(templateStatus[0].status === 'inactive'){
+      return 'inactive';
+    } else if (templateStatus[0].status === null){
       return null;
     }
 
-    return templateStatus[0];
-
-  } catch (err) {
-    throw new Error (
-      `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+    /* 템플릿 삭제: status 값과 inactive_date를 업데이트 */
+    const [result] = await conn.query(
+      `UPDATE template 
+       SET status = 'inactive', 
+           inactive_date = CURRENT_TIMESTAMP(6) 
+       WHERE id = ? AND status = 'active';`, // status은 null 가능함
+      [templateId]
     );
-  } finally {
-    conn.release();
-  }
-}
 
-// 템플릿 삭제하기 
-export const deleteTemplate = async (teplateId) => {
-  const conn = await pool.getConnection();
+    /* 업데이트 결과 반환 */
+    const [newUpdates] = await conn.query(`SELECT status, inactive_date FROM template WHERE id = ?;`, [templateId]);
 
-  try {
-    console.log("이제 템플릿 삭제하자");
+    return newUpdates[0];
+    
   } catch (err) {
     throw new Error (
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`

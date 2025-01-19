@@ -27,3 +27,13 @@ export class InactiveTemplateError extends Error {
         this.data = data;
     }
 }
+
+// Status 값이 null인 템플렛에 대한 유의 문구
+export class NullStatusTemplateError extends Error {
+    errorCode = "T23";
+    constructor(reason, data){
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+    }
+}

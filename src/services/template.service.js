@@ -1,6 +1,6 @@
-import { responseFromTemplate } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateInfo, checkTemplateStatus, deleteTemplate } from "../repositories/template.repository.js";
+import { responseFromTemplate, responseFromTemplateDeletion } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateInfo, deleteTemplate } from "../repositories/template.repository.js";
 
 // 템플릿 전체 불러오기 
 export const fullTemplateLoad = async (templateId) => {
@@ -29,12 +29,13 @@ export const templateDeletion = async (templateId) => {
         throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : numericTemplateId }); 
     }
 
-    const templateStatus = await checkTemplateStatus(numericTemplateId);
-    if(!templateStatus) {
+    const templateInfo = await deleteTemplate(numericTemplateId); // 여기부터 수정하기
+    if(templateInfo == 'inactive') { 
         throw new InactiveTemplateError("이미 삭제된 template 입니다.", { requestedTemplateId : numericTemplateId });
+    } else if (!templateInfo) { // templateStatus === null인 경우
+        throw new NullStatusTemplateError("템플릿의 상태값이 null입니다. Null인 이유를 확인해주세요.", { requestedTemplateId : numericTemplateId });
     }
-
-    const deletedTemplateInfo = await deleteTemplate(numericTemplateId); // 여기부터 수정하기
-    return responseFromTemplate(deletedTemplateInfo);
+    
+    return responseFromTemplateDeletion(templateInfo);
 }
 
