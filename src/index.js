@@ -163,7 +163,7 @@ app.delete('/templates/:templateId', handleTemplateDelete);
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 // 템플릿 단일 조회 API
-app.get('/templates/:templateId/view', handleViewTemplate);
+app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
 
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 

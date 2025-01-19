@@ -25,12 +25,11 @@ export const getFullTemplateInfo = async (templateId) => {
 };
 
 // 템플릿 단일 조회하기 (정보 얻기)
-export const getTemplateViewInfo = async (templateId) => {
+export const getTemplateViewInfo = async (userId, templateId) => {
   const conn = await pool.getConnection();
 
-  // 위에 getFullTemplateInfo 함수 코드 임시로 복붙
   try {
-    const [templates] = await pool.query(`SELECT * FROM template WHERE id = ?;`, templateId);
+    const [templates] = await pool.query(`SELECT * FROM template WHERE id = ?;`, templateId); // !!SQL문 수정하기
 
     console.log("\nDB에서 요청된 템플릿 정보를 얻습니다.");
     console.log(templates);
@@ -39,7 +38,7 @@ export const getTemplateViewInfo = async (templateId) => {
       return null;
     }
 
-    return templates[0];
+    return templates[0]; // !!조회할 데이터 수정하기
   } catch (err) {
     throw new Error (
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
