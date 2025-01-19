@@ -17,6 +17,9 @@ import {
     updatePortfolioPost,
     deletePortfolioPost
 } from './controllers/portfolio.post.controller.js';
+
+import { imageUploader } from "../middleware.js";
+
 import { handleSignUp, handleLogin, handlecheckEmail } from "./controllers/auth.controller.js";
 
 dotenv.config();
@@ -91,6 +94,7 @@ app.get("/openapi.json", async (req, res, next) => {
 
 
 app.get('/', (req, res) => {
+    // #swagger.ignore = true
     {
         res.send("hello world!")
     }
@@ -142,7 +146,7 @@ app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
 app.get('/users/:userId/myPage/bookMark', handlerGetScrapPost)
 
 // 프로필 사진 수정하기 API
-app.patch('/users/:userId/profile/modify', handlerPatchMyProfile)
+app.patch('/users/:userId/profile/modify', imageUploader.single('photo') ,handlerPatchMyProfile)
 
 // PPT 파일 불러오기 API
 app.get('/template/view', handlerGetTempleteView)

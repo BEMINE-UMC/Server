@@ -86,7 +86,6 @@ export const createUserPostScrap = async (userId, postId) => {
 
 };
 
-
 // 최근 본 게시물 테이블에서 게시물 ID 조회
 export const getRecentPosts = async (userId)=>{
     const posts = await prisma.recentViewPost.findMany({
