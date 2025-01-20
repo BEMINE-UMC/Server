@@ -33,6 +33,13 @@ export const responseFromTemplateAndLike = (templateViewInfo) => {
     };
 };
 
+// 템플릿 삭제 전 DTO (controller->service)
+export const templateToDelete = (template) => {
+    return {
+        templateId: parseInt(template.templateId),
+    };
+};
+
 // 템플릿 삭제 후 DTO (service->controller)
 export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);

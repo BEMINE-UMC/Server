@@ -198,7 +198,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         console.log("\n템플릿 전체 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const deletedTemplate = await templateDeletion(req.params.templateId);
+        const deletedTemplate = await templateDeletion(templateToDelete(req.params));
         res.status(StatusCodes.OK).success(deletedTemplate);
     } catch (error) {
         next(error);
