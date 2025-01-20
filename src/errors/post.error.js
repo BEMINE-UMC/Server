@@ -1,3 +1,4 @@
+//이미 좋아요를 누른 게시물인 경우
 export class alreadyExistPostLike extends Error {
     errorCode = "P030";
   
@@ -9,6 +10,7 @@ export class alreadyExistPostLike extends Error {
     }
 }
 
+//존재하지 않는 사용자인 경우
 export class NonExistUserError extends Error {
     errorCode = "P031";
     constructor(reason, data) {
@@ -19,6 +21,7 @@ export class NonExistUserError extends Error {
     }
 }
 
+//이미 스크랩을 누른 게시물인 경우
 export class alreadyExistPostScrap extends Error {
     errorCode = "P032";
   

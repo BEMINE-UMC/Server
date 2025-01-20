@@ -289,11 +289,14 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
     }
 }
 
+// 템플릿 좋아요 생성
 export const handlerCreateTemplateLike = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 좋아요 API';
-    #swagger.tags = ['Post']
+    #swagger.tags = ['Template']
     #swagger.description = '템플릿 좋아요 하는 API입니다.'
+    
+
     #swagger.responses[200] = {
         description: "템플릿 좋아요 성공 응답",
         content: {
