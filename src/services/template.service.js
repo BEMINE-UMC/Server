@@ -1,8 +1,7 @@
 import { NotExsistsUserError } from '../errors/user.error.js';
-import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike } from "../dtos/template.dto.js";
+import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, deleteTemplate } from "../repositories/template.repository.js";
-
+import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getFullTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
 // 템플릿 전체 불러오기 
 export const fullTemplateLoad = async (templateId) => { 
@@ -66,4 +65,8 @@ export const templateDeletion = async (templateId) => {
     return responseFromTemplateDeletion(templateInfo);
 }
 
-
+//인기많은 템플릿 정보
+export const getPopularTemplates = async () => {
+    const templates = await findPopularTemplates();
+    return responsePopularTemplates(templates);
+};
