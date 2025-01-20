@@ -2,21 +2,18 @@ import {
     createdPostLikedDTO,
     createdPostScrapedDTO,
     responseFromRecentPost,
-    responseFromScrapPost
+    responseFromScrapPost,
+    responseFromSearchedPost
 } from "../dtos/post.dto.js";
 import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
     NonExistUserError,
+    NotFoundSearchedPost,
     NotRecentPostsErrors, NotScrapPostsErrors
 } from "../errors/post.error.js";
-import {
-    createUserPostLike,
-    createUserPostScrap,
-    getRecentPosts,
-    getScrapPosts
-} from "../repositories/post.repository.js";
+import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts} from "../repositories/post.repository.js";
 import { getUserOtherPost } from "../repositories/post.repository.js";
 
 //사용자 게시물 좋아요 누르기
@@ -87,6 +84,16 @@ export const RecentViewPosts = async(data) =>{
     }))
 
     return responseFromRecentPost(userId, posts);
+}
+
+//게시물 검색하기
+export const getSearchedPostsList = async(word) => {
+    const listPost = await getSearchPosts(word);
+    
+    if(listPost.length==0)
+        throw new NotFoundSearchedPost('검색된 게시물이 없습니다.', data)
+
+    return responseFromSearchedPost(listPost);
 }
 
 // 스크랩한 게시물 조회

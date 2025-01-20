@@ -1,5 +1,5 @@
 export class alreadyExistPostLike extends Error {
-    errorCode = "P041";
+    errorCode = "P030";
   
     constructor(reason,data) {
       super(reason);
@@ -10,7 +10,7 @@ export class alreadyExistPostLike extends Error {
 }
 
 export class NonExistUserError extends Error {
-    errorCode = "P042";
+    errorCode = "P031";
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
@@ -20,7 +20,7 @@ export class NonExistUserError extends Error {
 }
 
 export class alreadyExistPostScrap extends Error {
-    errorCode = "P043";
+    errorCode = "P032";
   
     constructor(reason,data) {
       super(reason);
@@ -57,5 +57,19 @@ export class NotScrapPostsErrors extends Error {
         this.data = {
             userId: data.userId
         }
+    }
+}
+
+//검색한 내용의 게시물이 없을 경우
+export class NotFoundSearchedPost extends Error {
+    errorCode = "P033"
+
+    constructor(reason,data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = {
+            SearchWord: data.SearchWord
+        };
     }
 }

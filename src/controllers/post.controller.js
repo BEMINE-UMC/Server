@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import {createUserLike, createUserScrap, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
+import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
 import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 
@@ -543,7 +543,7 @@ export const handlerPostSearch = async (req,res) => {
         in: 'query',
         required: true,
         description: '검색 키워드',
-        schema: { type: 'string', example: 'Title' }
+        schema: { searchWord: 'itle' }
     }
     #swagger.responses[200] = {
         description: "게시물 검색 성공 응답",
@@ -608,7 +608,10 @@ export const handlerPostSearch = async (req,res) => {
         }
     }
     */
+  console.log(req.query)
+  const listOfPost = await getSearchedPostsList(req.query.searchWord);
 
+  res.status(StatusCodes.OK).success(listOfPost);
 }
 
 //내가 쓴 게시물 조회 하기

@@ -106,6 +106,19 @@ export const getRecentPosts = async (userId)=>{
     return posts;
 }
 
+//게시물 제목 검색 조회
+export const getSearchPosts = async  (words)=> {
+    const posts = await prisma.post.findMany({
+        where:{
+            title:{
+                contains: words
+            },
+        },
+    });
+
+    return posts;
+}
+
 // 스크랩한 게시물 조회
 export const getScrapPosts = async (data)=>{
     const posts = await prisma.scrapPost.findMany({

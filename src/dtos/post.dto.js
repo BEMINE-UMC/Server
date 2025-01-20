@@ -51,3 +51,11 @@ export const responseFromScrapPost = (userId,data) =>{
     post: data
   }
 }
+
+//검색 된 게시물 조회 응답 DTO
+export const responseFromSearchedPost = (posts) => {
+  return{
+    data: posts
+  }
+  
+}
