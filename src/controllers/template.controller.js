@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { fullTemplateLoad, templateDeletion , singleTemplateView , getPopularTemplates} from "../services/template.service.js";
-
+import { fullTemplateLoad, templateDeletion , templateFileInfo , getPopularTemplates} from "../services/template.service.js";
+import { templateToFileInfo } from "../dtos/template.dto.js";
 
 // 템플릿 전체 불러오기 요청
 export const handleFullTemplateLoad = async (req, res, next) => {
@@ -352,14 +352,14 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
     */
 }
 
-// 템플릿 단일 조회 요청
-export const handleViewTemplate = async (req, res, next) => {
+// 템플릿 파일 요청
+export const handleGetTemplateFile = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 단일 조회 API';
+    #swagger.summary = '템플릿 파일 조회 API';
     #swagger.tags = ['Get']
-    #swagger.description = '템플릿 단일 조회 API입니다.'
+    #swagger.description = '템플릿 파일 조회 API입니다.'
     #swagger.responses[200] = {
-        description: "템플릿 단일 조회 성공 응답",
+        description: "템플릿 파일 조회 성공 응답",
         content: {
             "application/json": {
                 schema: {
@@ -386,7 +386,7 @@ export const handleViewTemplate = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 단일 조회 실패 응답",
+        description: "템플릿 파일 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {
@@ -414,9 +414,9 @@ export const handleViewTemplate = async (req, res, next) => {
     }
     */
     try {
-        console.log("\n템플릿 단일 조회를 요청했습니다!");
+        console.log("\n템플릿 파일 조회를 요청했습니다!");
 
-        const singleTemplate = await singleTemplateView(req.params.userId, req.params.templateId);
+        const singleTemplate = await templateFileInfo(templateToFileInfo(req.params));
         res.status(StatusCodes.OK).success(singleTemplate);
     } catch (error) {
         next(error);

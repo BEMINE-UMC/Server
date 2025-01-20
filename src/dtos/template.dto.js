@@ -15,11 +15,19 @@ export const responseFromTemplate = (templateInfo) => {
     };
 };
 
+// 템플릿 파일 조회 DTO (controller->service)
+export const templateToFileInfo = (template)=>{
+    return{
+        userId: parseInt(template.userId),
+        templateId: parseInt(template.templateId),
+    }
+  }
 
-// 템플릿 단일 조회 DTO (service->controller)
+// 템플릿 파일 조회 DTO (service->controller)
 export const responseFromTemplateAndLike = (templateViewInfo) => {
     return {
         filePDF: templateViewInfo.file_pdf,
+        filePPT: templateViewInfo.file_ppt,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,
     };

@@ -42,7 +42,7 @@ export const getFullTemplateInfo = async (templateId) => {
 };
 
 // 템플릿 단일 조회하기 (정보 얻기)
-export const getTemplateViewInfo = async (userId, templateId) => {
+export const getTemplateFileInfo = async (userId, templateId) => {
   const conn = await pool.getConnection();
   try {
     /* PDF파일과 파일 저장 유무값을 불러오기 */

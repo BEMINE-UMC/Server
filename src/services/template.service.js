@@ -1,7 +1,7 @@
 import { NotExsistsUserError } from '../errors/user.error.js';
 import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getFullTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getFullTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
 // 템플릿 전체 불러오기 
 export const fullTemplateLoad = async (templateId) => { 
@@ -21,26 +21,26 @@ export const fullTemplateLoad = async (templateId) => {
 }
 
 
-// 템플릿 단일 조회하기 
-export const singleTemplateView = async (userId, templateId) => {
+// 템플릿 파일 조회하기 
+export const templateFileInfo = async (data) => {
     const numericUserId = parseInt(userId);
     const numericTemplateId = parseInt(templateId);
 
-    if (isNaN(numericUserId) || numericUserId <= 0) {
-        throw new NotExsistsUserError("유효하지 않은 userId 입니다.", numericUserId);
+    if (isNaN(data.userId) || data.userId <= 0) {
+        throw new NotExsistsUserError("유효하지 않은 userId 입니다.", data.userId);
     }
 
-    const templateExistence = await checkTemplateExists(numericTemplateId); 
+    const templateExistence = await checkTemplateExists(data.templateId); 
     if (!templateExistence) { // templateExistence이 null일 때 (=템플릿이 존재하지 않을 때)
-        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : numericTemplateId }); 
+        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : data.templateId }); 
     }
 
-    const templateViewInfo = await getTemplateViewInfo(numericUserId, numericTemplateId);
+    const templateViewInfo = await getTemplateFileInfo(data.userId, data.templateId);
     if (!templateViewInfo) { // templateViewInfo가 null일 때 (= userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때)
-        throw new NonexistentTemplateLike("Template에 대한 좋아요 여부 정보가 없습니다.",  { requestedUserId: numericUserId, requestedTemplateId : numericTemplateId });
+        throw new NonexistentTemplateLike("Template에 대한 좋아요 여부 정보가 없습니다.",  { requestedUserId: data.userId, requestedTemplateId : data.templateId });
     }
 
-    return responseFromTemplateAndLike(templateViewInfo);
+    return responseFromTemplateAndLike(templateViewInfo); // 여기부터 수정!!
 }
 
   // 템플릿 삭제하기 
