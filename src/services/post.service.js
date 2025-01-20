@@ -8,7 +8,6 @@ import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
-    NonExistUserError,
     NotRecentPostsErrors, NotScrapPostsErrors
 } from "../errors/post.error.js";
 import {
@@ -46,12 +45,7 @@ export const getOtherPost = async (userId) => {
         userOtherPosts.splice(3); // 첫 3개만 유지
     }
 
-     if (userOtherPosts === null || userOtherPosts.length === 0) {
-        throw new NonExistUserError("존재하지 않는 사용자입니다.", { requestedUserId: userId });
-    }
-
      return userOtherPosts.map(createdGetOtherPostDTO);
-
 };
 
 //사용자 게시물 스크랩 누르기
