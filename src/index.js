@@ -126,7 +126,7 @@ app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
 app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrap);
 
 //게시물 검색 API
-app.get('/api/v1/posts/search',handlerPostSearch);
+app.get('/posts/search',handlerPostSearch);
 
 //이메일 인증 API
 app.get('/users/checkEmail', handlecheckEmail);
