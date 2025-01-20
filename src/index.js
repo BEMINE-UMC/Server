@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,  } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch, handelPostDelete,getPostDetail } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
@@ -184,7 +184,13 @@ app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
 
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 
+// 게시글 삭제
+app.patch('/posts/:postId', authenticateJWT,handelPostDelete);
 
+//게시글 상세조회
+app.get('/posts/:postId',authenticateJWT,getPostDetail);
+
+//게시글 상세 조회회
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {
