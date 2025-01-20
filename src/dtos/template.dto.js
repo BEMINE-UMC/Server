@@ -22,7 +22,7 @@ export const responseFromTemplateAndLike = (templateViewInfo) => {
         filePDF: templateViewInfo.file_pdf,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,
-
+          
 // 템플릿 삭제 후 DTO (service->controller)
 export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
