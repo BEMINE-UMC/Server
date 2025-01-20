@@ -8,7 +8,7 @@ import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.c
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
+import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
     getPortfolioPostDetail,
@@ -146,8 +146,8 @@ app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/posts/other', authenticateJWT, handleOtherPost);
 
-// 템플릿 전체 불러오기 API (템플릿 올리기 화면)
-app.get('/templates/:templateId', handleFullTemplateLoad);
+// 템플릿 상세 정보 조회 API (템플릿 올리기 화면)
+app.get('/templates/:templateId', handleDetailTemplateInfoLoad);
 
 //작성한 게시물 조회 API
 app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)

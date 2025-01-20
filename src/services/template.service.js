@@ -1,23 +1,22 @@
 import { NotExsistsUserError } from '../errors/user.error.js';
-import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
+import { responseFromDetailInfo, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getFullTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
-// 템플릿 전체 불러오기 
-export const fullTemplateLoad = async (templateId) => { 
-    const numericTemplateId = parseInt(templateId);
-    if (isNaN(numericTemplateId) || numericTemplateId <= 0) {
-        throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : numericTemplateId });
+// 템플릿 상세 정보 불러오기 
+export const detailTemplateInfoLoad = async (data) => { 
+    if (isNaN(data.templateId) || data.templateId <= 0) {
+        throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : data.templateId });
     }
     
-    const templateExistence = await checkTemplateExists(numericUserId, numericTemplateId); 
+    const templateExistence = await checkTemplateExists(data.templateId); 
     if (!templateExistence) { // templateExistence이 null일 때 (=템플릿이 존재하지 않을 때)
-        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : numericTemplateId }); 
+        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : data.templateId }); 
     }
 
-    // !! getFullTemplateInfo 수정해서 처리하기!!
+    const templateInfo = await getDetailTemplateInfo(data.templateId);
 
-    return responseFromTemplate(templateInfo);
+    return responseFromDetailInfo(templateInfo);
 }
 
 
