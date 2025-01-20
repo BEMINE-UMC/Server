@@ -618,7 +618,7 @@ export const handlerPostSearch = async (req,res) => {
 export const handlerGetUserPost = async (req,res) => {
     /* 
     #swagger.summary = '작성한 게시물 조회 API';
-    #swagger.tags = ['Get']
+    #swagger.tags = ['POST']
     #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
     #swagger.responses[200] = {
         description: "작성한 게시물 조회 성공 응답",
