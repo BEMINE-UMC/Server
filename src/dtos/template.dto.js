@@ -33,3 +33,13 @@ export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
         inactiveDate,
     };
 };
+
+// 메인 - 템플릿 인기순 출력 API 
+// 좋아요 수를 포함시키는 것이 좋을 수 있습니다
+export const responsePopularTemplates = (templates) => {
+    return templates.map(template => ({
+        id: template.id,
+        title: template.title,
+        thumbnail: template.thumbnail
+    }));
+};
