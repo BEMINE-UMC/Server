@@ -21,13 +21,11 @@ export const checkTemplateExists = async (templateId) => {
   }
 };
 
-// 템플릿 전체 불러오기 (정보 얻기)
-// ! 프론트에게 보낼 내용만 조회하게 수정하기
-export const getFullTemplateInfo = async (templateId) => { 
+// 템플릿 상세 정보 불러오기 (정보 얻기)
+export const getDetailTemplateInfo = async (templateId) => { 
     const conn = await pool.getConnection();
 
     try {
-      // 이후에 filePDF 제외시켜서 프론트에게 보낼 예정 (createdAt, updatedAt도 템플릿 수정/생성 API 개발 테스트 후에 제외시킬 예정)
       const [templates] = await conn.query(`SELECT * FROM template WHERE id = ?;`, templateId); 
 
       return templates[0];

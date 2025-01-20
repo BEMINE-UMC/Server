@@ -3,12 +3,12 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,  } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch, handelPostDelete,getPostDetail } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
+import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
     getPortfolioPostDetail,
@@ -146,8 +146,8 @@ app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/posts/other', authenticateJWT, handleOtherPost);
 
-// 템플릿 전체 불러오기 API (템플릿 올리기 화면)
-app.get('/templates/:templateId', handleFullTemplateLoad);
+// 템플릿 상세 정보 조회 API (템플릿 올리기 화면)
+app.get('/templates/:templateId', handleDetailTemplateInfoLoad);
 
 //작성한 게시물 조회 API
 app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
@@ -184,7 +184,13 @@ app.get('/users/templates/:templateId/view', authenticateJWT, handleGetTemplateF
 
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 
+// 게시글 삭제
+app.patch('/posts/:postId', authenticateJWT,handelPostDelete);
 
+//게시글 상세조회
+app.get('/posts/:postId',authenticateJWT,getPostDetail);
+
+//게시글 상세 조회회
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {

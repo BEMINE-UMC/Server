@@ -1,15 +1,15 @@
 import { StatusCodes } from "http-status-codes";
-import { fullTemplateLoad, templateDeletion , templateFileInfo , getPopularTemplates} from "../services/template.service.js";
-import { templateToFileInfo } from "../dtos/template.dto.js";
+import { detailTemplateInfoLoad, templateDeletion , singleTemplateView , getPopularTemplates} from "../services/template.service.js";
+import { templateToDetailInfo } from "../dtos/template.dto.js";
 
-// 템플릿 전체 불러오기 요청
-export const handleFullTemplateLoad = async (req, res, next) => {
+// 템플릿 상세 정보 불러오기 요청
+export const handleDetailTemplateInfoLoad = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 전체 불러오기 API';
+    #swagger.summary = '템플릿 상세 정보 조회 API';
     #swagger.tags = ['Get']
-    #swagger.description = '템플릿 전체를 불러오는 API입니다.'
+    #swagger.description = '템플릿의 상세 정보를 조회하는 API입니다. (템플릿 올리기 화면의 기능)'
     #swagger.responses[200] = {
-        description: "템플릿 전체 불러오기 성공 응답",
+        description: "템플릿 상세 정보 조회 성공 응답",
         content: {
             "application/json": {
                 schema: {
@@ -36,7 +36,7 @@ export const handleFullTemplateLoad = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 전체 불러오기 실패 응답",
+        description: "템플릿 상세 정보 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {
@@ -64,10 +64,10 @@ export const handleFullTemplateLoad = async (req, res, next) => {
     }
     */
     try {
-        console.log("\n템플릿 전체 불러오기를 요청했습니다!");
+        console.log("\n템플릿 상세 정보 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const template = await fullTemplateLoad(req.params.templateId);
+        const template = await detailTemplateInfoLoad(templateToDetailInfo(req.params));
         res.status(StatusCodes.OK).success(template);
     } catch (error) {
         next(error);
@@ -198,7 +198,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         console.log("\n템플릿 전체 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const deletedTemplate = await templateDeletion(req.params.templateId);
+        const deletedTemplate = await templateDeletion(templateToDelete(req.params));
         res.status(StatusCodes.OK).success(deletedTemplate);
     } catch (error) {
         next(error);

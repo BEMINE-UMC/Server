@@ -1,5 +1,12 @@
-// 템플릿 전체 불러오기 DTO (service->controller)
-export const responseFromTemplate = (templateInfo) => {
+// 템플릿 상세 정보 조회 DTO (controller->service)
+export const templateToDetailInfo = (template)=>{
+    return{
+      templateId: parseInt(template.templateId),
+    }
+  }
+
+// 템플릿 상세 정보 조회 DTO (service->controller)
+export const responseFromDetailInfo = (templateInfo) => {
     const createdAt = new Date(templateInfo.created_at);
     const updatedAt = new Date(templateInfo.updated_at);
 
@@ -7,7 +14,8 @@ export const responseFromTemplate = (templateInfo) => {
         templateId: templateInfo.id || "",
         userId: templateInfo.user_id || "",
         title: templateInfo.title || "",
-        file: templateInfo.file,
+        filePPT: templateInfo.file_ppt,
+        filePDF: templateInfo.file_ppt,
         fileShareState: templateInfo.file_share_state || "",
         thumbnail: templateInfo.thumbnail,
         createdAt,
@@ -30,6 +38,13 @@ export const responseFromTemplateAndLike = (templateViewInfo) => {
         filePPT: templateViewInfo.file_ppt,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,
+    };
+};
+
+// 템플릿 삭제 전 DTO (controller->service)
+export const templateToDelete = (template) => {
+    return {
+        templateId: parseInt(template.templateId),
     };
 };
 
