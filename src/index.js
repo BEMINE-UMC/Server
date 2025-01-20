@@ -120,10 +120,10 @@ app.get('/api/templates/popular',handlePopularTemplates);
 app.get('/posts', handleViewAllPosts);
 
 //게시물 좋아요 누르기 API
-app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
+app.post('/posts/:postId/likes', authenticateJWT, handlerPostLike);
 
 //게시물 스크랩 누르기 API
-app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrap);
+app.post('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
 
 //게시물 검색 API
 app.get('/posts/search',handlerPostSearch);
@@ -150,7 +150,7 @@ app.get('/users/posts/other', authenticateJWT, handleOtherPost);
 app.get('/templates/:templateId', handleFullTemplateLoad);
 
 //작성한 게시물 조회 API
-app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
+app.get('/mypage/posts',authenticateJWT, handlerGetUserPost)
 
 // 최근 본 게시물 조회 API
 app.get('/myPage/recentPost',authenticateJWT, handlerGetRecentPost)
@@ -165,7 +165,7 @@ app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
-app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
+app.post('/templates/:templateId/like',authenticateJWT, handlerCreateTemplateLike)
 
 app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
 

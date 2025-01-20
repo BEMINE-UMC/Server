@@ -7,13 +7,20 @@ import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 export const handlerPostLike = async (req, res, next) => {
     console.log("게시물 좋아요 누르기 요청");
     
-    const likedPost = await createUserLike(req.params.userId,req.params.postId);
+    const likedPost = await createUserLike(req.user.userId,req.params.postId);
 
     res.status(StatusCodes.OK).success(likedPost);
  /* 
     #swagger.summary = '게시물 좋아요 API'
     #swagger.tags = ['Post']
     #swagger.description = '게시물 좋아요 누르는 API입니다.'
+    #swagger.parameters['Authorization'] = {
+    in: 'header',
+    description: 'Bearer 토큰을 입력해주세요',
+    required: true,
+    type: 'string',
+    example: 'Bearer <your_token_here>'
+    }
     
     #swagger.responses[200] = {
         description: "게시물 좋아요 성공 응답",
@@ -505,6 +512,13 @@ export const handlerPostScrap = async (req,res) => {
     #swagger.summary = '게시물 스크랩 API'
     #swagger.tags = ['Post']
     #swagger.description = '게시물 스크랩 누르는 API입니다.'
+    #swagger.parameters['Authorization'] = {
+    in: 'header',
+    description: 'Bearer 토큰을 입력해주세요',
+    required: true,
+    type: 'string',
+    example: 'Bearer <your_token_here>'
+    }    
     
     #swagger.responses[200] = {
         description: "게시물 스크랩 성공 응답",
@@ -562,7 +576,7 @@ export const handlerPostScrap = async (req,res) => {
     */
     console.log("게시물 스크랩을 요청하였습니다.");
 
-    const scrapedPost = await createUserScrap(req.params.userId,req.params.postId);
+    const scrapedPost = await createUserScrap(req.user.userId,req.params.postId);
 
     res.status(StatusCodes.OK).success(scrapedPost);
   }
@@ -571,7 +585,7 @@ export const handlerPostScrap = async (req,res) => {
 export const handlerPostSearch = async (req,res) => {
     /* 
     #swagger.summary = '게시물 검색 API';
-    #swagger.tags = ['Get']
+    #swagger.tags = ['Post']
     #swagger.description = '게시물을 검색하는 API입니다.'
     #swagger.parameters['query'] = {
         in: 'query',
@@ -652,8 +666,15 @@ export const handlerPostSearch = async (req,res) => {
 export const handlerGetUserPost = async (req,res) => {
     /* 
     #swagger.summary = '작성한 게시물 조회 API';
-    #swagger.tags = ['POST']
+    #swagger.tags = ['User']
     #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
+    #swagger.parameters['Authorization'] = {
+    in: 'header',
+    description: 'Bearer 토큰을 입력해주세요',
+    required: true,
+    type: 'string',
+    example: 'Bearer <your_token_here>'
+    }
     #swagger.responses[200] = {
         description: "작성한 게시물 조회 성공 응답",
         content: {
