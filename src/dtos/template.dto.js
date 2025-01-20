@@ -24,6 +24,7 @@ export const responseFromTemplateAndLike = (templateViewInfo) => {
         fileLikeStatus: templateViewInfo.like_status,
     };
 };
+
 // 템플릿 삭제 후 DTO (service->controller)
 export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);

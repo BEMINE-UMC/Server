@@ -3,7 +3,6 @@ import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplat
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
 import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getFullTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
-
 // 템플릿 전체 불러오기 
 export const fullTemplateLoad = async (templateId) => { 
     const numericTemplateId = parseInt(templateId);
