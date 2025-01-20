@@ -1,11 +1,11 @@
 import { NotExsistsUserError } from '../errors/user.error.js';
 import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getFullTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
-// 템플릿 전체 불러오기 
-export const fullTemplateLoad = async (templateId) => { 
-    const numericTemplateId = parseInt(templateId);
+// 템플릿 상세 정보 불러오기 
+export const detailTemplateInfoLoad = async (templateId) => { 
+    const numericTemplateId = parseInt(templateId); // !! 이거 DTO에서 하기
     if (isNaN(numericTemplateId) || numericTemplateId <= 0) {
         throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : numericTemplateId });
     }
@@ -15,7 +15,7 @@ export const fullTemplateLoad = async (templateId) => {
         throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : numericTemplateId }); 
     }
 
-    // !! getFullTemplateInfo 수정해서 처리하기!!
+    // !! getDetailTemplateInfo 수정해서 처리하기!!
 
     return responseFromTemplate(templateInfo);
 }
