@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { fullTemplateLoad, templateDeletion , singleTemplateView} from "../services/template.service.js";
+import { fullTemplateLoad, templateDeletion , singleTemplateView , getPopularTemplates} from "../services/template.service.js";
 
 
 // 템플릿 전체 불러오기 요청
@@ -422,3 +422,86 @@ export const handleViewTemplate = async (req, res, next) => {
         next(error);
     }
 }
+
+
+// 인기 템플릿 조회회
+export const handlePopularTemplates = async (req, res, next) => {
+    try {
+        // #swagger.tags = ['Template']
+        // #swagger.summary = '인기 템플릿 목록 조회'
+        // #swagger.description = '홈 화면 상단에 표시될 인기 템플릿 목록을 조회합니다. 좋아요 수가 많은 순으로 정렬되며, 좋아요 수가 동일한 경우 최신순으로 정렬됩니다.'
+
+        /* #swagger.responses[200] = {
+            description: "조회 성공 (데이터가 있는 경우)",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "SUCCESS" },
+                            error: { type: "null", example: null },
+                            success: {
+                                type: "array",
+                                items: {
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "integer", example: 1 },
+                                        title: { type: "string", example: "2024 마케팅 트렌드 분석" },
+                                        thumbnail: { type: "string", example: "thumbnail_url.jpg" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } */
+
+        /* #swagger.responses[200] = {
+            description: "조회 성공 (데이터가 없는 경우)",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "SUCCESS" },
+                            error: { type: "null", example: null },
+                            success: {
+                                type: "array",
+                                example: []
+                            }
+                        }
+                    }
+                }
+            }
+        } */
+
+        /* #swagger.responses[500] = {
+            description: "서버 오류 (데이터베이스 연결 실패 등)",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "FAIL" },
+                            error: {
+                                type: "object",
+                                properties: {
+                                    errorCode: { type: "string", example: "T25" },
+                                    reason: { type: "string", example: "데이터베이스 연결에 실패했습니다." },
+                                    data: { type: "null", example: null }
+                                }
+                            },
+                            success: { type: "null", example: null }
+                        }
+                    }
+                }
+            }
+        } */
+
+        const templates = await getPopularTemplates();
+        res.success(templates);
+    } catch (error) {
+        next(error);
+    }
+};

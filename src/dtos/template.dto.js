@@ -22,7 +22,8 @@ export const responseFromTemplateAndLike = (templateViewInfo) => {
         filePDF: templateViewInfo.file_pdf,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,
-
+    };
+};
 // 템플릿 삭제 후 DTO (service->controller)
 export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
@@ -31,4 +32,14 @@ export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
         status: deletedTemplateInfo.status,
         inactiveDate,
     };
+};
+
+// 메인 - 템플릿 인기순 출력 API 
+// 좋아요 수를 포함시키는 것이 좋을 수 있습니다
+export const responsePopularTemplates = (templates) => {
+    return templates.map(template => ({
+        id: template.id,
+        title: template.title,
+        thumbnail: template.thumbnail
+    }));
 };

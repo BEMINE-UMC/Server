@@ -104,3 +104,28 @@ export const deleteTemplate = async (templateId) => {
   }
 };
 
+export const findPopularTemplates = async () => {
+  const conn = await pool.getConnection();
+  try {
+      const query = `
+          SELECT 
+              t.id,
+              t.title,
+              t.thumbnail,
+              COUNT(CASE WHEN lt.status = true THEN 1 END) as like_count
+          FROM template t
+          LEFT JOIN liked_template lt ON t.id = lt.template_id
+          WHERE t.status = 'active'
+          GROUP BY t.id, t.title, t.thumbnail
+          ORDER BY like_count DESC, t.created_at DESC
+          LIMIT 12
+      `;
+
+      const [templates] = await conn.query(query);
+      return templates;
+  } catch (error) {
+    throw new DatabaseConnectionError(error.message);  // 데이터베이스 연결 오류만 처리
+}finally {
+      conn.release();
+  }
+};
