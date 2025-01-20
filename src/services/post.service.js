@@ -17,6 +17,8 @@ import {
     getScrapPosts
 } from "../repositories/post.repository.js";
 import { getUserOtherPost } from "../repositories/post.repository.js";
+import {getUserInfo} from "../repositories/user.repository.js";
+import {NotExsistsUserError} from "../errors/user.error.js";
 
 //사용자 게시물 좋아요 누르기
 export const createUserLike = async (userId, postId) => {
@@ -71,8 +73,11 @@ export const RecentViewPosts = async(data) =>{
     const recentPosts = await getRecentPosts(data.userId);
     const userId = data.userId
 
-    if (recentPosts.length === 0)
-        throw new NotRecentPostsErrors('해당 유저가 최근 본 게시물이 없습니다.', data)
+    const confirm = await getUserInfo(data);
+
+    // 존재하는 사용자인지 검사
+    if(confirm === null)
+        throw new NotExsistsUserError("유저가 존재하지 않음", data.userId)
 
 
     const posts = recentPosts.map(item=>({
@@ -88,8 +93,11 @@ export const ScrapPosts = async (data) =>{
     const scrapPosts = await getScrapPosts(data);
     const userId = data.userId
 
-    if (scrapPosts.length === 0)
-        throw new NotScrapPostsErrors('해당 유저가 스크랩한 게시물이 없습니다.', data)
+    const confirm = await getUserInfo(data);
+
+    // 존재하는 사용자인지 검사
+    if(confirm === null)
+        throw new NotExsistsUserError("유저가 존재하지 않음", data.userId)
 
     const posts = scrapPosts.map(item=>({
         postId: item.post.id,

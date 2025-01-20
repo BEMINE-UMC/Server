@@ -1,7 +1,7 @@
 import { NotExsistsUserError } from '../errors/user.error.js';
 import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateInfo, deleteTemplate, getFullTemplateInfo } from "../repositories/template.repository.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
+import { checkTemplateExists, deleteTemplate } from "../repositories/template.repository.js";
 
 
 // 템플릿 전체 불러오기 
