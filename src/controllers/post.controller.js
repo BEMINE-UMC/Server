@@ -715,3 +715,141 @@ export const handlerGetUserPost = async (req,res) => {
     */
 
 }
+export const handelPostDelete = async (req, res) => {
+  /* 
+  #swagger.summary = '게시글 삭제 API';
+  #swagger.tags = ['Post']
+  #swagger.description = '게시글의 상태를 inactive로 변경하는 API입니다.'
+  #swagger.parameters['postId'] = {
+      in: 'path',
+      required: true,
+      description: '삭제할 게시물의 ID',
+      schema: { type: 'number' }
+  }
+  #swagger.responses[200] = {
+      description: "게시글 삭제(상태 변경) 성공 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "SUCCESS" },
+                      error: { type: "object", nullable: true, example: null },
+                      success: { type: "object", nullable: true, example: null }
+                  }
+              }
+          }
+      }
+  }
+  #swagger.responses[400] = {
+      description: "게시글 삭제 실패 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "FAIL" },
+                      error: {
+                          type: "object",
+                          properties: {
+                              errorCode: { type: "string", example: "P041" },
+                              reason: { type: "string", example: "게시물 삭제에 실패했습니다." },
+                              data: {}
+                          }
+                      },
+                      success: { type: "object", nullable: true, example: null }
+                  }
+              }
+          }
+      }
+  }
+  */
+
+  const { postId } = req.params;
+
+  // 상태를 inactive로 변경하는 로직
+  await updatePostStatus(postId, 'inactive');
+
+  res.status(StatusCodes.OK).json({
+      resultType: "SUCCESS",
+      error: null,
+      success: null
+  });
+}
+export const getPostDetail = async (req, res) => {
+  /* 
+  #swagger.summary = '게시글 상세조회 API';
+  #swagger.tags = ['Post']
+  #swagger.description = '게시글의 상세 정보를 조회하는 API입니다.'
+  #swagger.parameters['postId'] = {
+      in: 'path',
+      required: true,
+      description: '상세조회할 게시물의 ID',
+      schema: { type: 'number' }
+  }
+  #swagger.responses[200] = {
+      description: "게시글 상세조회 성공 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "SUCCESS" },
+                      error: { type: "object", nullable: true, example: null },
+                      success: {
+                          type: "object",
+                          properties: {
+                              title: { type: "string", example: "게시글 제목" },
+                              createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                              liked: { type: "boolean", example: true },
+                              body: { type: "string", example: "게시글 내용" }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+  #swagger.responses[400] = {
+      description: "게시글 상세조회 실패 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "FAIL" },
+                      error: {
+                          type: "object",
+                          properties: {
+                              errorCode: { type: "string", example: "P012" },
+                              reason: { type: "string", example: "게시물 상세조회에 실패했습니다." },
+                              data: {}
+                          }
+                      },
+                      success: { type: "object", nullable: true, example: null }
+                  }
+              }
+          }
+      }
+  }
+  */
+
+  const { postId } = req.params;
+
+  // 게시글 상세조회 로직
+  const postDetail = await getPostById(postId); // 게시글을 ID로 조회하는 함수
+
+  // 'liked' 여부를 확인하는 로직 (예: 사용자가 좋아요를 눌렀는지 확인)
+  const liked = await checkIfPostLikedByUser(postId, req.user.id);
+
+  res.status(StatusCodes.OK).json({
+      resultType: "SUCCESS",
+      error: null,
+      success: {
+          title: postDetail.title,
+          createdAt: postDetail.createdAt,
+          liked: liked,
+          body: postDetail.body
+      }
+  });
+}
