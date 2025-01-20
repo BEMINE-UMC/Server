@@ -185,10 +185,10 @@ app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 
 // 게시글 삭제
-app.patch('/api/posts/:postId', authenticateJWT,handelPostDelete);
+app.patch('/posts/:postId', authenticateJWT,handelPostDelete);
 
 //게시글 상세조회
-app.get('/api/posts/:postId',authenticateJWT,getPostDetail);
+app.get('/posts/:postId',authenticateJWT,getPostDetail);
 
 //게시글 상세 조회회
 /****************전역 오류를 처리하기 위한 미들웨어*******************/

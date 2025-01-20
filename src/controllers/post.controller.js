@@ -718,7 +718,7 @@ export const handlerGetUserPost = async (req,res) => {
 export const handelPostDelete = async (req, res) => {
   /* 
   #swagger.summary = '게시글 삭제 API';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시글의 상태를 inactive로 변경하는 API입니다.'
   #swagger.parameters['postId'] = {
       in: 'path',
@@ -779,7 +779,7 @@ export const handelPostDelete = async (req, res) => {
 export const getPostDetail = async (req, res) => {
   /* 
   #swagger.summary = '게시글 상세조회 API';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시글의 상세 정보를 조회하는 API입니다.'
   #swagger.parameters['postId'] = {
       in: 'path',
