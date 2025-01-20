@@ -1,3 +1,10 @@
+// 템플릿 상세 정보 조회 DTO (controller->service)
+export const templateToDetailInfo = (template)=>{
+    return{
+      templateId: parseInt(template.templateId),
+    }
+  }
+
 // 템플릿 전체 불러오기 DTO (service->controller)
 export const responseFromTemplate = (templateInfo) => {
     const createdAt = new Date(templateInfo.created_at);
