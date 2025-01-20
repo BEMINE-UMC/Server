@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { detailTemplateInfoLoad, templateDeletion , singleTemplateView , getPopularTemplates} from "../services/template.service.js";
+import { templateToDetailInfo } from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
@@ -66,7 +67,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
         console.log("\n템플릿 상세 정보 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const template = await detailTemplateInfoLoad(req.params.templateId);
+        const template = await detailTemplateInfoLoad(templateToDetailInfo(req.params));
         res.status(StatusCodes.OK).success(template);
     } catch (error) {
         next(error);
