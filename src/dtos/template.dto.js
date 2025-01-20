@@ -16,10 +16,10 @@ export const responseFromTemplate = (templateInfo) => {
 };
 
 // 템플릿 파일 조회 DTO (controller->service)
-export const templateToFileInfo = (template)=>{
+export const templateToFileInfo = (user, params)=>{
     return{
-        userId: parseInt(template.userId),
-        templateId: parseInt(template.templateId),
+        userId: parseInt(user.userId),
+        templateId: parseInt(params.templateId),
     }
   }
 

@@ -180,7 +180,7 @@ app.patch('/templates/:templateId', handleTemplateDelete);
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 // 템플릿 파일 조회 API
-app.get('/users/:userId/templates/:templateId/view', handleGetTemplateFile);
+app.get('/users/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 
