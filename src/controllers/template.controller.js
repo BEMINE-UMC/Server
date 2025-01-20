@@ -295,13 +295,7 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
     #swagger.summary = '템플릿 좋아요 API';
     #swagger.tags = ['Template']
     #swagger.description = '템플릿 좋아요 하는 API입니다.'
-    #swagger.parameters['Authorization'] = {
-    in: 'header',
-    description: 'Bearer 토큰을 입력해주세요',
-    required: true,
-    type: 'string',
-    example: 'Bearer <your_token_here>'
-    }
+    
 
     #swagger.responses[200] = {
         description: "템플릿 좋아요 성공 응답",

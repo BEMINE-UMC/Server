@@ -14,14 +14,7 @@ export const handlerPostLike = async (req, res, next) => {
     #swagger.summary = '게시물 좋아요 API'
     #swagger.tags = ['Post']
     #swagger.description = '게시물 좋아요 누르는 API입니다.'
-    #swagger.parameters['Authorization'] = {
-    in: 'header',
-    description: 'Bearer 토큰을 입력해주세요',
-    required: true,
-    type: 'string',
-    example: 'Bearer <your_token_here>'
-    }
-    
+   
     #swagger.responses[200] = {
         description: "게시물 좋아요 성공 응답",
         content: {
@@ -512,13 +505,7 @@ export const handlerPostScrap = async (req,res) => {
     #swagger.summary = '게시물 스크랩 API'
     #swagger.tags = ['Post']
     #swagger.description = '게시물 스크랩 누르는 API입니다.'
-    #swagger.parameters['Authorization'] = {
-    in: 'header',
-    description: 'Bearer 토큰을 입력해주세요',
-    required: true,
-    type: 'string',
-    example: 'Bearer <your_token_here>'
-    }    
+    
     
     #swagger.responses[200] = {
         description: "게시물 스크랩 성공 응답",
@@ -668,13 +655,7 @@ export const handlerGetUserPost = async (req,res) => {
     #swagger.summary = '작성한 게시물 조회 API';
     #swagger.tags = ['User']
     #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
-    #swagger.parameters['Authorization'] = {
-    in: 'header',
-    description: 'Bearer 토큰을 입력해주세요',
-    required: true,
-    type: 'string',
-    example: 'Bearer <your_token_here>'
-    }
+    
     #swagger.responses[200] = {
         description: "작성한 게시물 조회 성공 응답",
         content: {
