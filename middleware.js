@@ -82,3 +82,12 @@ export const deleteImage = async (key) => {
     throw err;
   }
 };
+
+const optionalImageUpload = (req, res, next) => {
+  // 이미지 필드가 존재할 때만 이미지 업로드 미들웨어 실행
+  if (req.files || req.file || (req.body && req.body.image)) {
+      return imageUploader.single('image')(req, res, next);
+  }
+  // 이미지가 없으면 다음 미들웨어로 진행
+  return next();
+};

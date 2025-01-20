@@ -73,3 +73,22 @@ export class NotFoundSearchedPost extends Error {
         };
     }
 }
+// 제목 누락 에러러
+export class TitleRequiredError extends Error {
+    errorCode = "P041";
+    constructor(reason = "제목을 입력해주세요.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
+
+// 내용 누락 에러
+export class ContentRequiredError extends Error {
+    errorCode = "P042";
+    constructor(reason = "내용을 입력해주세요.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}

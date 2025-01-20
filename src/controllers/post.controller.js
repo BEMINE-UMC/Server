@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
+import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts , createNewPost} from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
 import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 
@@ -715,3 +715,80 @@ export const handlerGetUserPost = async (req,res) => {
     */
 
 }
+
+export const createPost = async (req, res, next) => {
+  try {
+      // #swagger.tags = ['Post']
+      // #swagger.summary = '게시글 작성'
+      // #swagger.description = '새로운 게시글을 작성합니다. 이미지가 포함된 경우 자동으로 업로드됩니다.'
+      
+      /* #swagger.requestBody = {
+          required: true,
+          content: {
+              "multipart/form-data": {
+                  schema: {
+                      type: "object",
+                      properties: {
+                          title: {
+                              type: "string",
+                              description: "게시글 제목"
+                          },
+                          body: {
+                              type: "string",
+                              description: "게시글 내용 (HTML 형식)"
+                          },
+                          categoryId: {
+                              type: "integer",
+                              description: "카테고리 ID"
+                          },
+                          image: {
+                              type: "file",
+                              description: "이미지 파일 (선택사항)"
+                          }
+                      },
+                      required: ["title", "body", "categoryId"]
+                  }
+              }
+          }
+      } */
+
+      /* #swagger.responses[201] = {
+          description: '게시글 작성 성공',
+          content: {
+              'application/json': {
+                  schema: {
+                      type: 'object',
+                      properties: {
+                          resultType: { type: 'string', example: 'SUCCESS' },
+                          error: { type: 'null', example: null },
+                          success: {
+                              type: 'object',
+                              properties: {
+                                  message: { type: 'string', example: '게시글이 작성되었습니다.' }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      } */
+
+      const { title, body, categoryId } = req.body;
+      const userId = req.user.id;  // JWT 토큰에서 추출된 사용자 ID
+      const imageUrl = req.file?.location;  // 이미지가 업로드된 경우의 URL
+
+      await createNewPost({
+          userId,
+          title,
+          body,
+          categoryId,
+          thumbnail: imageUrl
+      });
+
+      res.status(StatusCodes.CREATED).success({ 
+          message: "게시글이 작성되었습니다." 
+      });
+  } catch (error) {
+      next(error);
+  }
+};

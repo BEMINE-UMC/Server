@@ -3,22 +3,16 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,  } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch, createPost } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { 
-    getPortfolioPostDetail,
-    createPortfolioPost,
-    updatePortfolioPost,
-    deletePortfolioPost
-} from './controllers/portfolio.post.controller.js';
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
-import { imageUploader } from "../middleware.js";
+import { imageUploader , optionalImageUpload } from "../middleware.js";
 
 dotenv.config();
 
@@ -167,12 +161,6 @@ app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, han
 //템플릿 좋아요 누르기 API
 app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
 
-app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
-
-app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글 수정
-
-app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
-
 // 템플릿 삭제 API
 app.patch('/templates/:templateId', handleTemplateDelete);
 
@@ -182,7 +170,9 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 // 템플릿 단일 조회 API
 app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
 
-app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
+//게시글 작성 API 
+app.post('/api/posts/write', authenticateJWT,optionalImageUpload, createPost );
+
 
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/

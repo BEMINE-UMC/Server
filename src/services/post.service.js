@@ -11,10 +11,10 @@ import {
     alreadyExistPostScrap,
     NonExistUserError,
     NotFoundSearchedPost,
-    NotRecentPostsErrors, NotScrapPostsErrors
+    NotRecentPostsErrors, NotScrapPostsErrors ,  ContentRequiredError ,TitleRequiredError
 } from "../errors/post.error.js";
 import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts} from "../repositories/post.repository.js";
-import { getUserOtherPost } from "../repositories/post.repository.js";
+import { getUserOtherPost , createPost} from "../repositories/post.repository.js";
 import {getUserInfo} from "../repositories/user.repository.js";
 import {NotExsistsUserError} from "../errors/user.error.js";
 
@@ -114,3 +114,27 @@ export const ScrapPosts = async (data) =>{
 
     return responseFromScrapPost(userId, posts);
 }
+export const createNewPost = async (postData) => {
+    if (!postData.title?.trim()) {
+        throw new TitleRequiredError();
+    }
+
+    if (!postData.body?.trim()) {
+        throw new ContentRequiredError();
+    }
+
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+
+        const createdPost = await createPost(conn, postData);
+        
+        await conn.commit();
+        return createdPost;
+    } catch (error) {
+        await conn.rollback();
+        throw error;
+    } finally {
+        conn.release();
+    }
+};

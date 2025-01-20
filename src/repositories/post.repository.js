@@ -138,3 +138,28 @@ export const getScrapPosts = async (data)=>{
     })
     return posts;
 }
+
+export const createPost = async (conn, postData) => {
+    const query = `
+        INSERT INTO post (
+            user_id,
+            category_id,
+            title,
+            body,
+            thumbnail,
+            status,
+            created_at
+        ) VALUES (?, ?, ?, ?, ?, 'active', NOW())
+    `;
+    
+    const params = [
+        postData.userId,
+        postData.categoryId,
+        postData.title,
+        postData.body,
+        postData.thumbnail || null
+    ];
+
+    const [result] = await conn.query(query, params);
+    return result.insertId;
+};
