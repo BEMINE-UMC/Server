@@ -3,11 +3,10 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { getPopularTemplates } from './controllers/popular.template.controller.js';
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,  } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
-import {handlerCreateTemplateLike, handlerGetTempleteView} from "./controllers/template.controller.js";
+import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
@@ -17,10 +16,9 @@ import {
     updatePortfolioPost,
     deletePortfolioPost
 } from './controllers/portfolio.post.controller.js';
-
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
+import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
-
-import { handleSignUp, handleLogin, handlecheckEmail } from "./controllers/auth.controller.js";
 
 dotenv.config();
 
@@ -101,7 +99,7 @@ app.get('/', (req, res) => {
 });
 
 //메인페이지 좋아요 많은순 템플릿 출력
-app.get('/api/templates/popular',getPopularTemplates);
+app.get('/api/templates/popular',handlePopularTemplates);
 
 // 게시물 전체 조회 API
 app.get('/posts', handleViewAllPosts);
@@ -122,13 +120,16 @@ app.get('/users/checkEmail', handlecheckEmail);
 app.post('/users/signup', handleSignUp);
 
 //로그인 API
-app.get('/users/login', handleLogin);
+app.post('/users/login', handleLogin);
+
+// Access Token 재발급 API (Refresh Token 활용)
+app.post('/users/refresh', handleTokenRefresh);
 
 // 사용자 연혁 조회 API
 app.get('/users/:userId/myHistory', handlerGetUserHistory);
 
 //사용자가 작성한 다른 게시물 불러오기 API
-app.get('/users/:userId/posts', handleOtherPost);
+app.get('/users/posts/other', authenticateJWT, handleOtherPost);
 
 // 템플릿 전체 불러오기 API (템플릿 올리기 화면)
 app.get('/templates/:templateId', handleFullTemplateLoad);

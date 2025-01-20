@@ -37,3 +37,13 @@ export class NullStatusTemplateError extends Error {
         this.data = data;
     }
 }
+
+//DB 연결 오류 
+
+export class DatabaseConnectionError extends Error {
+    errorCode = "T40";
+    constructor(reason = "데이터베이스 연결에 실패했습니다.") {
+        super(reason);
+        this.reason = reason;
+    }
+}
