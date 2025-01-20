@@ -77,7 +77,7 @@ export const handleOtherPost = async (req, res, next) => {
 
     /*
      #swagger.summary = '사용자가 작성한 다른 게시물 조회 API';
-     #swagger.tags = ['Get']
+     #swagger.tags = ['POST']
      #swagger.parameters['userId'] = {
        in: 'path',
        description: '유저 ID',
@@ -128,7 +128,7 @@ export const handleOtherPost = async (req, res, next) => {
                error: {
                  type: "object",
                  properties: {
-                   errorCode: { type: "string", example: "P002" },
+                   errorCode: { type: "string", example: "P042" },
                    reason: { type: "string", example: "존재하지 않는 사용자입니다." },
                    data: {
                      type: "object",
@@ -435,7 +435,7 @@ export const handleGetPostLiked = async (req, res) => {
     
 /*
       #swagger.summary = '좋아요 누른 게시물 조회 API';
-      #swagger.tags = ['Get']
+      #swagger.tags = ['POST']
 
       #swagger.responses[200] = {
         description: "좋아요 누른 게시물 조회 성공 응답",
