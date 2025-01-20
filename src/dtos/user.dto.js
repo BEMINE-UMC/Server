@@ -4,9 +4,9 @@
 import {NotFileAllowedError} from "../errors/user.error.js";
 import {deleteImage} from "../../middleware.js";
 
-export const userToHistory = (params) =>{
+export const userToHistory = (user) =>{
     return{
-        userId: parseInt(params.userId)
+        userId: parseInt(user.userId)
     }
 }
 
@@ -19,7 +19,7 @@ export const responseFromHistory = (data) =>{
 }
 
 // 유저 프로필 수정 요청 DTO
-export const userToProfile = (params, file) =>{
+export const userToProfile = (user, file) =>{
     // const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".gif"];
     // const key = file.key
     // console.log(key)
@@ -29,9 +29,8 @@ export const userToProfile = (params, file) =>{
     //     const a = deleteImage(`https://bemine-s3.s3.ap-northeast-2.amazonaws.com/${file.key}`)
     //     throw new NotFileAllowedError('이미지 파일을 올려주세요', allowedExtensions)
     // }
-
     return{
-        userId: parseInt(params.userId),
+        userId: parseInt(user.userId),
         photo: `https://bemine-s3.s3.ap-northeast-2.amazonaws.com/${file.key}`
     }
 }

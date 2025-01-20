@@ -6,19 +6,16 @@ import {userHistory, userProfileModify} from "../services/user.service.js";
 // 연혁 조회 요청
 export const handlerGetUserHistory = async (req, res) => {
     console.log("연혁 조회 요청");
-
-    const history = await userHistory(userToHistory(req.params));
+    const history = await userHistory(userToHistory(req.user));
 
     res.status(StatusCodes.OK).success(history);
     /*
-  #swagger.summary = '사용자 연혁 조회 API';
-  #swagger.tags = ['Get']
-  #swagger.parameters['userId'] = {
-    in: 'path',
-    description: '유저 ID',
-    required: true,
-    type: 'integer'
-  }
+  #swagger.summary = '사용자 연혁 조회 API'
+  #swagger.tags = ['User']
+
+  #swagger.security = [{
+    "bearerAuth": []
+  }]
 
   #swagger.responses[200] = {
     description: "사용자 연혁 조회 성공 응답",
@@ -42,13 +39,7 @@ export const handlerGetUserHistory = async (req, res) => {
                       title: { type: "string", example: "학력 및 전공" },
                       body: { type: "string", example: "어쩌고 저쩌고" }
                     }
-                  },
-                 example: [
-                  { num: 1, title: "학력 및 전공", body: "전공: 미디어커뮤니케이션 학과... " },
-                  { num: 2, title: "주요 경험", body: "인턴십: 스타트업 A사 6개월일함..." },
-                  { num: 3, title: "기타 활동", body: "개인프로젝트: 커피브랜드 C사..." },
-                  { num: 4, title: "주요 역할 및 성과", body: "마케팅 툴: Google Analytics, Facebook Ads Manger..." }
-                ]
+                  }
                 }
               }
             }
@@ -56,7 +47,7 @@ export const handlerGetUserHistory = async (req, res) => {
         }
       }
     }
-  };
+  }
 
   #swagger.responses[400] = {
     description: "사용자 연혁 조회 실패 응답",
@@ -84,8 +75,9 @@ export const handlerGetUserHistory = async (req, res) => {
         }
       }
     }
-  };
+  }
 */
+
 }
 
 
@@ -93,13 +85,7 @@ export const handlerGetUserHistory = async (req, res) => {
 export const handlerPatchMyProfile = async (req, res) => {
     /*
       #swagger.summary = '사용자 프로필 사진 수정 API';
-      #swagger.tags = ['Patch']
-      #swagger.parameters['userId'] = {
-        in: 'path',
-        description: '사용자 ID',
-        required: true,
-        type: 'integer',
-      }
+      #swagger.tags = ['User']
 
       #swagger.requestBody = {
         required: true,
@@ -170,6 +156,6 @@ export const handlerPatchMyProfile = async (req, res) => {
         }
       };
     */
-    const user = await userProfileModify(userToProfile(req.params,req.file))
+    const user = await userProfileModify(userToProfile(req.user,req.file))
     res.status(StatusCodes.OK).success(user)
 }
