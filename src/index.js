@@ -70,6 +70,7 @@ app.get("/openapi.json", async (req, res, next) => {
         openapi: "3.0.0",
         disableLogs: true,
         writeOutputFile: false,
+        autoHeaders: false
     };
     const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
     const routes = ["./src/index.js"];
@@ -84,6 +85,20 @@ app.get("/openapi.json", async (req, res, next) => {
             description: "BEMINE 프로젝트",
         },
         host: `${protocol}://${host}`,
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT", // JWT 형식 명시 (선택 사항)
+                },
+            },
+        },
+        security: [
+            {
+                bearerAuth: [], // 모든 API에 기본적으로 인증 적용
+            },
+        ],
     };
 
     const result = await swaggerAutogen(options)(outputFile, routes, doc);
@@ -111,7 +126,7 @@ app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
 app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrap);
 
 //게시물 검색 API
-app.get('/api/v1/posts/search',handlerPostSearch);
+app.get('/posts/search',handlerPostSearch);
 
 //이메일 인증 API
 app.get('/users/checkEmail', handlecheckEmail);
@@ -126,7 +141,7 @@ app.post('/users/login', handleLogin);
 app.post('/users/refresh', handleTokenRefresh);
 
 // 사용자 연혁 조회 API
-app.get('/users/:userId/myHistory', handlerGetUserHistory);
+app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
 
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/posts/other', authenticateJWT, handleOtherPost);
@@ -138,19 +153,16 @@ app.get('/templates/:templateId', handleFullTemplateLoad);
 app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
 
 // 최근 본 게시물 조회 API
-app.get('/users/:userId/myPage/recentPost', handlerGetRecentPost)
+app.get('/myPage/recentPost',authenticateJWT, handlerGetRecentPost)
 
 //좋아요 누른 게시물 조회 API
 app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
 
 // 북마크한 게시물 조회 API
-app.get('/users/:userId/myPage/bookMark', handlerGetScrapPost)
+app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 
 // 프로필 사진 수정하기 API
-app.patch('/users/:userId/profile/modify', imageUploader.single('photo') ,handlerPatchMyProfile)
-
-// PPT 파일 불러오기 API
-app.get('/template/view', handlerGetTempleteView)
+app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
 app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
