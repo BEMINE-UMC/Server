@@ -22,9 +22,9 @@ export const createdPostScrapedDTO = (scrapedPost) => {
 };
 
 // 최근 본 게시물 조회 요청DTO
-export const postToRecent = (params)=>{
+export const postToRecent = (user)=>{
   return{
-    userId: parseInt(params.userId),
+    userId: parseInt(user.userId),
   }
 }
 
@@ -38,9 +38,9 @@ export const responseFromRecentPost = (userId,data)=>{
 }
 
 // 북마크한 게시물 조회 요청 DTO
-export const postToScrap = (params) =>{
+export const postToScrap = (user) =>{
   return{
-    userId: parseInt(params.userId),
+    userId: parseInt(user.userId),
   }
 }
 

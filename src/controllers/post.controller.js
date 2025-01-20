@@ -161,12 +161,6 @@ export const handlerGetRecentPost = async (req, res) => {
     /*
       #swagger.summary = '최근 게시물 조회 API';
       #swagger.tags = ['POST']
-      #swagger.parameters['userId'] = {
-        in: 'path',
-        description: '유저 ID',
-        required: true,
-        type: 'integer',
-      }
 
       #swagger.responses[200] = {
         description: "사용자 최근 게시물 조회 성공 응답(값이 있을 때)",
@@ -254,7 +248,7 @@ export const handlerGetRecentPost = async (req, res) => {
         }
       };
     */
-    const posts = await RecentViewPosts(postToRecent(req.params))
+    const posts = await RecentViewPosts(postToRecent(req.user))
     res.status(StatusCodes.OK).success(posts)
 }
 
@@ -263,12 +257,7 @@ export const handlerGetScrapPost = async (req, res) => {
     /*
       #swagger.summary = '북마크 게시물 조회 API';
       #swagger.tags = ['POST']
-      #swagger.parameters['userId'] = {
-        in: 'path',
-        description: '유저 ID',
-        required: true,
-        type: 'integer',
-      }
+
     #swagger.responses[200] = {
         description: "사용자 북마크 게시물 조회 성공 응답(값이 있을 때)",
         content: {
@@ -355,7 +344,7 @@ export const handlerGetScrapPost = async (req, res) => {
         }
       };
 */
-    const posts = await ScrapPosts(postToScrap(req.params))
+    const posts = await ScrapPosts(postToScrap(req.user))
     res.status(StatusCodes.OK).success(posts)
 }
 
