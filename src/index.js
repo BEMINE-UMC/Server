@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,handelPostDelete,getPostDetail ,handlePostWrite } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,handelPostDelete,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
@@ -168,7 +168,7 @@ app.patch('/templates/:templateId', handleTemplateDelete);
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
 // 템플릿 파일 조회 API
-app.get('templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
+app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
 
 
