@@ -114,3 +114,8 @@ export const ScrapPosts = async (data) =>{
 
     return responseFromScrapPost(userId, posts);
 }
+
+// 게시물 전체 조회
+export const AllPostsView = async (data) => {
+    console.log(data);
+}

@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
+import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, AllPostsView} from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
-import {postToRecent, postToScrap} from "../dtos/post.dto.js";
+import {postToRecent, postToScrap, postToAllPosts} from "../dtos/post.dto.js";
 
 //게시물 좋아요 누르기
 export const handlerPostLike = async (req, res, next) => {
@@ -424,7 +424,12 @@ export const handleViewAllPosts = async (req, res, next) => {
     }
     */
     try {
-        
+      console.log("\n템플릿 상세 정보 불러오기를 요청했습니다!");
+      console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
+
+      // const template = await AllPostsView(postToAllPosts(req.user, req.query)); // -->이건 로그인 전용
+      
+      res.status(StatusCodes.OK).success(template);
     } catch (error) {
         next(error);
     }

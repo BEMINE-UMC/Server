@@ -59,3 +59,13 @@ export const responseFromSearchedPost = (posts) => {
   }
   
 }
+
+// 게시물 전체 조회 (controller->service)
+export const postToAllPosts = (user, data) =>{
+  return{
+    userId: parseInt(user.userId),
+    categoryId: parseInt(data.categoryId),
+    offset: parseInt(data.offset),
+    limit: parseInt(data.limit)
+  }
+}
