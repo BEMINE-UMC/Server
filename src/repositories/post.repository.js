@@ -188,3 +188,20 @@ export const updatePost = async (conn, postData) => {
     }
     return true;
 };
+
+//게시글 조회 
+export const getPostById = async (conn, postId) => {
+    const [posts] = await conn.query(
+        'SELECT id, title, body, created_at, updated_at FROM post WHERE id = ?',
+        [postId]
+    );
+    return posts[0];
+};
+//방문한 글의 좋아요를 사용자가 눌렀는지 판별별
+export const checkPostLiked = async (conn, userId, postId) => {
+    const [likes] = await conn.query(
+        'SELECT id FROM liked_post WHERE user_id = ? AND post_id = ? AND status = true',
+        [userId, postId]
+    );
+    return likes.length > 0;
+};
