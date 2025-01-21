@@ -165,7 +165,7 @@ app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
-app.post('/templates/:templateId/like',authenticateJWT, handlerCreateTemplateLike)
+app.post('/templates/:templateId/likes',authenticateJWT, handlerCreateTemplateLike)
 
 app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
 

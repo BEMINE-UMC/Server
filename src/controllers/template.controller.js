@@ -332,7 +332,7 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
                         error: {
                             type: "object",
                             properties: {
-                                errorCode: { type: "string", example: "T003" },
+                                errorCode: { type: "string", example: "T030" },
                                 reason: { type: "string", example: "이미 좋아요 누른 템플릿입니다." },
                                 data: {
                                     type: "object",
