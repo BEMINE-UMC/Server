@@ -1,7 +1,13 @@
 import { StatusCodes } from "http-status-codes";
-import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts ,  deletePost} from "../services/post.service.js";
+import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
+import { getOtherPost,getPostDetailWithLikeStatus } from "../services/post.service.js";
+import {postToRecent, postToScrap} from "../dtos/post.dto.js";
+import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost } from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
 import { postToRecent, postToScrap } from "../dtos/post.dto.js";
+import { imageUploader, deleteImage } from '../../middleware.js';
+
+
 
 //게시물 좋아요 누르기
 export const handlerPostLike = async (req, res, next) => {
@@ -352,8 +358,8 @@ export const handlerGetScrapPost = async (req, res) => {
 export const handleViewAllPosts = async (req, res, next) => {
   /* 
   #swagger.summary = '게시물 전체 조회 API';
-  #swagger.tags = ['Post']
-  #swagger.description = '메인페이지에서 모든 게시물을 조회하는 API입니다.'
+  #swagger.tags = ['Get']
+  #swagger.description = '게시물 전체 조회를 하는 API입니다.'
   #swagger.responses[200] = {
       description: "게시물 전체 조회 성공 응답",
       content: {
@@ -396,7 +402,9 @@ export const handleViewAllPosts = async (req, res, next) => {
       }
   }
   #swagger.responses[400] = {
-      description: "게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+
+      description: "게시물 전체 조회 실패 응답",
+
       content: {
           "application/json": {
               schema: {
@@ -406,7 +414,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                       error: {
                           type: "object",
                           properties: {
-                              errorCode: { type: "string", example: "P20" },
+                              errorCode: { type: "string", example: "P001" },
                               reason: { type: "string", example: "유효하지 않은 categoryId 입니다." },
                               data: {
                                   type: "object",
@@ -432,7 +440,8 @@ export const handleViewAllPosts = async (req, res, next) => {
 
 // 좋아요 누른 게시물 조회
 export const handleGetPostLiked = async (req, res) => {
-
+// 좋아요 누른 게시물 조회
+export const handleGetPostLiked = async (req, res) => {
   /*
         #swagger.summary = '좋아요 누른 게시물 조회 API';
         #swagger.tags = ['POST']
@@ -496,7 +505,6 @@ export const handleGetPostLiked = async (req, res) => {
           }
         };
   */
-
 }
 
 //게시물 스크랩 하기
@@ -567,7 +575,6 @@ export const handlerPostScrap = async (req, res) => {
 
   res.status(StatusCodes.OK).success(scrapedPost);
 }
-
 //게시물 검색하기
 export const handlerPostSearch = async (req, res) => {
   /* 
@@ -651,6 +658,72 @@ export const handlerPostSearch = async (req, res) => {
 
 //내가 쓴 게시물 조회 하기
 export const handlerGetUserPost = async (req, res) => {
+/* 
+  #swagger.summary = '작성한 게시물 조회 API';
+  #swagger.tags = ['User']
+  #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
+  
+  #swagger.responses[200] = {
+      description: "작성한 게시물 조회 성공 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "SUCCESS" },
+                      error: { type: "object", nullable: true, example: null },
+                      success: {
+                          type: "object",
+                          properties: {
+                              data: {
+                                  type: "array",
+                                  items: {
+                                      type: "object",
+                                      properties: {
+                                          postId: { type: "number", example: 1 },
+                                          userId: { type: "number", example: 1 },
+                                          categoryId: { type: "number", example: 1 },
+                                          title: { type: "string", example: "Title" },
+                                          body: { type: "string", example: "Body" },
+                                          picture: { type: "string", example: "url"},
+                                          createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                          updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+  #swagger.responses[400] = {
+      description: "작성한 게시물 조회 실패 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "FAIL" },
+                      error: {
+                          type: "object",
+                          properties: {
+                              errorCode: { type: "string", example: "P006" },
+                              reason: { type: "string", example: "사용자가 작성한 게시물이 없습니다." },
+                              data: {
+                              }
+                          }
+                      },
+                      success: { type: "object", nullable: true, example: null }
+                  }
+              }
+          }
+      }
+  }
+  */
+}
+export const handelPostDelete = async (req, res) => {
   /* 
   #swagger.summary = '작성한 게시물 조회 API';
   #swagger.tags = ['User']
@@ -774,6 +847,13 @@ export const handlePostDelete = async (req, res, next) => {
         }
     }
 }
+
+res.status(StatusCodes.OK).json({
+    resultType: "SUCCESS",
+    error: null,
+    success: null
+});
+}
 */
   try {
     const { postId } = req.params;
@@ -865,3 +945,172 @@ export const getPostDetail = async (req, res) => {
     }
   });
 }
+//게시글 작성/수정 컨트롤러
+export const handlePostWrite = async (req, res, next) => {
+  
+      /* 
+    #swagger.summary = '게시글 작성/수정 API'
+    #swagger.tags = ['POST']
+    #swagger.description = `
+        게시글을 작성하거나 수정합니다.
+        - postId가 있으면 수정, 없으면 새로 작성
+        - 이미지는 반드시 S3 URL이어야 함
+        - body에는 HTML 형식의 텍스트가 들어가며, img 태그로 이미지 포함 가능
+        - 썸네일은 선택 사항이며, 이미지가 있어도 썸네일로 지정하지 않을 수 있음
+    `
+
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    required: ["title", "body", "categoryId"],
+                    properties: {
+                        postId: {
+                            type: "integer",
+                            description: "게시글 ID (수정 시에만 필요)",
+                            example: 1
+                        },
+                        title: {
+                            type: "string",
+                            description: "게시글 제목 (필수)",
+                            example: "제목입니다"
+                        },
+                        body: {
+                            type: "string",
+                            description: "게시글 본문 - HTML 형식 (필수)",
+                            example: "<p>안녕하세요</p><img src='https://bemine-s3.s3.ap-northeast-2.amazonaws.com/bemine-images/example.jpg'><p>내용입니다</p>"
+                        },
+                        categoryId: {
+                            type: "integer",
+                            description: "카테고리 ID (필수)",
+                            example: 1
+                        },
+                        thumbnail: {
+                            type: "string",
+                            description: "썸네일 이미지 URL (선택)",
+                            example: "https://bemine-s3.s3.ap-northeast-2.amazonaws.com/bemine-images/thumbnail.jpg",
+                            nullable: true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #swagger.responses[201] = {
+        description: "게시글 작성/수정 성공",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "null", example: null },
+                        success: { 
+                            type: "object",
+                            properties: {
+                                message: { type: "string", example: "게시글이 작성되었습니다." }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #swagger.responses[400] = {
+        description: "요청 실패",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { 
+                                    type: "string",
+                                    description: "에러 코드",
+                                    example: "P041",
+                                    enum: ["P041", "P042", "P043", "P044", "P045"]
+                                },
+                                reason: { 
+                                    type: "string", 
+                                    description: "에러 메시지",
+                                    example: "제목을 입력해주세요."
+                                }
+                            }
+                        },
+                        success: { type: "null", example: null }
+                    }
+                },
+                examples: {
+                    "제목 누락": {
+                        value: {
+                            resultType: "FAIL",
+                            error: {
+                                errorCode: "P041",
+                                reason: "제목을 입력해주세요."
+                            },
+                            success: null
+                        }
+                    },
+                    "내용 누락": {
+                        value: {
+                            resultType: "FAIL",
+                            error: {
+                                errorCode: "P042",
+                                reason: "내용을 입력해주세요."
+                            },
+                            success: null
+                        }
+                    },
+                    "잘못된 이미지 형식": {
+                        value: {
+                            resultType: "FAIL",
+                            error: {
+                                errorCode: "P043",
+                                reason: "지원하지 않는 이미지 형식입니다."
+                            },
+                            success: null
+                        }
+                    },
+                    "이미지 크기 초과": {
+                        value: {
+                            resultType: "FAIL",
+                            error: {
+                                errorCode: "P044",
+                                reason: "이미지 크기는 5MB를 초과할 수 없습니다."
+                            },
+                            success: null
+                        }
+                    }
+                  
+                }
+            }
+        }
+    }
+    */
+    try {
+      const { postId, title, body, categoryId, thumbnail } = req.body;
+      const userId = req.user.userId;
+
+      await createOrUpdatePost({
+          postId,
+          userId,
+          title,
+          body,
+          categoryId,
+          thumbnail
+      });
+
+      res.status(StatusCodes.CREATED).success({
+          message: postId ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다."
+      });
+  } catch (error) {
+      next(error);
+  }
+};

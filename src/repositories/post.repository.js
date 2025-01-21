@@ -138,7 +138,6 @@ export const getScrapPosts = async (data)=>{
     })
     return posts;
 }
-
 //삭제를 위해 받아오는 값 (작성자 확인 , s3에 이미지 삭제)
 export const findPostForDelete = async (conn, postId) => {
     const [posts] = await conn.query(
@@ -148,10 +147,62 @@ export const findPostForDelete = async (conn, postId) => {
     return posts[0];
 };
 
+// 게시물 상태를 비활성화로 변경 (소프트 삭제)
 export const updatePostStatus = async (conn, postId) => {
     const [result] = await conn.query(
         'UPDATE post SET status = ?, inactive_date = NOW() WHERE id = ?',
         ['inactive', postId]
     );
     return result.affectedRows > 0;
+};
+
+//게시글 생성
+export const createPost = async (conn, postData) => {
+    const query = `
+        INSERT INTO post (
+            user_id, category_id, title, body, image, thumbnail,
+            status, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, 'active', NOW())
+    `;
+    
+    const params = [
+        postData.userId,
+        postData.categoryId,
+        postData.title,
+        postData.body,
+        postData.image || null,
+        postData.thumbnail || null
+    ];
+    const [result] = await conn.query(query, params);
+    return result.insertId;
+};
+
+// 게시글 수정
+export const updatePost = async (conn, postData) => {
+    const query = `
+        UPDATE post 
+        SET title = ?,
+            body = ?,
+            category_id = ?,
+            image = ?,
+            thumbnail = ?,
+            updated_at = NOW()
+        WHERE id = ? AND user_id = ?
+    `;
+    
+    const params = [
+        postData.title,
+        postData.body,
+        postData.categoryId,
+        postData.image || null,
+        postData.thumbnail || null,
+        postData.postId,
+        postData.userId
+    ];
+    const [result] = await conn.query(query, params);
+    if (result.affectedRows === 0) {
+        throw new Error('게시글을 찾을 수 없거나 수정 권한이 없습니다.');
+    }
+    return true;
+};
 };
