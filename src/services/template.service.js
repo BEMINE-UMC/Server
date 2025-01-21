@@ -1,7 +1,6 @@
-import { NotExsistsUserError } from '../errors/user.error.js';
-import { responseFromDetailInfo, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import { responseFromTemplate, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
@@ -20,26 +19,24 @@ export const detailTemplateInfoLoad = async (data) => {
 }
 
 
-// 템플릿 단일 조회하기 
-export const singleTemplateView = async (userId, templateId) => {
-    const numericUserId = parseInt(userId);
-    const numericTemplateId = parseInt(templateId);
-
-    if (isNaN(numericUserId) || numericUserId <= 0) {
-        throw new NotExsistsUserError("유효하지 않은 userId 입니다.", numericUserId);
+// 템플릿 파일 조회하기 
+export const templateFileInfo = async (data) => {
+    if (isNaN(data.templateId) || data.templateId <= 0) {
+        throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : data.templateId });
     }
-
-    const templateExistence = await checkTemplateExists(numericTemplateId); 
+    const templateExistence = await checkTemplateExists(data.templateId); 
     if (!templateExistence) { // templateExistence이 null일 때 (=템플릿이 존재하지 않을 때)
-        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : numericTemplateId }); 
+        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : data.templateId }); 
     }
 
-    const templateViewInfo = await getTemplateViewInfo(numericUserId, numericTemplateId);
-    if (!templateViewInfo) { // templateViewInfo가 null일 때 (= userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때)
-        throw new NonexistentTemplateLike("Template에 대한 좋아요 여부 정보가 없습니다.",  { requestedUserId: numericUserId, requestedTemplateId : numericTemplateId });
+    const templateViewInfo = await getTemplateFileInfo(data.userId, data.templateId);
+    if (templateViewInfo === 0) { // templateViewInfo가 0일 때 (= userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때)
+        throw new NonexistentTemplateLike("Template에 대한 좋아요 여부 정보가 없습니다.",  { requestedUserId: data.userId, requestedTemplateId : data.templateId });
+    } else if (templateViewInfo === null ) { // templateViewInfo가 null일 때 (= user가 templateId에 좋아요를 한 status null일 때)
+        throw new NullTemplateLike("Template 좋아요 status이 null입니다. null인 이유를 확인해주세요.", { requestedUserId: data.userId, requestedTemplateId : data.templateId });
     }
 
-    return responseFromTemplateAndLike(templateViewInfo);
+    return responseFromTemplateAndLike(templateViewInfo); // 여기부터 수정!!
 }
 
   // 템플릿 삭제하기 

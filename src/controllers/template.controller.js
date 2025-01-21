@@ -362,14 +362,14 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
     */
 }
 
-// 템플릿 단일 조회 요청
-export const handleViewTemplate = async (req, res, next) => {
+// 템플릿 파일 요청
+export const handleGetTemplateFile = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 단일 조회 API';
+    #swagger.summary = '템플릿 파일 조회 API';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿 단일 조회 API입니다.'
+    #swagger.description = '템플릿 파일 조회 API입니다.'
     #swagger.responses[200] = {
-        description: "템플릿 단일 조회 성공 응답. (추가적인 성공 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 파일 조회 성공 응답. (추가적인 성공 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -392,7 +392,7 @@ export const handleViewTemplate = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 단일 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 파일 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -420,9 +420,9 @@ export const handleViewTemplate = async (req, res, next) => {
     }
     */
     try {
-        console.log("\n템플릿 단일 조회를 요청했습니다!");
+        console.log("\n템플릿 파일 조회를 요청했습니다!");
 
-        const singleTemplate = await singleTemplateView(req.params.userId, req.params.templateId);
+        const singleTemplate = await templateFileInfo(templateToFileInfo(req.user, req.params));
         res.status(StatusCodes.OK).success(singleTemplate);
     } catch (error) {
         next(error);
