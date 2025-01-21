@@ -76,7 +76,18 @@ export class NotFoundSearchedPost extends Error {
         };
     }
 }
-// 제목 누락 에러러
+// 게시물 작성자가 아닌 경우의 에러
+export class NotPostAuthorError extends Error {
+    errorCode = "P047";
+    constructor(reason = "작성자가 아닙니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 403;
+        this.data = {};
+    }
+}
+
+// 제목 누락 에러
 export class TitleRequiredError extends Error {
     errorCode = "P041";
     constructor(reason = "제목을 입력해주세요.") {
@@ -95,6 +106,8 @@ export class ContentRequiredError extends Error {
         this.statusCode = 400;
     }
 }
+
+// 이미지 형식 관련 에러
 export class InvalidImageFormatError extends Error {
     errorCode = "P043";
     constructor(reason = "지원하지 않는 이미지 형식입니다.") {
@@ -104,6 +117,7 @@ export class InvalidImageFormatError extends Error {
     }
 }
 
+// 이미지 크기 초과 에러
 export class ImageSizeExceededError extends Error {
     errorCode = "P044";
     constructor(reason = "이미지 크기는 5MB를 초과할 수 없습니다.") {
