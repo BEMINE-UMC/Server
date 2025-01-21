@@ -205,4 +205,3 @@ export const updatePost = async (conn, postData) => {
     }
     return true;
 };
-};

@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates} from "../services/template.service.js";
-import { templateToDetailInfo } from "../dtos/template.dto.js";
+import { templateToDetailInfo, templateToFileInfo } from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
@@ -205,7 +205,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         console.log("\n템플릿 전체 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const deletedTemplate = await templateDeletion(templateToDelete(req.params));
+        const deletedTemplate = await templateDeletion(templateToDetailInfo(req.params));
         res.status(StatusCodes.OK).success(deletedTemplate);
     } catch (error) {
         next(error);
