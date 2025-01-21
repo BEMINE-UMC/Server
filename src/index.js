@@ -3,19 +3,13 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch, handelPostDelete,getPostDetail } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,handelPostDelete,getPostDetail ,handlePostWrite } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { 
-    getPortfolioPostDetail,
-    createPortfolioPost,
-    updatePortfolioPost,
-    deletePortfolioPost
-} from './controllers/portfolio.post.controller.js';
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
@@ -114,7 +108,7 @@ app.get('/', (req, res) => {
 });
 
 //메인페이지 좋아요 많은순 템플릿 출력
-app.get('/api/templates/popular',handlePopularTemplates);
+app.get('/templates/popular',handlePopularTemplates);
 
 // 게시물 전체 조회 API
 app.get('/posts', handleViewAllPosts);
@@ -165,13 +159,7 @@ app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
-app.post('/templates/:templateId/like',authenticateJWT, handlerCreateTemplateLike)
-
-app.post('/api/portfolio/posts', createPortfolioPost);              // 게시글 작성
-
-app.put('/api/portfolio/posts/:postId', updatePortfolioPost);       // 게시글 수정
-
-app.delete('/api/portfolio/posts/:postId', deletePortfolioPost);    // 게시글 삭제
+app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
 
 // 템플릿 삭제 API
 app.patch('/templates/:templateId', handleTemplateDelete);
@@ -182,7 +170,20 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 // 템플릿 파일 조회 API
 app.get('templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
-app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
+
+
+
+//게시글 작성 API 
+app.post('/posts/write', authenticateJWT, handlePostWrite );
+
+//게시글에 이미지 첨부 시 이미지 업로드 API 
+app.post('/posts/image/uploads', authenticateJWT, imageUploader.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'File upload failed' });
+    }
+    res.status(200).json({ imageUrl: req.file.location });
+});
+//게시글 이미지 업로드 API (분리)
 
 // 게시글 삭제
 app.patch('/posts/:postId', authenticateJWT,handelPostDelete);
