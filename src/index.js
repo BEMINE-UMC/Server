@@ -8,7 +8,7 @@ import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.c
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
-import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
+import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
     getPortfolioPostDetail,
@@ -179,8 +179,8 @@ app.patch('/templates/:templateId', handleTemplateDelete);
 // 템플릿 수정/생성 API
 app.put('/templates/:templateId', handleTemplateCreateAndModify);
 
-// 템플릿 단일 조회 API
-app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
+// 템플릿 파일 조회 API
+app.get('templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
 app.get('/api/portfolio/posts/:postId', getPortfolioPostDetail);    // 상세 조회
 

@@ -41,21 +41,25 @@ export const getDetailTemplateInfo = async (templateId) => {
 };
 
 // 템플릿 단일 조회하기 (정보 얻기)
-export const getTemplateViewInfo = async (userId, templateId) => {
+export const getTemplateFileInfo = async (userId, templateId) => {
   const conn = await pool.getConnection();
   try {
     /* PDF파일과 파일 저장 유무값을 불러오기 */
-    const [templateInfo] = await conn.query(`SELECT file_pdf, file_share_state FROM template WHERE id = ?;`, [templateId]);
+    const [templateInfo] = await conn.query(`SELECT file_pdf, file_ppt, file_share_state FROM template WHERE id = ?;`, [templateId]);
     /* 템플릿 좋아요 상태값을 불러오기 */
     const [templateLike] = await conn.query('SELECT status FROM liked_template WHERE user_id = ? AND template_id = ?', [userId, templateId]);
     if (templateLike.length === 0) { // 조회된 템플릿 좋아요 여부 데이터가 없다면
+      return 0;
+    } else if (templateLike[0].status === null ) {
       return null;
     }
+    
     /* PDF파일, 파일 저장 유무값, 템플릿 좋아요 상태값을 묶어서 반환 */
     return {
-      file_pdf: templateInfo[0].file_pdf, // PDF 파일 링크
-      file_share_state: templateInfo[0].file_share_state, // 파일 공유 상태
-      like_status: templateLike[0].status // 템플릿 좋아요 상태
+      file_pdf: templateInfo[0].file_pdf,
+      file_ppt: templateInfo[0].file_ppt,
+      file_share_state: templateInfo[0].file_share_state,
+      like_status: templateLike[0].status
     };
   } catch (err) {
     throw new Error (
