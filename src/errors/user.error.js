@@ -10,3 +10,15 @@ export class NotExsistsUserError extends Error {
         this.data = data;
     }
 }
+
+// 이미지 파일이 아닌경우(프로필 사진 수정)
+export class NotFileAllowedError extends Error {
+    errorCode = "U002";
+
+    constructor(reason,allowed) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 401;
+        this.allowed = allowed
+    }
+}
