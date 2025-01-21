@@ -186,7 +186,7 @@ app.post('/posts/image/uploads', authenticateJWT, imageUploader.single('image'),
 //게시글 이미지 업로드 API (분리)
 
 // 게시글 삭제
-app.patch('/posts/:postId', authenticateJWT,handelPostDelete);
+app.patch('/posts/:postId', authenticateJWT,handlePostDelete);
 
 //게시글 상세조회
 app.get('/posts/:postId',authenticateJWT,getPostDetail);

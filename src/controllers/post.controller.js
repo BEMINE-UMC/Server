@@ -8,6 +8,7 @@ import { postToRecent, postToScrap } from "../dtos/post.dto.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
+
 //게시물 좋아요 누르기
 export const handlerPostLike = async (req, res, next) => {
   console.log("게시물 좋아요 누르기 요청");
@@ -401,7 +402,9 @@ export const handleViewAllPosts = async (req, res, next) => {
       }
   }
   #swagger.responses[400] = {
+
       description: "게시물 전체 조회 실패 응답",
+
       content: {
           "application/json": {
               schema: {
@@ -437,7 +440,8 @@ export const handleViewAllPosts = async (req, res, next) => {
 
 // 좋아요 누른 게시물 조회
 export const handleGetPostLiked = async (req, res) => {
-
+// 좋아요 누른 게시물 조회
+export const handleGetPostLiked = async (req, res) => {
   /*
         #swagger.summary = '좋아요 누른 게시물 조회 API';
         #swagger.tags = ['POST']
@@ -445,13 +449,6 @@ export const handleGetPostLiked = async (req, res) => {
         #swagger.responses[200] = {
           description: "좋아요 누른 게시물 조회 성공 응답",
           content: {
-    /* 
-    #swagger.summary = '게시물 전체 조회 API';
-    #swagger.tags = ['Post']
-    #swagger.description = '메인페이지에서 모든 게시물을 조회하는 API입니다.'
-    #swagger.responses[200] = {
-        description: "게시물 전체 조회 성공 응답",
-        content: {
             "application/json": {
               schema: {
                 type: "object",
@@ -483,11 +480,6 @@ export const handleGetPostLiked = async (req, res) => {
         #swagger.responses[400] = {
           description: "좋아요 누른 게시물 조회 실패 응답",
           content: {
- 		}
-    }
-    #swagger.responses[400] = {
-        description: "게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
-        content: {
             "application/json": {
               schema: {
                 type: "object",
@@ -504,21 +496,6 @@ export const handleGetPostLiked = async (req, res) => {
                           requestedUserId: { type: "number", example: 1 }
                         }
                       }
-						resultType: { type: "string", example: "FAIL" },
-                        error: {
-                            type: "object",
-                            properties: {
-                                errorCode: { type: "string", example: "P20" },
-                                reason: { type: "string", example: "유효하지 않은 categoryId 입니다." },
-                                data: {
-                                    type: "object",
-                                    properties: {
-                                        requestedCategoryId: { type: "number", example: 0 }
-                                    }
-                                }
-                            }
-                        },
-                        success: { type: "object", nullable: true, example: null }
                     }
                   },
                   success: { type: "object", nullable: true, example: null }
@@ -528,7 +505,6 @@ export const handleGetPostLiked = async (req, res) => {
           }
         };
   */
-
 }
 
 //게시물 스크랩 하기
@@ -599,7 +575,6 @@ export const handlerPostScrap = async (req, res) => {
 
   res.status(StatusCodes.OK).success(scrapedPost);
 }
-
 //게시물 검색하기
 export const handlerPostSearch = async (req, res) => {
   /* 
@@ -683,6 +658,72 @@ export const handlerPostSearch = async (req, res) => {
 
 //내가 쓴 게시물 조회 하기
 export const handlerGetUserPost = async (req, res) => {
+/* 
+  #swagger.summary = '작성한 게시물 조회 API';
+  #swagger.tags = ['User']
+  #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
+  
+  #swagger.responses[200] = {
+      description: "작성한 게시물 조회 성공 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "SUCCESS" },
+                      error: { type: "object", nullable: true, example: null },
+                      success: {
+                          type: "object",
+                          properties: {
+                              data: {
+                                  type: "array",
+                                  items: {
+                                      type: "object",
+                                      properties: {
+                                          postId: { type: "number", example: 1 },
+                                          userId: { type: "number", example: 1 },
+                                          categoryId: { type: "number", example: 1 },
+                                          title: { type: "string", example: "Title" },
+                                          body: { type: "string", example: "Body" },
+                                          picture: { type: "string", example: "url"},
+                                          createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                          updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+  #swagger.responses[400] = {
+      description: "작성한 게시물 조회 실패 응답",
+      content: {
+          "application/json": {
+              schema: {
+                  type: "object",
+                  properties: {
+                      resultType: { type: "string", example: "FAIL" },
+                      error: {
+                          type: "object",
+                          properties: {
+                              errorCode: { type: "string", example: "P006" },
+                              reason: { type: "string", example: "사용자가 작성한 게시물이 없습니다." },
+                              data: {
+                              }
+                          }
+                      },
+                      success: { type: "object", nullable: true, example: null }
+                  }
+              }
+          }
+      }
+  }
+  */
+}
+export const handelPostDelete = async (req, res) => {
   /* 
   #swagger.summary = '작성한 게시물 조회 API';
   #swagger.tags = ['User']
@@ -749,67 +790,84 @@ export const handlerGetUserPost = async (req, res) => {
   */
 
 }
-export const handelPostDelete = async (req, res) => {
+//게시글 삭제 
+export const handlePostDelete = async (req, res, next) => {
   /* 
-  #swagger.summary = '게시글 삭제 API';
-  #swagger.tags = ['POST']
-  #swagger.description = '게시글의 상태를 inactive로 변경하는 API입니다.'
-  #swagger.parameters['postId'] = {
-      in: 'path',
-      required: true,
-      description: '삭제할 게시물의 ID',
-      schema: { type: 'number' }
-  }
-  #swagger.responses[200] = {
-      description: "게시글 삭제(상태 변경) 성공 응답",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "SUCCESS" },
-                      error: { type: "object", nullable: true, example: null },
-                      success: { type: "object", nullable: true, example: null }
-                  }
-              }
-          }
-      }
-  }
-  #swagger.responses[400] = {
-      description: "게시글 삭제 실패 응답",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "FAIL" },
-                      error: {
-                          type: "object",
-                          properties: {
-                              errorCode: { type: "string", example: "P041" },
-                              reason: { type: "string", example: "게시물 삭제에 실패했습니다." },
-                              data: {}
-                          }
-                      },
-                      success: { type: "object", nullable: true, example: null }
-                  }
-              }
-          }
-      }
-  }
-  */
+#swagger.summary = '게시글 삭제 API'
+#swagger.tags = ['POST']
+#swagger.description = '게시글을 삭제합니다 (상태를 inactive로 변경). 작성자만 삭제가 가능하며, 이미지가 있는 경우 S3에서도 삭제.'
 
-  const { postId } = req.params;
+#swagger.parameters['postId'] = {
+    in: 'path',
+    required: true,
+    type: 'integer',
+    description: '삭제할 게시글 ID'
+}
 
-  // 상태를 inactive로 변경하는 로직
-  await updatePostStatus(postId, 'inactive');
+#swagger.responses[200] = {
+    description: "게시글 삭제 성공",
+    content: {
+        "application/json": {
+            schema: {
+                type: "object",
+                properties: {
+                    resultType: { type: "string", example: "SUCCESS" },
+                    error: { type: "null", example: null },
+                    success: {
+                        type: "object",
+                        properties: {
+                            message: { type: "string", example: "게시글이 삭제되었습니다." }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-  res.status(StatusCodes.OK).json({
+#swagger.responses[403] = {
+    description: "삭제 권한 없음",
+    content: {
+        "application/json": {
+            schema: {
+                type: "object",
+                properties: {
+                    resultType: { type: "string", example: "FAIL" },
+                    error: {
+                        type: "object",
+                        properties: {
+                            errorCode: { type: "string", example: "P047" }, // 에러 코드 변경
+                            reason: { type: "string", example: "작성자가 아닙니다." }, // 에러 메시지 변경
+                            data: { type: "object", example: {} }
+                        }
+                    },
+                    success: { type: "null", example: null }
+                }
+            }
+        }
+    }
+}
+
+res.status(StatusCodes.OK).json({
     resultType: "SUCCESS",
     error: null,
     success: null
-  });
+});
 }
+*/
+  try {
+    const { postId } = req.params;
+    await deletePost(req.user.userId, postId);
+
+    res.status(StatusCodes.OK).success({
+      message: "게시글이 삭제되었습니다."
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// 게시글 상세조회
 export const getPostDetail = async (req, res) => {
   /* 
   #swagger.summary = '게시글 상세조회 API';
