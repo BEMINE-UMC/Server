@@ -97,7 +97,7 @@ export const getSearchedPostsList = async (word) => {
     const listPost = await getSearchPosts(word);
 
     if (listPost.length == 0)
-        throw new NotFoundSearchedPost('검색된 게시물이 없습니다.', data)
+        throw new NotFoundSearchedPost('검색된 게시물이 없습니다.', word)
 
     return responseFromSearchedPost(listPost);
 }
