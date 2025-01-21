@@ -138,3 +138,53 @@ export const getScrapPosts = async (data)=>{
     })
     return posts;
 }
+//게시글 생성
+export const createPost = async (conn, postData) => {
+    const query = `
+        INSERT INTO post (
+            user_id, category_id, title, body, image, thumbnail,
+            status, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, 'active', NOW())
+    `;
+    
+    const params = [
+        postData.userId,
+        postData.categoryId,
+        postData.title,
+        postData.body,
+        postData.image || null,
+        postData.thumbnail || null
+    ];
+
+    const [result] = await conn.query(query, params);
+    return result.insertId;
+};
+// 게시글 수정
+export const updatePost = async (conn, postData) => {
+    const query = `
+        UPDATE post 
+        SET title = ?,
+            body = ?,
+            category_id = ?,
+            image = ?,
+            thumbnail = ?,
+            updated_at = NOW()
+        WHERE id = ? AND user_id = ?
+    `;
+    
+    const params = [
+        postData.title,
+        postData.body,
+        postData.categoryId,
+        postData.image || null,
+        postData.thumbnail || null,
+        postData.postId,
+        postData.userId
+    ];
+
+    const [result] = await conn.query(query, params);
+    if (result.affectedRows === 0) {
+        throw new Error('게시글을 찾을 수 없거나 수정 권한이 없습니다.');
+    }
+    return true;
+};
