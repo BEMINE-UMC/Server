@@ -126,5 +126,3 @@ export class ImageSizeExceededError extends Error {
         this.statusCode = 400;
     }
 }
-    }
-}

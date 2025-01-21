@@ -1,10 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
-import { getOtherPost,getPostDetailWithLikeStatus } from "../services/post.service.js";
 import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost } from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
-import { postToRecent, postToScrap } from "../dtos/post.dto.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
@@ -438,8 +435,6 @@ export const handleViewAllPosts = async (req, res, next) => {
   }
 }
 
-// 좋아요 누른 게시물 조회
-export const handleGetPostLiked = async (req, res) => {
 // 좋아요 누른 게시물 조회
 export const handleGetPostLiked = async (req, res) => {
   /*
