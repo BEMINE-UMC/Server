@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { detailTemplateInfoLoad, templateDeletion , singleTemplateView , getPopularTemplates} from "../services/template.service.js";
+import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates} from "../services/template.service.js";
 import { templateToDetailInfo } from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
