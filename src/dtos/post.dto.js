@@ -59,3 +59,13 @@ export const responseFromSearchedPost = (posts) => {
   }
   
 }
+// 게시글 상세조회 DTO
+export const createPostDetailDTO = (post, isLiked) => {
+  return {
+      title: post.title,
+      body: post.body,
+      createdAt: post.created_at,
+      updatedAt: post.updated_at,
+      liked: isLiked
+  }
+};
