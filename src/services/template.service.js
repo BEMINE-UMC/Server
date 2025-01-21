@@ -1,8 +1,6 @@
-import { NotExsistsUserError } from '../errors/user.error.js';
-import { responseFromDetailInfo, responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromLikedTemplate } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, alreadyExistTemplateLike, NonexistentTemplateLike, NullTemplateLike } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateViewInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike } from "../repositories/template.repository.js";
-
+import {responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
@@ -66,21 +64,3 @@ export const getPopularTemplates = async () => {
     const templates = await findPopularTemplates();
     return responsePopularTemplates(templates);
 };
-
-//템플릿 좋아요 누르기
-export const createTemplateLike = async(userId,templateId) => {
-    const likedTemplate = await postTemplateLike(userId,templateId);
-
-    if (likedTemplate==null) {
-            throw new alreadyExistTemplateLike(
-                "User already liked this template",
-                {
-                  userId: userId,
-                  templateId: templateId,
-                }
-            );
-        }
-    
-        return responseFromLikedTemplate(likedTemplate);
-
-}
