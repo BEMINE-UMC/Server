@@ -352,8 +352,8 @@ export const handlerGetScrapPost = async (req, res) => {
 export const handleViewAllPosts = async (req, res, next) => {
     /* 
     #swagger.summary = '게시물 전체 조회 API';
-    #swagger.tags = ['Get']
-    #swagger.description = '게시물 전체 조회를 하는 API입니다.'
+    #swagger.tags = ['Post']
+    #swagger.description = '메인페이지에서 모든 게시물을 조회하는 API입니다.'
     #swagger.responses[200] = {
         description: "게시물 전체 조회 성공 응답",
         content: {
@@ -396,7 +396,7 @@ export const handleViewAllPosts = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "게시물 전체 조회 실패 응답",
+        description: "게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -406,7 +406,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                         error: {
                             type: "object",
                             properties: {
-                                errorCode: { type: "string", example: "P001" },
+                                errorCode: { type: "string", example: "P20" },
                                 reason: { type: "string", example: "유효하지 않은 categoryId 입니다." },
                                 data: {
                                     type: "object",

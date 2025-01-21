@@ -6,8 +6,11 @@ import { templateToDetailInfo } from "../dtos/template.dto.js";
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 상세 정보 조회 API';
-    #swagger.tags = ['Get']
+    #swagger.tags = ['Template']
     #swagger.description = '템플릿의 상세 정보를 조회하는 API입니다. (템플릿 올리기 화면의 기능)'
+    #swagger.security = [{
+        "bearerAuth": []
+    }]
     #swagger.responses[200] = {
         description: "템플릿 상세 정보 조회 성공 응답",
         content: {
@@ -23,7 +26,8 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
                                 templateId: { type: "number", example: 1 },
                                 userId: { type: "number", example: 1 },
                                 title: { type: "string", example: "Portfolio1 Template" },
-                                file: { type: "string", example: "https://example.com/files/template1.pptx" },
+                                filePPT: { type: "string", example: "https://example.com/files/template1.pptx" },
+                                filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
                                 fileShareState: { type: "string", example: "public" },
                                 thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg" },
                                 createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
@@ -36,7 +40,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 상세 정보 조회 실패 응답",
+        description: "템플릿 상세 정보 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -46,7 +50,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
                         error: {
                             type: "object",
                             properties: {
-                                errorCode: { type: "string", example: "T001" },
+                                errorCode: { type: "string", example: "T20" },
                                 reason: { type: "string", example: "유효하지 않은 templateId 입니다." },
                                 data: {
                                     type: "object",
@@ -143,8 +147,11 @@ export const handlerGetTempleteView = async (req, res) => {
 export const handleTemplateDelete = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 삭제 API';
-    #swagger.tags = ['Delete']
+    #swagger.tags = ['Template']
     #swagger.description = '템플릿을 삭제하는 API입니다.'
+    #swagger.security = [{
+        "bearerAuth": []
+    }]
     #swagger.responses[200] = {
         description: "템플릿 삭제 성공 응답",
         content: {
@@ -167,7 +174,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 삭제 실패 응답",
+        description: "템플릿 삭제 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -177,7 +184,7 @@ export const handleTemplateDelete = async (req, res, next) => {
                         error: {
                             type: "object",
                             properties: {
-                                errorCode: { type: "string", example: "T001" },
+                                errorCode: { type: "string", example: "T20" },
                                 reason: { type: "string", example: "유효하지 않은 templateId 입니다." },
                                 data: {
                                     type: "object",
@@ -359,13 +366,10 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
 export const handleGetTemplateFile = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 파일 조회 API';
-    #swagger.tags = ['Get']
+    #swagger.tags = ['Template']
     #swagger.description = '템플릿 파일 조회 API입니다.'
-    #swagger.security = [{
-        "bearerAuth": []
-    }]
     #swagger.responses[200] = {
-        description: "템플릿 파일 조회 성공 응답",
+        description: "템플릿 파일 조회 성공 응답. (추가적인 성공 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -376,14 +380,10 @@ export const handleGetTemplateFile = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
-                                templateId: { type: "number", example: 1 },
-                                userId: { type: "number", example: 1 },
-                                title: { type: "string", example: "Portfolio1 Template" },
-                                file: { type: "string", example: "https://example.com/files/template1.pptx" },
-                                fileShareState: { type: "string", example: "public" },
-                                thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg" },
-                                createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
+                                filePPT: { type: "string", example: "https://example.com/files/template1.pptx" },
+                                fileShareState: { type: "string", example: "저장 가능" },
+                                fileLikeStatus: { type: "boolean", example: true },
                             }
                         }
                     }
@@ -392,7 +392,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 파일 조회 실패 응답",
+        description: "템플릿 파일 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {
             "application/json": {
                 schema: {
@@ -402,7 +402,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
                         error: {
                             type: "object",
                             properties: {
-                                errorCode: { type: "string", example: "T001" },
+                                errorCode: { type: "string", example: "T20" },
                                 reason: { type: "string", example: "유효하지 않은 templateId 입니다." },
                                 data: {
                                     type: "object",
