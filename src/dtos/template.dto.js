@@ -59,3 +59,15 @@ export const responsePopularTemplates = (templates) => {
         thumbnail: template.thumbnail
     }));
 };
+
+// 좋아요 누른 템플릿 응답 DTO
+export const responseFromLikedTemplate = (likedTemplate) => {
+    return {
+        id: likedTemplate.id,
+        userId: likedTemplate.userId,
+        templateId: likedTemplate.templateId,
+        status: likedTemplate.status,
+        createdAt: likedTemplate.createdAt,
+        updatedAt: likedTemplate.updatedAt
+      }
+}

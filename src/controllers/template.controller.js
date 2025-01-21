@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { detailTemplateInfoLoad, templateDeletion , singleTemplateView , getPopularTemplates} from "../services/template.service.js";
+import { detailTemplateInfoLoad, templateDeletion , singleTemplateView , getPopularTemplates, createTemplateLike} from "../services/template.service.js";
 import { templateToDetailInfo } from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
@@ -309,14 +309,11 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
-                                templateId: { type: "number", example: 1 },
-                                userId: { type: "number", example: 1 },
-                                title: { type: "string", example: "Title" },
-                                file: { type: "string", example: "url" },
-                                fileShareState: { type: "string", example: "private" },
-                                thumbnail: { type: "string", example: "url" },
-                                createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                id: { type: "integer", example: 1 },
+                                templateId: { type: "integer", example: 1 },
+                                userId: { type: "integer", example: 1 },
+                                createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
+                                updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                             }
                         }
                     }
@@ -353,6 +350,9 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
         }
     }
     */
+    const likedTemplate = await createTemplateLike(req.user.userId, req.params.templateId);
+
+    res.status(StatusCodes.OK).success(likedTemplate);
 }
 
 // 템플릿 단일 조회 요청
