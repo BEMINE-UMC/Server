@@ -40,6 +40,7 @@ model Post {
   title     String?  @db.VarChar(120)
   body      String?  @db.Text
   thumbnail String?  @db.VarChar(255)
+  image String?  @db.VarChar(255)
   status    String?  @db.VarChar(50) @map("status")
   inactiveDate  DateTime? @db.DateTime(6) @map("inactive_date")
   createdAt DateTime? @default(now()) @db.DateTime(6) @map("created_at")

@@ -3,16 +3,16 @@ import express from 'express'
 import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
-import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch, createPost } from "./controllers/post.controller.js";
+import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,handelPostDelete,getPostDetail ,handlePostWrite } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
 import { handleViewAllPosts } from "./controllers/post.controller.js";
-import { handleFullTemplateLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
+import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
-import { imageUploader , optionalImageUpload } from "../middleware.js";
+import { imageUploader } from "../middleware.js";
 
 dotenv.config();
 
@@ -108,16 +108,16 @@ app.get('/', (req, res) => {
 });
 
 //메인페이지 좋아요 많은순 템플릿 출력
-app.get('/api/templates/popular',handlePopularTemplates);
+app.get('/templates/popular',handlePopularTemplates);
 
 // 게시물 전체 조회 API
 app.get('/posts', handleViewAllPosts);
 
 //게시물 좋아요 누르기 API
-app.post('/api/v1/users/:userId/posts/:postId/likes', handlerPostLike);
+app.post('/posts/:postId/likes', authenticateJWT, handlerPostLike);
 
 //게시물 스크랩 누르기 API
-app.post('/api/v1/users/:userId/posts/:postId/scrapts', handlerPostScrap);
+app.post('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
 
 //게시물 검색 API
 app.get('/posts/search',handlerPostSearch);
@@ -140,11 +140,11 @@ app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/posts/other', authenticateJWT, handleOtherPost);
 
-// 템플릿 전체 불러오기 API (템플릿 올리기 화면)
-app.get('/templates/:templateId', handleFullTemplateLoad);
+// 템플릿 상세 정보 조회 API (템플릿 올리기 화면)
+app.get('/templates/:templateId', handleDetailTemplateInfoLoad);
 
 //작성한 게시물 조회 API
-app.get('/api/v1/users/:userId/mypage/posts',handlerGetUserPost)
+app.get('/mypage/posts',authenticateJWT, handlerGetUserPost)
 
 // 최근 본 게시물 조회 API
 app.get('/myPage/recentPost',authenticateJWT, handlerGetRecentPost)
@@ -170,11 +170,28 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 // 템플릿 단일 조회 API
 app.get('/users/:userId/templates/:templateId/view', handleViewTemplate);
 
+
+
+
 //게시글 작성 API 
-app.post('/api/posts/write', authenticateJWT,optionalImageUpload, createPost );
+app.post('/posts/write', authenticateJWT, handlePostWrite );
 
+//게시글에 이미지 첨부 시 이미지 업로드 API 
+app.post('/posts/image/uploads', authenticateJWT, imageUploader.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'File upload failed' });
+    }
+    res.status(200).json({ imageUrl: req.file.location });
+});
+//게시글 이미지 업로드 API (분리)
 
+// 게시글 삭제
+app.patch('/posts/:postId', authenticateJWT,handelPostDelete);
 
+//게시글 상세조회
+app.get('/posts/:postId',authenticateJWT,getPostDetail);
+
+//게시글 상세 조회회
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {

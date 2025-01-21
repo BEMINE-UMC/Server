@@ -11,12 +11,16 @@ import {
     alreadyExistPostScrap,
     NonExistUserError,
     NotFoundSearchedPost,
-    NotRecentPostsErrors, NotScrapPostsErrors ,  ContentRequiredError ,TitleRequiredError
+    NotRecentPostsErrors, NotScrapPostsErrors ,  ContentRequiredError ,TitleRequiredError , InvalidImageFormatError
 } from "../errors/post.error.js";
 import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts} from "../repositories/post.repository.js";
-import { getUserOtherPost , createPost} from "../repositories/post.repository.js";
+import { getUserOtherPost , createPost , updatePost} from "../repositories/post.repository.js";
 import {getUserInfo} from "../repositories/user.repository.js";
+import { pool } from "../db.config.js";
+import { imageUploader , deleteImage } from "../../middleware.js";
 import {NotExsistsUserError} from "../errors/user.error.js";
+
+
 
 //사용자 게시물 좋아요 누르기
 export const createUserLike = async (userId, postId) => {
@@ -114,11 +118,30 @@ export const ScrapPosts = async (data) =>{
 
     return responseFromScrapPost(userId, posts);
 }
-export const createNewPost = async (postData) => {
+
+//이미지 URL 검증 함수 추가 
+const validateS3ImageUrl = async (imageUrl) => {
+    if (!imageUrl.startsWith(`https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`)) {
+        return false;
+    }
+    try {
+        // S3에 실제로 파일이 존재하는지 확인하는 로직 추가
+        const key = new URL(imageUrl).pathname.substring(1);
+        await s3.headObject({
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
+            Key: key
+        }).promise();
+        return true;
+    } catch (error) {
+        return false;
+    }
+};
+
+//게시글 작성/수정 
+export const createOrUpdatePost  = async (postData) => {
     if (!postData.title?.trim()) {
         throw new TitleRequiredError();
     }
-
     if (!postData.body?.trim()) {
         throw new ContentRequiredError();
     }
@@ -127,10 +150,34 @@ export const createNewPost = async (postData) => {
     try {
         await conn.beginTransaction();
 
-        const createdPost = await createPost(conn, postData);
-        
+        let newImage = null;
+        const imgMatch = postData.body.match(/<img[^>]+src="([^"]+)"/);
+        if (imgMatch) {
+            newImage = imgMatch[1];
+            // 이미지 URL 검증
+            if (!validateS3ImageUrl(newImage)) {
+                throw new InvalidImageFormatError("유효하지 않은 이미지 URL입니다.");
+            }
+        }
+
+        if (postData.postId) {
+            const [existingPost] = await conn.query('SELECT image FROM post WHERE id = ? and user_id = ? FOR UPDATE', [postData.postId , postData.userId]);
+
+            const oldImage = existingPost[0]?.image;
+            if (oldImage && oldImage !== newImage) {
+                try {
+                    await deleteImage(oldImage);
+                } catch (error) {
+                    throw new Error('기존 이미지 삭제 실패: ' + error.message);
+                }
+            }
+
+            await updatePost(conn, { ...postData, image: newImage });
+        } else {
+            await createPost(conn, { ...postData, image: newImage });
+        }
+
         await conn.commit();
-        return createdPost;
     } catch (error) {
         await conn.rollback();
         throw error;
