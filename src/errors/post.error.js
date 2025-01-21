@@ -76,3 +76,13 @@ export class NotFoundSearchedPost extends Error {
         };
     }
 }
+
+export class NotPostAuthorError extends Error {
+    errorCode = "P047";
+    constructor(reason = "작성자가 아닙니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 403;
+        this.data = {};
+    }
+}

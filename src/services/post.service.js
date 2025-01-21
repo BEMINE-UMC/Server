@@ -13,11 +13,12 @@ import {
     NotFoundSearchedPost,
     NotRecentPostsErrors, NotScrapPostsErrors
 } from "../errors/post.error.js";
-import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts} from "../repositories/post.repository.js";
+import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts , findPostForDelete , updatePostStatus} from "../repositories/post.repository.js";
 import { getUserOtherPost } from "../repositories/post.repository.js";
 import {getUserInfo} from "../repositories/user.repository.js";
 import {NotExsistsUserError} from "../errors/user.error.js";
-
+import { pool } from "../db.config.js";
+import { deleteImage } from "../../middleware.js";
 //사용자 게시물 좋아요 누르기
 export const createUserLike = async (userId, postId) => {
     const userlikedPost = await createUserPostLike(userId,postId);
@@ -114,3 +115,38 @@ export const ScrapPosts = async (data) =>{
 
     return responseFromScrapPost(userId, posts);
 }
+
+//게시글 삭제 로직
+export const deletePost = async (userId, postId) => {
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+
+        const post = await findPostForDelete(conn, postId);
+        if (!post) {
+            throw new PostNotFoundError();
+        }
+
+        if (post.user_id !== userId) {
+            throw new NotPostAuthorError();
+        }
+
+        // S3 이미지 삭제
+        if (post.image) {
+            try {
+                new URL(post.image);
+                await deleteImage(post.image);
+            } catch (error) {
+                console.error('이미지 삭제 실패:', error);
+            }
+        }
+
+        await updatePostStatus(conn, postId);
+        await conn.commit();
+    } catch (error) {
+        await conn.rollback();
+        throw error;
+    } finally {
+        conn.release();
+    }
+};

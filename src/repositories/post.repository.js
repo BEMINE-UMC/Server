@@ -138,3 +138,20 @@ export const getScrapPosts = async (data)=>{
     })
     return posts;
 }
+
+//삭제를 위해 받아오는 값 (작성자 확인 , s3에 이미지 삭제)
+export const findPostForDelete = async (conn, postId) => {
+    const [posts] = await conn.query(
+        'SELECT user_id, image FROM post WHERE id = ?',
+        [postId]
+    );
+    return posts[0];
+};
+
+export const updatePostStatus = async (conn, postId) => {
+    const [result] = await conn.query(
+        'UPDATE post SET status = ?, inactive_date = NOW() WHERE id = ?',
+        ['inactive', postId]
+    );
+    return result.affectedRows > 0;
+};
