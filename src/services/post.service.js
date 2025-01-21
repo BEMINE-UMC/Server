@@ -5,19 +5,19 @@ import {
     responseFromScrapPost,
     responseFromSearchedPost
 } from "../dtos/post.dto.js";
-import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
+import { createdGetOtherPostDTO , createPostDetailDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
     NonExistUserError,
     NotFoundSearchedPost,
-    NotRecentPostsErrors, NotScrapPostsErrors
+    NotRecentPostsErrors, NotScrapPostsErrors , PostNotFoundError
 } from "../errors/post.error.js";
-import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts} from "../repositories/post.repository.js";
+import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts , getPostById , checkPostLiked} from "../repositories/post.repository.js";
 import { getUserOtherPost } from "../repositories/post.repository.js";
 import {getUserInfo} from "../repositories/user.repository.js";
 import {NotExsistsUserError} from "../errors/user.error.js";
-
+import { pool } from "../db.config.js";
 //사용자 게시물 좋아요 누르기
 export const createUserLike = async (userId, postId) => {
     const userlikedPost = await createUserPostLike(userId,postId);
@@ -114,3 +114,19 @@ export const ScrapPosts = async (data) =>{
 
     return responseFromScrapPost(userId, posts);
 }
+// 게시글 정보 (좋아요 여부 포함) 전달
+export const getPostDetailWithLikeStatus = async (userId, postId) => {
+    const conn = await pool.getConnection();
+    try {
+        const post = await getPostById(conn, postId);
+        if (!post) {
+            throw new PostNotFoundError();
+
+        }
+
+        const isLiked = await checkPostLiked(conn, userId, postId);
+        return createPostDetailDTO(post, isLiked);
+    } finally {
+        conn.release();
+    }
+};

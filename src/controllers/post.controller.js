@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts} from "../services/post.service.js";
-import { getOtherPost } from "../services/post.service.js";
+import { getOtherPost,getPostDetailWithLikeStatus } from "../services/post.service.js";
 import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 
 //게시물 좋아요 누르기
@@ -778,42 +778,48 @@ export const handelPostDelete = async (req, res) => {
       success: null
   });
 }
-export const getPostDetail = async (req, res) => {
+export const getPostDetail = async (req, res, next) => {
   /* 
-  #swagger.summary = '게시글 상세조회 API';
+  #swagger.summary = '게시글 상세 조회 API'
   #swagger.tags = ['POST']
-  #swagger.description = '게시글의 상세 정보를 조회하는 API입니다.'
-  #swagger.parameters['postId'] = {
-      in: 'path',
-      required: true,
-      description: '상세조회할 게시물의 ID',
-      schema: { type: 'number' }
-  }
+  #swagger.description = '게시글의 상세 정보를 조회. 제목, 내용, 작성일, 수정일(있는 경우)을 반환하며, 현재 사용자의 좋아요 상태도 함께 반환환.'
+
   #swagger.responses[200] = {
-      description: "게시글 상세조회 성공 응답",
+      description: "게시글 상세 조회 성공",
       content: {
           "application/json": {
               schema: {
                   type: "object",
                   properties: {
                       resultType: { type: "string", example: "SUCCESS" },
-                      error: { type: "object", nullable: true, example: null },
+                      error: { type: "null", example: null },
                       success: {
                           type: "object",
                           properties: {
                               title: { type: "string", example: "게시글 제목" },
-                              createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                              liked: { type: "boolean", example: true },
-                              body: { type: "string", example: "게시글 내용" }
+                              body: { type: "string", example: "<p>게시글 내용입니다</p>" },
+                              createdAt: { 
+                                  type: "string", 
+                                  format: "date-time", 
+                                  example: "2024-01-21T12:00:00.000Z" 
+                              },
+                              updatedAt: { 
+                                  type: "string", 
+                                  format: "date-time", 
+                                  example: "2024-01-22T15:30:00.000Z",
+                                  nullable: true 
+                              },
+                              liked: { type: "boolean", example: true }
                           }
                       }
                   }
               }
           }
       }
-  }
-  #swagger.responses[400] = {
-      description: "게시글 상세조회 실패 응답",
+  }; 
+
+  #swagger.responses[404] = {
+      description: "게시글이 존재하지 않음",
       content: {
           "application/json": {
               schema: {
@@ -823,35 +829,25 @@ export const getPostDetail = async (req, res) => {
                       error: {
                           type: "object",
                           properties: {
-                              errorCode: { type: "string", example: "P012" },
-                              reason: { type: "string", example: "게시물 상세조회에 실패했습니다." },
-                              data: {}
+                              errorCode: { type: "string", example: "P046" },
+                              reason: { type: "string", example: "게시글을 찾을 수 없습니다." },
+                              data: { type: "object", example: {} }
                           }
                       },
-                      success: { type: "object", nullable: true, example: null }
+                      success: { type: "null", example: null }
                   }
               }
           }
       }
+  }; 
+*/
+
+  try {
+      const { postId } = req.params;
+      const detail = await getPostDetailWithLikeStatus(req.user.userId, postId);
+      
+      res.status(StatusCodes.OK).success(detail);
+  } catch (error) {
+      next(error);
   }
-  */
-
-  const { postId } = req.params;
-
-  // 게시글 상세조회 로직
-  const postDetail = await getPostById(postId); // 게시글을 ID로 조회하는 함수
-
-  // 'liked' 여부를 확인하는 로직 (예: 사용자가 좋아요를 눌렀는지 확인)
-  const liked = await checkIfPostLikedByUser(postId, req.user.id);
-
-  res.status(StatusCodes.OK).json({
-      resultType: "SUCCESS",
-      error: null,
-      success: {
-          title: postDetail.title,
-          createdAt: postDetail.createdAt,
-          liked: liked,
-          body: postDetail.body
-      }
-  });
-}
+};
