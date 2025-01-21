@@ -597,12 +597,14 @@ export const handlerPostSearch = async (req,res) => {
                                     items: {
                                         type: "object",
                                         properties: {
-                                            postId: { type: "number", example: 1 },
+                                            Id: { type: "number", example: 1 },
                                             userId: { type: "number", example: 1 },
                                             categoryId: { type: "number", example: 1 },
                                             title: { type: "string", example: "Title" },
                                             body: { type: "string", example: "Body" },
-                                            picture: { type: "string", example: "url"},
+                                            thumbnail: { type: "string", example: "url"},
+                                            status: { type: "string", example: "status"},
+                                            inactiveDate: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                             createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                             updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
                                         }
