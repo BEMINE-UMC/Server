@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { getOtherPost, getPostDetailWithLikeStatus } from "../services/post.service.js";
 import { postToRecent, postToScrap } from "../dtos/post.dto.js";
-import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost } from "../services/post.service.js";
+import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost,deletePost } from "../services/post.service.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
