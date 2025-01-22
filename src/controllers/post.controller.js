@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import { getOtherPost , getPostDetailWithLikeStatus  } from "../services/post.service.js";
 import {postToRecent, postToScrap} from "../dtos/post.dto.js";
 import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost } from "../services/post.service.js";
-import { getOtherPost } from "../services/post.service.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
@@ -718,73 +718,6 @@ export const handlerGetUserPost = async (req, res) => {
   }
   */
 }
-export const handelPostDelete = async (req, res) => {
-  /* 
-  #swagger.summary = '작성한 게시물 조회 API';
-  #swagger.tags = ['User']
-  #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
-  
-  #swagger.responses[200] = {
-      description: "작성한 게시물 조회 성공 응답",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "SUCCESS" },
-                      error: { type: "object", nullable: true, example: null },
-                      success: {
-                          type: "object",
-                          properties: {
-                              data: {
-                                  type: "array",
-                                  items: {
-                                      type: "object",
-                                      properties: {
-                                          postId: { type: "number", example: 1 },
-                                          userId: { type: "number", example: 1 },
-                                          categoryId: { type: "number", example: 1 },
-                                          title: { type: "string", example: "Title" },
-                                          body: { type: "string", example: "Body" },
-                                          picture: { type: "string", example: "url"},
-                                          createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                          updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-      }
-  }
-  #swagger.responses[400] = {
-      description: "작성한 게시물 조회 실패 응답",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "FAIL" },
-                      error: {
-                          type: "object",
-                          properties: {
-                              errorCode: { type: "string", example: "P006" },
-                              reason: { type: "string", example: "사용자가 작성한 게시물이 없습니다." },
-                              data: {
-                              }
-                          }
-                      },
-                      success: { type: "object", nullable: true, example: null }
-                  }
-              }
-          }
-      }
-  }
-  */
-
-}
 //게시글 삭제 
 export const handlePostDelete = async (req, res, next) => {
   /* 
@@ -908,7 +841,7 @@ export const getPostDetail = async (req, res) => {
                       error: {
                           type: "object",
                           properties: {
-                              errorCode: { type: "string", example: "P012" },
+                              errorCode: { type: "string", example: "P046" },
                               reason: { type: "string", example: "게시물 상세조회에 실패했습니다." },
                               data: {}
                           }
@@ -1108,4 +1041,4 @@ export const handlePostWrite = async (req, res, next) => {
   } catch (error) {
       next(error);
   }
-};
+}
