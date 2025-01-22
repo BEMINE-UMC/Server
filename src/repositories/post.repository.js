@@ -21,6 +21,7 @@ export const createUserPostLike = async (userId, postId) => {
                 postId: parseInt(postId),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                status: true,
             }
         });
 
@@ -74,6 +75,7 @@ export const createUserPostScrap = async (userId, postId) => {
                 postId: parseInt(postId),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                status: true,
             }
         });
 
