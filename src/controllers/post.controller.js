@@ -841,7 +841,7 @@ export const getPostDetail = async (req, res) => {
                       error: {
                           type: "object",
                           properties: {
-                              errorCode: { type: "string", example: "P012" },
+                              errorCode: { type: "string", example: "P046" },
                               reason: { type: "string", example: "게시물 상세조회에 실패했습니다." },
                               data: {}
                           }
