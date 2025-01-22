@@ -126,3 +126,15 @@ export class ImageSizeExceededError extends Error {
         this.statusCode = 400;
     }
 }
+
+// 조회한 게시글이 없는 게시글일 때
+export class PostNotFoundError extends Error {
+    errorCode = "P046";
+    constructor(reason = "게시글을 찾을 수 없습니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 404;
+        this.data = {};
+    }
+}
+

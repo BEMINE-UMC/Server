@@ -5,21 +5,23 @@ import {
     responseFromScrapPost,
     responseFromSearchedPost
 } from "../dtos/post.dto.js";
-import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
+import { createdGetOtherPostDTO, createPostDetailDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
     NonExistUserError,
     NotFoundSearchedPost,
+
     NotRecentPostsErrors, NotScrapPostsErrors, ContentRequiredError, TitleRequiredError, InvalidImageFormatError
 } from "../errors/post.error.js";
 
-import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts } from "../repositories/post.repository.js";
+import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked } from "../repositories/post.repository.js";
 import { getUserOtherPost, createPost, updatePost } from "../repositories/post.repository.js";
 import { getUserInfo } from "../repositories/user.repository.js";
 import { pool } from "../db.config.js";
 import { NotExsistsUserError } from "../errors/user.error.js";
-import { deleteImage } from "../../middleware.js";
+import { imageUploader, deleteImage } from "../../middleware.js";
+
 
 
 
@@ -120,6 +122,22 @@ export const ScrapPosts = async (data) => {
 
     return responseFromScrapPost(userId, posts);
 }
+// 게시글 정보 (좋아요 여부 포함) 전달
+export const getPostDetailWithLikeStatus = async (userId, postId) => {
+    const conn = await pool.getConnection();
+    try {
+        const post = await getPostById(conn, postId);
+        if (!post) {
+            throw new PostNotFoundError();
+
+        }
+
+        const isLiked = await checkPostLiked(conn, userId, postId);
+        return createPostDetailDTO(post, isLiked);
+    } finally {
+        conn.release();
+    }
+};
 
 //이미지 URL 검증 함수
 const validateS3ImageUrl = async (imageUrl) => {
@@ -139,93 +157,95 @@ const validateS3ImageUrl = async (imageUrl) => {
     }
 };
 
-//게시글 작성/수정 
-export const createOrUpdatePost = async (postData) => {
-    // 필수 입력값 검증
-    if (!postData.title?.trim()) {
-        throw new TitleRequiredError();
-    }
-    if (!postData.body?.trim()) {
-        throw new ContentRequiredError();
-    }
-};
 
-//게시글 삭제 로직
 export const deletePost = async (userId, postId) => {
-    // 삭제 로직 구현
-};
-const conn = await pool.getConnection();
-try {
-    await conn.beginTransaction();
+
+    const conn = await pool.getConnection();
 
     try {
-        // 게시글 삭제 로직
-        const deletePost = async (conn, userId, postId) => {
-            // 1. 게시글 존재 여부와 작성자 권한 확인
-            const post = await findPostForDelete(conn, postId);
-            if (!post) {
-                throw new PostNotFoundError();
+        // 트랜잭션 시작 - 데이터 일관성을 보장하기 위함
+        await conn.beginTransaction();
+
+        // 게시글 정보 조회 및 권한 검증
+        const post = await findPostForDelete(conn, postId);
+        if (!post) {
+            throw new PostNotFoundError();
+        }
+        if (post.user_id !== userId) {
+            throw new NotPostAuthorError();
+        }
+
+        // S3에 저장된 이미지가 있는 경우 삭제 처리
+        if (post.image) {
+            try {
+                // URL 형식 검증 후 이미지 삭제 시도
+                new URL(post.image);
+                await deleteImage(post.image);
+            } catch (error) {
+                // 이미지 삭제 실패는 로그만 남기고 계속 진행
+                // 고아 이미지가 될 수 있지만, 게시글 삭제는 진행
+                console.error('이미지 삭제 실패:', error);
             }
-            if (post.user_id !== userId) {
-                throw new NotPostAuthorError();
-            }
+        }
 
-            // 2. S3에 저장된 이미지가 있다면 삭제 시도
-            if (post.image) {
-                try {
-                    new URL(post.image); // URL 유효성 검사
-                    await deleteImage(post.image);
-                } catch (error) {
-                    console.error('이미지 삭제 실패:', error);
-                    // 이미지 삭제 실패가 전체 프로세스를 중단시키지는 않습니다
-                }
-            }
+        // 게시글 상태를 비활성화로 변경 (소프트 삭제)
+        const updated = await updatePostStatus(conn, postId);
+        if (!updated) {
+            throw new Error('게시글 상태 업데이트 실패');
+        }
 
-            // 3. 게시글 상태를 비활성화로 변경
-            await updatePostStatus(conn, postId);
-        };
-
-        // 게시글 생성/수정 로직
-        const createOrUpdatePost = async (conn, postData) => {
-            // 1. 본문에서 이미지 URL 추출
-            let newImage = null;
-            const imgMatch = postData.body.match(/<img[^>]+src="([^"]+)"/);
-            if (imgMatch) {
-                newImage = imgMatch[1];
-                // 이미지 URL 검증 - S3 버킷 규칙 준수 확인
-                if (!await validateS3ImageUrl(newImage)) {
-                    throw new InvalidImageFormatError("유효하지 않은 이미지 URL입니다.");
-                }
-            }
-
-            // 2. 기존 게시글 수정인 경우
-            if (postData.postId) {
-                // 기존 이미지 정보 조회 및 잠금 (동시성 제어)
-                const [existingPost] = await conn.query(
-                    'SELECT image FROM post WHERE id = ? and user_id = ? FOR UPDATE',
-                    [postData.postId, postData.userId]
-                );
-
-                // 3. 이미지가 변경된 경우 이전 이미지 삭제
-                const oldImage = existingPost[0]?.image;
-                if (oldImage && oldImage !== newImage) {
-                    try {
-                        await deleteImage(oldImage);
-                    } catch (error) {
-                        throw new Error('기존 이미지 삭제 실패: ' + error.message);
-                    }
-                }
-
-                // 4. 게시글 업데이트
-                await updatePost(conn, { ...postData, image: newImage });
-            } else {
-                // 5. 새 게시글 생성
-                await createPost(conn, { ...postData, image: newImage });
-            }
-        };
+        // 모든 작업이 성공적으로 완료되면 트랜잭션 커밋
+        await conn.commit();
     } catch (error) {
-        // 에러 처리는 상위 레벨에서 수행
-        throw error;
+        // 에러 발생 시 트랜잭션 롤백
+        await conn.rollback();
+        throw error; // 상위 레벨에서 에러 처리할 수 있도록 다시 던짐
+    } finally {
+        // 데이터베이스 커넥션 반환
+        conn.release();
+    }
+};
+
+// 게시글 생성/수정 로직
+export const createOrUpdatePost = async (postData) => {
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction
+    
+    // 1. 본문에서 이미지 URL 추출
+    let newImage = null;
+    const imgMatch = postData.body.match(/<img[^>]+src="([^"]+)"/);
+    if (imgMatch) {
+        newImage = imgMatch[1];
+        // 이미지 URL 검증 - S3 버킷 규칙 준수 확인
+        if (!await validateS3ImageUrl(newImage)) {
+            throw new InvalidImageFormatError("유효하지 않은 이미지 URL입니다.");
+        }
+    }
+
+    // 2. 기존 게시글 수정인 경우
+    if (postData.postId) {
+        // 기존 이미지 정보 조회 및 잠금 (동시성 제어)
+        const [existingPost] = await conn.query(
+            'SELECT image FROM post WHERE id = ? and user_id = ? FOR UPDATE',
+            [postData.postId, postData.userId]
+        );
+
+        // 3. 이미지가 변경된 경우 이전 이미지 삭제
+        const oldImage = existingPost[0]?.image;
+        if (oldImage && oldImage !== newImage) {
+            try {
+                await deleteImage(oldImage);
+            } catch (error) {
+                throw new Error('기존 이미지 삭제 실패: ' + error.message);
+            }
+        }
+
+        // 4. 게시글 업데이트
+        await updatePost(conn, { ...postData, image: newImage });
+    } else {
+        // 5. 새 게시글 생성
+        await createPost(conn, { ...postData, image: newImage });
     }
     await conn.commit();
 } catch (error) {
@@ -233,4 +253,5 @@ try {
     throw error;
 } finally {
     conn.release();
+}
 }
