@@ -15,7 +15,7 @@ import {
     NotRecentPostsErrors, NotScrapPostsErrors, ContentRequiredError, TitleRequiredError, InvalidImageFormatError
 } from "../errors/post.error.js";
 
-import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts } from "../repositories/post.repository.js";
+import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked } from "../repositories/post.repository.js";
 import { getUserOtherPost, createPost, updatePost } from "../repositories/post.repository.js";
 import { getUserInfo } from "../repositories/user.repository.js";
 import { pool } from "../db.config.js";
@@ -207,7 +207,8 @@ export const deletePost = async (userId, postId) => {
 };
 
 // 게시글 생성/수정 로직
-export const createOrUpdatePost = async (conn, postData) => {
+export const createOrUpdatePost = async (postData) => {
+    const conn = await pool.getConnection();
     try {
         await conn.beginTransaction
     
