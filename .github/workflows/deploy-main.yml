@@ -49,11 +49,6 @@ jobs:
           ssh bemine 'npm install --prefix /opt/app/'
           ssh bemine 'cd /opt/app; npm exec prisma generate'
 
-      - name: Apply prisma migrations
-        if: steps.paths-filter.outputs.prisma == 'true'
-        run: |
-          ssh bemine 'cd /opt/app; npm exec prisma migrate deploy'
-
       - name: Copy systemd service file
         run: |
           ssh bemine '
