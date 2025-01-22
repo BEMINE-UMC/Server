@@ -159,7 +159,7 @@ app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
-app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
+app.post('/templates/:templateId/likes',authenticateJWT,handlerCreateTemplateLike)
 
 // 템플릿 삭제 API
 app.patch('/templates/:templateId', handleTemplateDelete);

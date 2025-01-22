@@ -73,6 +73,7 @@ export class alreadyExistTemplateLike extends Error {
     errorCode = "T30"
     constructor(reason, data){
         super(reason);
+        this.statusCode = 400;
         this.reason = reason;
         this.data = data;
     }
