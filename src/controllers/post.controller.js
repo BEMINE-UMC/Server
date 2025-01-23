@@ -15,7 +15,7 @@ export const handlerPostLike = async (req, res, next) => {
   res.status(StatusCodes.OK).success(likedPost);
   /* 
      #swagger.summary = '게시물 좋아요 API'
-     #swagger.tags = ['Post']
+     #swagger.tags = ['POST']
      #swagger.description = '게시물 좋아요 누르는 API입니다.'
     
      #swagger.responses[200] = {
@@ -506,7 +506,7 @@ export const handleGetPostLiked = async (req, res) => {
 export const handlerPostScrap = async (req, res) => {
   /* 
   #swagger.summary = '게시물 스크랩 API'
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시물 스크랩 누르는 API입니다.'
   
   
@@ -574,7 +574,7 @@ export const handlerPostScrap = async (req, res) => {
 export const handlerPostSearch = async (req, res) => {
   /* 
   #swagger.summary = '게시물 검색 API';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시물을 검색하는 API입니다.'
   #swagger.parameters['query'] = {
       in: 'query',
@@ -599,12 +599,15 @@ export const handlerPostSearch = async (req, res) => {
                                   items: {
                                       type: "object",
                                       properties: {
-                                          postId: { type: "number", example: 1 },
+                                          id: { type: "number", example: 1 },
                                           userId: { type: "number", example: 1 },
                                           categoryId: { type: "number", example: 1 },
                                           title: { type: "string", example: "Title" },
                                           body: { type: "string", example: "Body" },
-                                          picture: { type: "string", example: "url"},
+                                          thumbnail: { type: "string", example: "url"},
+                                          image: { type: "string", example: "url"},
+                                          status: { type: "string", example: "status"},
+                                          inactivateDate: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                           createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                           updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
                                       }
@@ -655,7 +658,7 @@ export const handlerPostSearch = async (req, res) => {
 export const handlerGetUserPost = async (req, res) => {
   /* 
     #swagger.summary = '작성한 게시물 조회 API';
-    #swagger.tags = ['User']
+    #swagger.tags = ['POST']
     #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
     
     #swagger.responses[200] = {

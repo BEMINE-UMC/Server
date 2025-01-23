@@ -319,7 +319,7 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
                                 id: { type: "integer", example: 1 },
                                 templateId: { type: "integer", example: 1 },
                                 userId: { type: "integer", example: 1 },
-                                status: { type: "string", example: "true" }
+                                status: { type: "string", example: "true" },
                                 createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                 updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                             }
