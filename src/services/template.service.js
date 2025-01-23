@@ -1,6 +1,19 @@
-import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo } from "../dtos/template.dto.js";
+import {
+    responseFromTemplateDeletion,
+    responseFromTemplateAndLike,
+    responsePopularTemplates,
+    responseFromDetailInfo,
+    responseFromSaveTemplate
+} from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import {
+    checkTemplateExists,
+    getTemplateFileInfo,
+    deleteTemplate,
+    getDetailTemplateInfo,
+    findPopularTemplates,
+    upsertTemplate
+} from "../repositories/template.repository.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
@@ -64,3 +77,14 @@ export const getPopularTemplates = async () => {
     const templates = await findPopularTemplates();
     return responsePopularTemplates(templates);
 };
+
+// 템플릿 수정/생성하기
+export const saveTemplate = async(data)=>{
+    const confirm = await getDetailTemplateInfo(data.templateId);
+    if (confirm === null)
+        throw new NonexistentTemplateError('존재하지 않는 템플릿입니다.', data.templateId)
+
+    const template = await upsertTemplate(data);
+
+    return responseFromSaveTemplate(template);
+}

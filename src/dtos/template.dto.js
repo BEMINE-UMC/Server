@@ -60,3 +60,30 @@ export const responsePopularTemplates = (templates) => {
         thumbnail: template.thumbnail
     }));
 };
+
+// 템플릿 수정 생성 요청 DTO
+export const templateToSave = (body, params, user, files) => {
+    return{
+        templateId: parseInt(params.templateId),
+        userId: parseInt(user.userId),
+        title: body.title,
+        fileShareState: body.fileShareState,
+        filePDF: files.filePDF ? files.filePDF[0].location : null,
+        thumbnail: files.thumbnail? files.thumbnail[0].location : null
+    }
+}
+
+// 템플릿 수정 생성 전송 DTO
+export const responseFromSaveTemplate = (data) =>{
+    console.log(data.filePDF)
+    return{
+        templateId: parseInt(data.templateId),
+        userId: parseInt(data.userId),
+        title: data.title,
+        filePdf: data.filePDF,
+        fileShareState: data.fileShareState,
+        thumbnail: data.thumbnail,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt
+    }
+}

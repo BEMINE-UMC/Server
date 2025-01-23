@@ -1,6 +1,12 @@
 import { StatusCodes } from "http-status-codes";
-import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates} from "../services/template.service.js";
-import { templateToDetailInfo, templateToFileInfo } from "../dtos/template.dto.js";
+import {
+    detailTemplateInfoLoad,
+    templateDeletion,
+    templateFileInfo,
+    getPopularTemplates,
+    saveTemplate
+} from "../services/template.service.js";
+import {templateToDetailInfo, templateToFileInfo, templateToSave} from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
@@ -216,19 +222,27 @@ export const handleTemplateDelete = async (req, res, next) => {
 export const handleTemplateCreateAndModify = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 수정/생성 API';
-    #swagger.tags = ['Put']
+    #swagger.tags = ['Template']
     #swagger.description = '템플릿을 수정/생성 하는 API입니다.'
     #swagger.requestBody = {
         required: true,
         content: {
-            "application/json": {
+            "multipart/form-data": {
                 schema: {
                     type: "object",
                     properties: {
                         title: { type: "string", example: "New Title" },
-                        file: { type: "string", example: "https://example.com/new-file/template.pptx" },
-                        fileShareState: { type: "string", example: "private" },
-                        thumbnail: { type: "string", example: "https://example.com/new-image/thumb1.jpg"}
+                        filePDF: {
+                            type: "string",
+                            format: "binary",
+                            description: "업로드할 PDF"
+                        },
+                        fileShareState: { type: "string", example: 'public' },
+                        thumbnail: {
+                            type: "string",
+                            format: "binary",
+                            description: "업로드할 썸네일 사진"
+                        }
                     }
                 }
             }
@@ -249,7 +263,7 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
                                 templateId: { type: "number", example: 1 },
                                 userId: { type: "number", example: 1 },
                                 title: { type: "string", example: "New Title" },
-                                file: { type: "string", example: "https://example.com/new-file/template.pptx" },
+                                filePDF: { type: "string", example: "https://example.com/new-file/template.pptx" },
                                 fileShareState: { type: "string", example: "private" },
                                 thumbnail: { type: "string", example: "https://example.com/new-image/thumb1.jpg" },
                                 createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
@@ -277,7 +291,7 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "number", example: 1 }
                                     }
                                 }
                             }
@@ -289,11 +303,8 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
         }
     }
     */
-    try {
-
-    } catch (error) {
-        next(error);
-    }
+    const template = await saveTemplate(templateToSave(req.body, req.params,req.user,req.files))
+    res.status(StatusCodes.OK).success(template);
 }
 
 // 템플릿 좋아요 생성

@@ -168,7 +168,14 @@ app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplat
 app.patch('/templates/:templateId', handleTemplateDelete);
 
 // 템플릿 수정/생성 API
-app.put('/templates/:templateId', handleTemplateCreateAndModify);
+app.put('/templates/:templateId',
+    imageUploader.fields([
+        {name: 'filePDF', maxCount:1 },
+        {name: 'thumbnail', maxCount:1 }
+    ]),
+    authenticateJWT,
+    handleTemplateCreateAndModify
+);
 
 // 템플릿 파일 조회 API
 app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);

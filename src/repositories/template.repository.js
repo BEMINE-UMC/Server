@@ -1,4 +1,4 @@
-import { pool } from "../db.config.js";
+import {pool, prisma} from "../db.config.js";
 
 // 템플릿 존재 여부 확인하기
 export const checkTemplateExists = async (templateId) => {
@@ -131,3 +131,27 @@ export const findPopularTemplates = async () => {
       conn.release();
   }
 };
+
+// 템플릿 수정 생성
+export const upsertTemplate = async(data)=>{
+  const template = await prisma.template.upsert({
+    where:{id: data.templateId},
+    update:{
+      title: data.title,
+      filePDF: data.filePDF,
+      fileShareState: data.fileShareState,
+      thumbnail: data.thumbnail,
+      updatedAt: new Date()
+    },
+    create:{
+      userId: data.userId,
+      title: data.title,
+      filePDF: data.filePDF,
+      fileShareState: data.fileShareState,
+      thumbnail: data.thumbnail,
+      status: 'active',
+    }
+  })
+
+  return template;
+}
