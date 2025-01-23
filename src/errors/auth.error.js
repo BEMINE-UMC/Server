@@ -72,3 +72,32 @@ export class InvalidTokenError extends Error {
         this.statusCode = 400;
     }
 }
+
+export class EmailFormError extends Error {
+    errorCode = "A018";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
+export class CodeFormError extends Error {
+    errorCode = "A019";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
+export class CodeNotValidateError extends Error {
+    errorCode = "A020";
+    constructor(reason) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
