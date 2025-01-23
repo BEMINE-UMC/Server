@@ -10,6 +10,9 @@ dotenv.config();
 
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+const EMAIL_TRANS_USER = process.env.EMAIL_TRANS_USER;
+const EMAIL_TRANS_PW = process.env.EMAIL_TRANS_PW;
+const EMAIL_TRANS_HOST = process.env.EMAIL_TRANS_HOST;
 
 // 회원가입 api
 export const postUserInfo = async ({ name, email, password }) => {
@@ -72,17 +75,17 @@ export const sendVerificationEmail = async (email) => {
     await saveVerificationCode(validatedEmail, code);
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.naver.com',
+        host: EMAIL_TRANS_HOST,
         port: 465,
         secure: true,
         auth: {
-            user: 'bemine07umc@naver.com',
-            pass: 'umc07bemine',
+            user: EMAIL_TRANS_USER,
+            pass: EMAIL_TRANS_PW,
         },
     });
 
     const mailOptions = {
-        from: 'bemine07umc@naver.com',
+        from: EMAIL_TRANS_USER,
         to: validatedEmail,
         subject: 'Bemine Verification Code',
         text: `Your verification code is: ${code}`,
