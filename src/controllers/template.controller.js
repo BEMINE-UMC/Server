@@ -263,7 +263,7 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
                                 templateId: { type: "number", example: 1 },
                                 userId: { type: "number", example: 1 },
                                 title: { type: "string", example: "New Title" },
-                                filePDF: { type: "string", example: "https://example.com/new-file/template.pptx" },
+                                filePDF: { type: "string", example: "https://example.com/new-file/template.pdf" },
                                 fileShareState: { type: "string", example: "private" },
                                 thumbnail: { type: "string", example: "https://example.com/new-image/thumb1.jpg" },
                                 createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
