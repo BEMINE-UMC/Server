@@ -205,13 +205,22 @@ export const updatePost = async (conn, postData) => {
     }
     return true;
 };
-//게시글 조회 
-export const getPostById = async (conn, postId) => {
+//게시글 조회 ==== > #121 함수 추가 
+export const getPostById = async (conn, postId,userId) => {
+    await conn.beginTransaction();
+    try {
     const [posts] = await conn.query(
         'SELECT id, title, body, created_at, updated_at FROM post WHERE id = ?',
         [postId]
     );
+    await createRecentViewPost(conn , userId , postId); 
+    await conn.commit();
     return posts[0];
+} catch (error) {
+    await conn.rollback();
+    throw error;
+}
+
 };
 
 //방문한 글의 좋아요를 사용자가 눌렀는지 판별별
@@ -221,4 +230,27 @@ export const checkPostLiked = async (conn, userId, postId) => {
         [userId, postId]
     );
     return likes.length > 0;
+};
+
+//최근본 게시물 추가
+export const createRecentViewPost = async (conn, userId, postId) => {
+    // 기존에 조회한 기록이 있는지 확인
+    const [rows] = await conn.query(
+        'SELECT id FROM recent_view_post WHERE user_id = ? AND post_id = ?',
+        [userId, postId]
+    );
+
+    if (rows.length > 0) {
+        // 기존 기록이 있다면 created_at만 업데이트
+        await conn.query(
+            'UPDATE recent_view_post SET created_at = NOW() WHERE user_id = ? AND post_id = ?',
+            [userId, postId]
+        );
+    } else {
+        // 기존 기록이 없다면 새로운 레코드 삽입
+        await conn.query(
+            'INSERT INTO recent_view_post (user_id, post_id, created_at) VALUES (?, ?, NOW())',
+            [userId, postId]
+        );
+    }
 };
