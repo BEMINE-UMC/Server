@@ -15,7 +15,7 @@ export const responseFromDetailInfo = (templateInfo) => {
         userId: templateInfo.user_id || "",
         title: templateInfo.title || "",
         filePPT: templateInfo.file_ppt,
-        filePDF: templateInfo.file_ppt,
+        filePDF: templateInfo.file_pdf,
         fileShareState: templateInfo.file_share_state || "",
         thumbnail: templateInfo.thumbnail,
         createdAt,
