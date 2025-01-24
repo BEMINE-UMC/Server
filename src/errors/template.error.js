@@ -67,3 +67,24 @@ export class NullTemplateLike extends Error {
         this.data = data;
     }
 }
+
+// 템플릿 카테고리가 없음
+export class NonTemplateCategoryId extends Error {
+    errorCode = 'T001'
+    constructor(reason) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
+
+// 템플릿이 존재하지 않음
+export class NonExsistsTemplateError extends Error {
+    errorCode = "T002";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = {userId: data.templateId}
+        this.statusCode = 400;
+    }
+}

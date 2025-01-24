@@ -1,6 +1,28 @@
-import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import {
+    responseFromTemplateDeletion,
+    responseFromTemplateAndLike,
+    responsePopularTemplates,
+    responseFromDetailInfo,
+    responseFromTemplateCreate, responseFromTemplateUpdate
+} from "../dtos/template.dto.js";
+import {
+    InvalidTemplateIdError,
+    NonexistentTemplateError,
+    InactiveTemplateError,
+    NullStatusTemplateError,
+    NonexistentTemplateLike,
+    NullTemplateLike,
+    NonTemplateCategoryId, NonExsistsTemplateError
+} from "../errors/template.error.js";
+import {
+    checkTemplateExists,
+    getTemplateFileInfo,
+    deleteTemplate,
+    getDetailTemplateInfo,
+    findPopularTemplates,
+    newTempalteCreate, existingTemplateUpdate
+} from "../repositories/template.repository.js";
+import {deleteImage} from "../../middleware.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
@@ -64,3 +86,32 @@ export const getPopularTemplates = async () => {
     const templates = await findPopularTemplates();
     return responsePopularTemplates(templates);
 };
+
+// 템플릿 생성
+export const templateCreate = async(data) =>{
+    if(!data.tCategoryId)
+        throw new NonTemplateCategoryId('템플릿 카테고리를 선택해주세요');
+
+    const template = await newTempalteCreate(data);
+    return responseFromTemplateCreate(template);
+}
+
+// 템플릿 수정
+export const templateUpdate = async(data) =>{
+    const confirm = await checkTemplateExists(data.templateId);
+    if(!confirm)
+        throw new NonExsistsTemplateError('템플릿이 존재하지 않음', data);
+    const preThumbnail = confirm.thumbnail
+    const prePDF = confirm.filePDF
+
+    if(preThumbnail){
+        await deleteImage(preThumbnail)
+    }
+
+    if(prePDF){
+        await deleteImage(prePDF)
+    }
+
+    const template = await existingTemplateUpdate(data);
+    return responseFromTemplateUpdate(template);
+}

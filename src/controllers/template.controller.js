@@ -1,6 +1,12 @@
 import { StatusCodes } from "http-status-codes";
-import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates} from "../services/template.service.js";
-import { templateToDetailInfo, templateToFileInfo } from "../dtos/template.dto.js";
+import {
+    detailTemplateInfoLoad,
+    templateDeletion,
+    templateFileInfo,
+    getPopularTemplates,
+    templateCreate, templateUpdate
+} from "../services/template.service.js";
+import {templateToCreate, templateToDetailInfo, templateToFileInfo, templateToUpdate} from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
@@ -294,6 +300,265 @@ export const handleTemplateCreateAndModify = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+// 템플릿 생성
+export const handlerTemplateCreate = async(req,res, next)=>{
+    /*
+    #swagger.summary = '템플릿 생성 API';
+    #swagger.tags = ['Template']
+    #swagger.description = '템플릿을 생성하는 API입니다.'
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "multipart/form-data": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        title: { type: "string", example: "New Title", description: "템플릿 제목" },
+                        filePDF: {
+                            type: "string",
+                            format: "binary",
+                            description: "업로드할 PDF 파일"
+                        },
+                        fileShareState: {
+                            type: "string",
+                            example: "public",
+                            description: "파일 공유 상태 (public 또는 private)"
+                        },
+                        thumbnail: {
+                            type: "string",
+                            format: "binary",
+                            description: "업로드할 썸네일 이미지"
+                        },
+                        tCategoryId: {
+                            type: "number",
+                            description: "템플릿 카테고리 ID",
+                            example: 1
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[200] = {
+        description: "템플릿 생성 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS", description: "결과 타입" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                templateId: { type: "number", example: 1, description: "템플릿 ID" },
+                                userId: { type: "number", example: 1, description: "사용자 ID" },
+                                title: { type: "string", example: "New Title", description: "템플릿 제목" },
+                                filePDF: {
+                                    type: "string",
+                                    example: "https://example.com/new-file/template.pdf",
+                                    description: "업로드된 PDF 파일 경로"
+                                },
+                                fileShareState: {
+                                    type: "string",
+                                    example: "private",
+                                    description: "파일 공유 상태"
+                                },
+                                tCategoryId: { type: "number", example: 1, description: "템플릿 카테고리 ID" },
+                                thumbnail: {
+                                    type: "string",
+                                    example: "https://example.com/new-image/thumb1.jpg",
+                                    description: "업로드된 썸네일 이미지 경로"
+                                },
+                                createdAt: {
+                                    type: "string",
+                                    format: "date-time",
+                                    example: "2025-01-10T00:41:23.000Z",
+                                    description: "템플릿 생성 시간"
+                                },
+                                updatedAt: {
+                                    type: "string",
+                                    format: "date-time",
+                                    example: "2025-01-10T00:41:23.000Z",
+                                    description: "템플릿 업데이트 시간"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        description: "템플릿 생성 실패 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL", description: "결과 타입" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "T001", description: "에러 코드" },
+                                reason: { type: "string", example: "템플릿 카테고리를 설정해주세요", description: "에러 이유" },
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+*/
+
+    const template = await templateCreate(templateToCreate(req.body, req.files, req.user))
+    res.status(StatusCodes.OK).success(template);
+}
+
+// 템플릿 수정
+export const handlerTemplateUpdate =async (req,res,next) =>{
+    /*
+        #swagger.summary = '템플릿 수정 API';
+        #swagger.tags = ['Template']
+        #swagger.description = '템플릿을 수정하는 API입니다.'
+        #swagger.requestBody = {
+            required: true,
+            content: {
+                "multipart/form-data": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            title: { type: "string", example: "New Title", description: "템플릿 제목" },
+                            filePDF: {
+                                type: "string",
+                                format: "binary",
+                                description: "업로드할 PDF 파일"
+                            },
+                            fileShareState: {
+                                type: "string",
+                                example: "public",
+                                description: "파일 공유 상태 (public 또는 private)"
+                            },
+                            thumbnail: {
+                                type: "string",
+                                format: "binary",
+                                description: "업로드할 썸네일 이미지"
+                            },
+                            tCategoryId: {
+                                type: "number",
+                                example: 1,
+                                description: "템플릿 카테고리 ID"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #swagger.responses[200] = {
+            description: "템플릿 수정 성공 응답",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: { type: "string", example: "SUCCESS", description: "결과 타입" },
+                            error: { type: "object", nullable: true, example: null },
+                            success: {
+                                type: "object",
+                                properties: {
+                                    templateId: { type: "number", example: 1, description: "템플릿 ID" },
+                                    userId: { type: "number", example: 1, description: "사용자 ID" },
+                                    title: { type: "string", example: "New Title", description: "템플릿 제목" },
+                                    filePDF: {
+                                        type: "string",
+                                        example: "https://example.com/new-file/template.pdf",
+                                        description: "업로드된 PDF 파일 경로"
+                                    },
+                                    fileShareState: {
+                                        type: "string",
+                                        example: "private",
+                                        description: "파일 공유 상태"
+                                    },
+                                    tCategoryId: { type: "number", example: 1, description: "템플릿 카테고리 ID" },
+                                    thumbnail: {
+                                        type: "string",
+                                        example: "https://example.com/new-image/thumb1.jpg",
+                                        description: "업로드된 썸네일 이미지 경로"
+                                    },
+                                    createdAt: {
+                                        type: "string",
+                                        format: "date-time",
+                                        example: "2025-01-10T00:41:23.000Z",
+                                        description: "템플릿 생성 시간"
+                                    },
+                                    updatedAt: {
+                                        type: "string",
+                                        format: "date-time",
+                                        example: "2025-01-10T00:41:23.000Z",
+                                        description: "템플릿 수정 시간"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #swagger.responses[400] = {
+            description: "템플릿 수정 실패 응답",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            resultType: {
+                                type: "string",
+                                example: "FAIL",
+                                description: "결과 타입"
+                            },
+                            error: {
+                                type: "object",
+                                properties: {
+                                    errorCode: {
+                                        type: "string",
+                                        example: "T001",
+                                        description: "에러 코드"
+                                    },
+                                    reason: {
+                                        type: "string",
+                                        example: "유효하지 않은 templateId 입니다.",
+                                        description: "에러 사유"
+                                    },
+                                    data: {
+                                        type: "object",
+                                        properties: {
+                                            requestedTemplateId: {
+                                                type: "number",
+                                                example: 1,
+                                                description: "요청된 템플릿 ID"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            success: {
+                                type: "object",
+                                nullable: true,
+                                example: null,
+                                description: "성공 데이터 (항상 null)"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    */
+
+    const template = await templateUpdate(templateToUpdate(req.params,req.body, req.files, req.user))
+    res.status(StatusCodes.OK).success(template);
 }
 
 // 템플릿 좋아요 생성
