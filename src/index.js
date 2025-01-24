@@ -177,7 +177,7 @@ app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 app.get('/templates', handleViewAllTemplates);
 
 // 템플릿 목록 조회 API (로그인 후)
-app.get('/templates/loggedIn', authenticateJWT, handleViewAllTemplatesLoggedIn);
+app.get('/user/templates', authenticateJWT, handleViewAllTemplatesLoggedIn);
 
 //게시글 작성 API 
 app.post('/posts/write', authenticateJWT, handlePostWrite );

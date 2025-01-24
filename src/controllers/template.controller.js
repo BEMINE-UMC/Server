@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates, allTemplatesInfoLoad } from "../services/template.service.js";
-import { templateToDetailInfo, templateToFileInfo, postToAllTemplates } from "../dtos/template.dto.js";
+import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates, allTemplatesInfoLoad, allTemplatesInfoLoadLoggedIn } from "../services/template.service.js";
+import { templateToDetailInfo, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn } from "../dtos/template.dto.js";
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
@@ -627,5 +627,111 @@ export const handleViewAllTemplates = async(req, res, next) => {
 
 // 템플릿 목록 조회 (로그인 후)
 export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
+/* 
+    #swagger.summary = '템플릿 목록 조회 API (로그인 후)';
+    #swagger.tags = ['Template']
+    #swagger.parameters: [
+    { in: "query",
+        name: "categoryId",
+        schema: { type: "integer" },
+        description: "카테고리 ID",
+        required: false,
+    }
+    ]
+    #swagger.parameters: [
+    { in: "query",
+        name: "offset",
+        schema: { type: "integer" },
+        description: "offset (기본값: 0)",
+        required: false,
+    }
+    ]
+    #swagger.parameters: [
+    { in: "query",
+        name: "limit",
+        schema: { type: "integer" },
+        description: "limit (기본값: 20)",
+        required: false,
+    }
+    ]
+    #swagger.description = '로그인 후 템플릿 목록 조회를 하는 API입니다. (로그인 후에는 사용자에 대한 템플릿 좋아요 여부를 볼 수 있음)'
+    #swagger.responses[200] = {
+        description: "로그인 후 템플릿 목록 조회 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                data: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                            postId: { type: "number", example: 100 },
+                                            title: { type: "string", example: "Template Title 100" },
+                                            thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
+                                            authorId: { type: "number", example: 5 },
+                                            authorName: { type: "string", example: "Eve" },
+                                            categoryId: { type: "number", example: 4 },
+                                            categoryName: { type: "string", example: "바이럴 마케터" },
+                                            likedStatus: { type: "boolean", example: true },
+                                        }
+                                    }
+                                },
+                                pagination: {
+                                    type: "object", 
+                                    properties: {
+                                        cursor: { type: "number", nullable: true }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        description: "로그인 후 템플릿 목록 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "T26" },
+                                reason: { type: "string", example: "유효하지 않은 categoryId 입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        requestedCategoryId: { type: "number", example: -1 }
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+*/
+    try {
+        console.log("\n템플릿 목록 조회를 요청했습니다! (로그인 후)");
 
+        const posts = await allTemplatesInfoLoadLoggedIn(postToAllTemplatesLoggedIn(req.user, req.query));
+
+        res.status(StatusCodes.OK).success(posts);
+    } catch (error) {
+        next(error);
+    }
 };

@@ -97,6 +97,7 @@ export class InvalidLimitError extends Error {
         super(reason);
         this.reason = reason;
         this.data = data;
+        this.statusCode = 400;
     }
 }
 
@@ -107,5 +108,6 @@ export class NonexistentCategoryIdError extends Error {
         super(reason);
         this.reason = reason;
         this.data = data;
+        this.statusCode = 400;
     }
 }
