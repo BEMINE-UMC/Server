@@ -126,7 +126,7 @@ export const ScrapPosts = async (data) => {
 export const getPostDetailWithLikeStatus = async (userId, postId) => {
     const conn = await pool.getConnection();
     try {
-        const post = await getPostById(conn, postId);
+        const post = await getPostById(conn, postId,userId);
         if (!post) {
             throw new PostNotFoundError();
 

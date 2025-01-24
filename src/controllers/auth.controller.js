@@ -1,10 +1,7 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from "http-status-codes";
-import { postUserInfo } from "../services/auth.service.js";
-import { getLoginInfo } from "../services/auth.service.js";
-import { handleTokenRefreshService } from "../services/auth.service.js";
-import { PasswordLengthError } from "../errors/auth.error.js";
-import { createdGetLoginInfoDTO } from '../dtos/auth.dto.js';
+import { postUserInfo, getLoginInfo, handleTokenRefreshService, sendVerificationEmail, verifyEmailCode } from "../services/auth.service.js";
+import { PasswordLengthError, CodeNotValidateError } from "../errors/auth.error.js";
 
 // 회원가입
 export const handleSignUp = async (req, res) => {
@@ -252,7 +249,7 @@ export const handleLogin = async (req, res) => {
 
   const { email, password } = req.body;
 
-  const userInfo = await getLoginInfo({email, password});
+  const userInfo = await getLoginInfo({ email, password });
 
   res.status(StatusCodes.OK).success(userInfo);
 
@@ -335,15 +332,15 @@ export const handleTokenRefresh = async (req, res) => {
 
 }
 
-// 이메일 인증
-export const handlecheckEmail = async (req, res) => {
+// 인증번호 발송
+export const handlesendEmail = async (req, res) => {
 
   /*
-  #swagger.summary = '이메일 인증 API';
+  #swagger.summary = '인증번호 발송 API';
   #swagger.tags = ['Auth']
 
   #swagger.responses[200] = {
-    description: "이메일 인증 성공 응답",
+    description: "인증번호 발송 성공 응답",
     content: {
       "application/json": {
         schema: {
@@ -366,7 +363,7 @@ export const handlecheckEmail = async (req, res) => {
   }
 
   #swagger.responses[400] = {
-    description: "이메일 인증 실패 응답",
+    description: "인증번호 발송 실패 응답",
     content: {
       "application/json": {
         schema: {
@@ -377,7 +374,7 @@ export const handlecheckEmail = async (req, res) => {
               type: "object",
               properties: {
                 errorCode: { type: "string", example: "L003" },
-                reason: { type: "string", example: "이메일 인증 실패" },
+                reason: { type: "string", example: "인증번호 발송 실패" },
                 data: { type: "object", nullable: true, example: {} }
               }
             },
@@ -389,5 +386,80 @@ export const handlecheckEmail = async (req, res) => {
   }
 */
 
+  console.log("인증번호 발송 요청");
+
+  const { email } = req.body;
+
+  await sendVerificationEmail(email);
+
+  res.status(StatusCodes.OK).success({ message: '인증번호가 전송되었습니다!' });
+
+}
+
+// 인증번호 검증
+export const handlecheckEmail = async (req, res) => {
+
+  /*
+  #swagger.summary = '인증번호 검증 API';
+  #swagger.tags = ['Auth']
+
+  #swagger.responses[200] = {
+    description: "인증번호 검증 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                email: { type: "string", example: "user@example.com" },
+                accessToken: { type: "string", example: "accessToken" },
+                refreshToken: { type: "string", example: "refreshToken" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #swagger.responses[400] = {
+    description: "인증번호 검증 실패 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "L003" },
+                reason: { type: "string", example: "인증번호 검증 실패" },
+                data: { type: "object", nullable: true, example: {} }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+*/
+
+  console.log("인증번호 검증 요청");
+
+  const { email, code } = req.body;
+  
+  const isVerified = await verifyEmailCode(email, code);
+
+  if (isVerified) {
+    return res.status(StatusCodes.OK).success({ message: '인증되었습니다.'});
+  } else {
+    throw new CodeNotValidateError("인증번호가 올바르지 않습니다.");
+  }
 
 }

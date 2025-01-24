@@ -10,7 +10,7 @@ import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplate
 import { handleViewAllPosts } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh } from "./controllers/auth.controller.js";
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
 
@@ -122,8 +122,11 @@ app.post('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
 //게시물 검색 API
 app.get('/posts/search',handlerPostSearch);
 
-//이메일 인증 API
-app.get('/users/checkEmail', handlecheckEmail);
+//인증번호 발송 API
+app.post('/users/sendEmail', handlesendEmail);
+
+//인증번호 검증 API
+app.post('/users/checkEmail', handlecheckEmail);
 
 //회원가입 API
 app.post('/users/signup', handleSignUp);
