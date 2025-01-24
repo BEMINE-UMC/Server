@@ -77,6 +77,68 @@ export class NotFoundSearchedPost extends Error {
     }
 }
 
+// 게시물 작성자가 아닌 경우의 에러
+export class NotPostAuthorError extends Error {
+    errorCode = "P047";
+    constructor(reason = "작성자가 아닙니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 403;
+        this.data = {};
+    }
+}
+
+// 제목 누락 에러
+export class TitleRequiredError extends Error {
+    errorCode = "P041";
+    constructor(reason = "제목을 입력해주세요.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
+
+// 내용 누락 에러
+export class ContentRequiredError extends Error {
+    errorCode = "P042";
+    constructor(reason = "내용을 입력해주세요.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
+
+// 이미지 형식 관련 에러
+export class InvalidImageFormatError extends Error {
+    errorCode = "P043";
+    constructor(reason = "지원하지 않는 이미지 형식입니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
+
+// 이미지 크기 초과 에러
+export class ImageSizeExceededError extends Error {
+    errorCode = "P044";
+    constructor(reason = "이미지 크기는 5MB를 초과할 수 없습니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}
+
+// 조회한 게시글이 없는 게시글일 때
+export class PostNotFoundError extends Error {
+    errorCode = "P046";
+    constructor(reason = "게시글을 찾을 수 없습니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 404;
+        this.data = {};
+    }
+}
+
 // 유효하지 않은 categoryId 에러
 export class InvalidCategoryIdError extends Error {
     errorCode = "P20";

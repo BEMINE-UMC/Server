@@ -3,6 +3,9 @@ import { pool } from "../db.config.js";
 import bcrypt from 'bcrypt';
 import { ExistEmailError, ExistNameError, UserNotExistError, InvalidPasswordError } from "../errors/auth.error.js";
 
+// 메모리 기반 임시 저장소
+const verificationStore = new Map();
+
 // 회원가입
 export const postUserInformation = async ({ name, email, password }) => {
     const conn = await pool.getConnection();
@@ -34,7 +37,7 @@ export const postUserInformation = async ({ name, email, password }) => {
 };
 
 // 로그인
-export const getUserInfo = async ({email, password}) => {
+export const getUserInfo = async ({ email, password }) => {
     const conn = await pool.getConnection();
 
     try {
@@ -45,9 +48,9 @@ export const getUserInfo = async ({email, password}) => {
         }
 
         const isPasswordValid = await bcrypt.compare(password, user[0].password);
-         if (!isPasswordValid) {
-             throw new InvalidPasswordError("비밀번호가 일치하지 않습니다.");
-         }
+        if (!isPasswordValid) {
+            throw new InvalidPasswordError("비밀번호가 일치하지 않습니다.");
+        }
 
         return user[0];
 
@@ -55,4 +58,17 @@ export const getUserInfo = async ({email, password}) => {
         console.error("Error in getUserInfo: ", error);
         throw error;
     }
+};
+
+// 인증번호 저장
+export const saveVerificationCode = async (email, code) => {
+    verificationStore.set(email, code);
+
+    // 5분 후 인증번호 자동 삭제
+    setTimeout(() => verificationStore.delete(email), 5 * 60 * 1000);
+};
+
+// 인증번호 조회
+export const getVerificationCode = async (email) => {
+    return verificationStore.get(email);
 };
