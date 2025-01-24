@@ -13,7 +13,19 @@ export const createUserPostLike = async (userId, postId) => {
         });
 
         if (existPostLike)
-            return null;
+        {
+            const updatePostLike = await prisma.likedPost.update({
+                where: {
+                    id: existPostLike.id,
+                },
+                data: {
+                    status: !existPostLike.status,
+                    updatedAt: new Date(),
+                },
+            });
+
+            return updatePostLike;
+        };
 
         const createPostLike = await prisma.likedPost.create({
             data: {

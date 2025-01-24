@@ -4,6 +4,7 @@ export const createdPostLikedDTO = (likedPost) => {
     id: likedPost.id,
     userId: likedPost.userId,
     postId: likedPost.postId,
+    status: likedPost.status,
     createdAt: likedPost.createdAt,
     updatedAt: likedPost.updatedAt
   }
