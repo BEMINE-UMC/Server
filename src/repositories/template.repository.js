@@ -144,7 +144,19 @@ export const postTemplateLike = async (userId, templateId) => {
           });
 
           if (existtemplateLike)
-              return null;    //여기에 status 변경하는 부분을 넣으면 괜찮지 않을까..?
+          {
+            const updateLikeTemplate = await prisma.likedTemplate.update({
+              where: {
+                  id: existtemplateLike.id,
+              },
+              data: {
+                  status: !existtemplateLike.status,
+                  updatedAt: new Date(),
+              },
+          });
+
+          return updateLikeTemplate;
+          }
 
           const createTemplateLike = await prisma.likedTemplate.create({
               data: {

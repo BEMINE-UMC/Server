@@ -319,39 +319,11 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
                                 id: { type: "integer", example: 1 },
                                 templateId: { type: "integer", example: 1 },
                                 userId: { type: "integer", example: 1 },
-                                status: { type: "string", example: "true" },
+                                status: { type: "boolean", example: true },
                                 createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                 updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                             }
                         }
-                    }
-                }
-            }
-        }
-    }
-    #swagger.responses[400] = {
-        description: "템플릿 좋아요 실패 응답",
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        resultType: { type: "string", example: "FAIL" },
-                        error: {
-                            type: "object",
-                            properties: {
-                                errorCode: { type: "string", example: "T030" },
-                                reason: { type: "string", example: "이미 좋아요 누른 템플릿입니다." },
-                                data: {
-                                    type: "object",
-                                    properties: {
-                                        templateId: { type: "number", example: 1 },
-                                        userId:  { type: "number", example: 1 }
-                                    },
-                                }
-                            }
-                        },
-                        success: { type: "object", nullable: true, example: null }
                     }
                 }
             }
