@@ -79,7 +79,19 @@ export const createUserPostScrap = async (userId, postId) => {
         });
 
         if (existPostScrap)
-            return null;
+        {
+            const updatePostScrap = await prisma.scrapPost.update({
+                where: {
+                    id: existPostScrap.id,
+                },
+                data: {
+                    status: !existPostScrap.status,
+                    updatedAt: new Date(),
+                },
+            });
+
+            return updatePostScrap;
+        };
 
         const createPostScrap = await prisma.scrapPost.create({
             data: {

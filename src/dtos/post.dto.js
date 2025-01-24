@@ -26,6 +26,7 @@ export const createdPostScrapedDTO = (scrapedPost) => {
     id: scrapedPost.id,
     userId: scrapedPost.userId,
     postId: scrapedPost.postId,
+    status: scrapedPost.status,
     createdAt: scrapedPost.createdAt,
     updatedAt: scrapedPost.updatedAt
   }

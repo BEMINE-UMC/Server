@@ -35,37 +35,12 @@ export const handlerPostLike = async (req, res, next) => {
                                      id: { type: "integer", example: 1 },
                                      postId: { type: "integer", example: 1 },
                                      userId: { type: "integer", example: 1 },
+                                     status: { type: "boolean", example: true },
                                      createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                      updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                  }
                              }
                          }
-                     }
-                 }
-             }
-         }
-     }
-     
-     #swagger.responses[400] = {
-         description: "이미 좋아요 누른 상태임",
-         content: {
-             "application/json": {
-                 schema: {
-                     type: "object",
-                     properties: {
-                         resultType: { type: "string", example: "FAIL" },
-                         error: {
-                             type: "object",
-                             properties: {
-                                 errorCode: { type: "string", example: "P001" },
-                                 reason: { type: "string", example: "User already liked this post" },
-                                 data: { 
-                                     type: "object",
-                                     example: {}
-                                 }
-                             }
-                         },
-                         success: { type: "null", example: null }
                      }
                  }
              }
@@ -527,37 +502,12 @@ export const handlerPostScrap = async (req, res) => {
                                   id: { type: "integer", example: 1 },
                                   postId: { type: "integer", example: 1 },
                                   userId: { type: "integer", example: 1 },
+                                  status: { type: "boolean", example: true },
                                   createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                   updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                               }
                           }
                       }
-                  }
-              }
-          }
-      }
-  }
-  
-  #swagger.responses[400] = {
-      description: "이미 스크랩 누른 상태임",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "FAIL" },
-                      error: {
-                          type: "object",
-                          properties: {
-                              errorCode: { type: "string", example: "P003" },
-                              reason: { type: "string", example: "User already scrapted this post" },
-                              data: { 
-                                  type: "object",
-                                  example: {}
-                              }
-                          }
-                      },
-                      success: { type: "null", example: null }
                   }
               }
           }
