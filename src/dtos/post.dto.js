@@ -61,11 +61,29 @@ export const responseFromSearchedPost = (posts) => {
 }
 
 // 게시물 전체 조회 (controller->service)
-export const postToAllPosts = (user, data) =>{
+export const postToAllPosts = (data) => {
   return{
-    userId: parseInt(user.userId),
-    categoryId: parseInt(data.categoryId),
-    offset: parseInt(data.offset),
-    limit: parseInt(data.limit)
+    // userId: parseInt(user.userId), // 로그인 전용
+    categoryId: (data.categoryId == undefined ? undefined : parseInt(data.categoryId)),
+    offset: (data.offset === undefined ? 0 : parseInt(data.offset)), // 기본값 부여
+    limit: (data.limit === undefined ? 20 : parseInt(data.limit)) // 기본값 부여
   }
+}
+
+// 게시물 전체 조회 (controller->service)
+export const responseFromAllPosts = (posts) => {
+  return posts.map(post => {
+    const postCreatedAt = new Date(post.post_created_at);
+
+    return {
+      postCreatedAt,
+      postId: post.post_id,
+      title: post.title,
+      thumbnail: post.thumbnail,
+      authorId: post.author_id,
+      authorName: post.author_name,
+      categoryId: post.category_id,
+      categoryName: post.category_name
+    }
+  });
 }

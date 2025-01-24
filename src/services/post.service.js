@@ -5,16 +5,20 @@ import {
     responseFromScrapPost,
     responseFromSearchedPost
 } from "../dtos/post.dto.js";
-import { createdGetOtherPostDTO } from "../dtos/post.dto.js";
+import { createdGetOtherPostDTO, responseFromAllPosts } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
     NonExistUserError,
     NotFoundSearchedPost,
-    NotRecentPostsErrors, NotScrapPostsErrors
+    NotRecentPostsErrors, NotScrapPostsErrors, 
+    InvalidCategoryIdError, 
+    InvalidOffsetError, 
+    InvalidLimitError,
+    NonexistentCategoryIdError
 } from "../errors/post.error.js";
 import {createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts} from "../repositories/post.repository.js";
-import { getUserOtherPost } from "../repositories/post.repository.js";
+import { getUserOtherPost, getAllPostsInfo } from "../repositories/post.repository.js";
 import {getUserInfo} from "../repositories/user.repository.js";
 import {NotExsistsUserError} from "../errors/user.error.js";
 
@@ -116,6 +120,24 @@ export const ScrapPosts = async (data) =>{
 }
 
 // 게시물 전체 조회
-export const AllPostsView = async (data) => {
-    console.log(data);
+export const allPostsInfoLoad = async (data) => {
+    if (data.categoryId === undefined) {}
+    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
+    }
+    if (data.offset === undefined) {}
+    else if (isNaN(data.offset) || data.offset < 0) {
+        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
+    }
+    if (data.limit === undefined) {}
+    else if (isNaN(data.limit) || data.limit <= 0) {
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+    }
+
+    const allPostsInfo = await getAllPostsInfo(data.categoryId, data.offset, data.limit);
+    if (allPostsInfo === null){
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+    }
+
+    return responseFromAllPosts(allPostsInfo);
 }

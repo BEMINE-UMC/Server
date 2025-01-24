@@ -138,3 +138,60 @@ export const getScrapPosts = async (data)=>{
     })
     return posts;
 }
+
+// 게시물 전체 조회 (정보 얻기)
+export const getAllPostsInfo = async (categoryId, offset, limit) => {
+    const conn = await pool.getConnection();
+    try {
+        let posts;
+        
+        // 기본 쿼리 정의
+        const baseQuery = `
+            SELECT 
+                p.created_at AS post_created_at,
+                p.id AS post_id,
+                p.title,
+                p.thumbnail,
+                u.id AS author_id,
+                u.name AS author_name,
+                c.id AS category_id,
+                c.name AS category_name
+            FROM post AS p
+            LEFT JOIN category AS c ON p.category_id = c.id
+            LEFT JOIN user AS u ON p.user_id = u.id`;
+
+        // 카테고리가 명시되지 않은 경우
+        if (categoryId === undefined) {
+            [posts] = await conn.query(
+                `${baseQuery}
+                 ORDER BY p.created_at DESC
+                 LIMIT ? OFFSET ?`, 
+                [limit, offset]
+            );
+        } else { // 카테고리가 명시된 경우
+            const [categoryCheck] = await conn.query(
+                `SELECT 1 FROM category WHERE id = ? LIMIT 1`,
+                [categoryId]
+            );
+            if (categoryCheck.length === 0) {
+                return null;
+            }
+
+            [posts] = await conn.query(
+                `${baseQuery}
+                 WHERE p.category_id = ?
+                 ORDER BY p.created_at DESC
+                 LIMIT ? OFFSET ?`, 
+                [categoryId, limit, offset]
+            );
+        }
+
+        return posts;
+    } catch (err) {
+        throw new Error (
+            `게시물 전체 조회 중에 오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+          );
+    } finally {
+        conn.release();
+    }
+}

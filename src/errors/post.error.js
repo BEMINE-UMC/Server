@@ -76,3 +76,43 @@ export class NotFoundSearchedPost extends Error {
         };
     }
 }
+
+// 유효하지 않은 categoryId 에러
+export class InvalidCategoryIdError extends Error {
+    errorCode = "P20";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+    }
+}
+
+// 유효하지 않은 offset 에러
+export class InvalidOffsetError extends Error {
+    errorCode = "P21";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+    }
+}
+
+// 유효하지 않은 limit 에러
+export class InvalidLimitError extends Error {
+    errorCode = "P22";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+    }
+}
+
+// 존재하지 않는 categoryId 에러
+export class NonexistentCategoryIdError extends Error {
+    errorCode = "P23";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+    }
+}

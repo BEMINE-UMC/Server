@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, AllPostsView} from "../services/post.service.js";
+import {createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, allPostsInfoLoad} from "../services/post.service.js";
 import { getOtherPost } from "../services/post.service.js";
 import {postToRecent, postToScrap, postToAllPosts} from "../dtos/post.dto.js";
 
@@ -352,7 +352,7 @@ export const handlerGetScrapPost = async (req, res) => {
 export const handleViewAllPosts = async (req, res, next) => {
     /* 
     #swagger.summary = '게시물 전체 조회 API';
-    #swagger.tags = ['Get']
+    #swagger.tags = ['Post']
     #swagger.description = '게시물 전체 조회를 하는 API입니다.'
     #swagger.responses[200] = {
         description: "게시물 전체 조회 성공 응답",
@@ -424,12 +424,15 @@ export const handleViewAllPosts = async (req, res, next) => {
     }
     */
     try {
-      console.log("\n템플릿 상세 정보 불러오기를 요청했습니다!");
-      console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
+      console.log("\게시물 전체 조회를 요청했습니다!");
+      console.log(`요청된 categoryId입니다: ${req.query.categoryId}`);
+      console.log(`요청된 offset입니다: ${req.query.offset}`);
+      console.log(`요청된 limit입니다: ${req.query.limit}`);
 
+      const posts = await allPostsInfoLoad(postToAllPosts(req.query));
       // const template = await AllPostsView(postToAllPosts(req.user, req.query)); // -->이건 로그인 전용
       
-      res.status(StatusCodes.OK).success(template);
+      res.status(StatusCodes.OK).success(posts);
     } catch (error) {
         next(error);
     }
