@@ -60,3 +60,30 @@ export const responsePopularTemplates = (templates) => {
         thumbnail: template.thumbnail
     }));
 };
+
+// 템플릿 목록 조회 (로그인 전) (controller->service)
+export const postToAllTemplates = (query) => {
+    return{
+        categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+        offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
+        limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
+    }
+}
+
+// 게시물 전체 조회 (로그인 전) (controller->service)
+export const responseFromAllTemplates = (templates) => {
+    return templates.map(template => {
+        const templateCreatedAt = new Date(template.template_created_at);
+
+        return {
+            templateCreatedAt,
+            templateId: template.template_id,
+            title: template.title,
+            thumbnail: template.thumbnail,
+            authorId: template.author_id,
+            authorName: template.author_name,
+            categoryId: template.category_id,
+            categoryName: template.category_name
+        }
+    });
+}
