@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { getOtherPost, getPostDetailWithLikeStatus } from "../services/post.service.js";
-import { postToRecent, postToScrap } from "../dtos/post.dto.js";
-import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost,deletePost } from "../services/post.service.js";
+import { postToRecent, postToScrap, createGetLikePostDTO } from "../dtos/post.dto.js";
+import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost, deletePost, getLikePost } from "../services/post.service.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
@@ -439,7 +439,7 @@ export const handleViewAllPosts = async (req, res, next) => {
 export const handleGetPostLiked = async (req, res) => {
   /*
         #swagger.summary = '좋아요 누른 게시물 조회 API';
-        #swagger.tags = ['POST']
+        #swagger.tags = ['GET']
   
         #swagger.responses[200] = {
           description: "좋아요 누른 게시물 조회 성공 응답",
@@ -500,6 +500,12 @@ export const handleGetPostLiked = async (req, res) => {
           }
         };
   */
+
+  console.log("좋아요 누른 게시물 조회 요청");
+
+  const likePost = await getLikePost(createGetLikePostDTO(req.user));
+
+  res.status(StatusCodes.OK).success(likePost);
 }
 
 //게시물 스크랩 하기

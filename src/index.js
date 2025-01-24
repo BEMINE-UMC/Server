@@ -153,7 +153,7 @@ app.get('/mypage/posts',authenticateJWT, handlerGetUserPost)
 app.get('/myPage/recentPost',authenticateJWT, handlerGetRecentPost)
 
 //좋아요 누른 게시물 조회 API
-app.get('/users/:userId/posts/:postId/like', handleGetPostLiked);
+app.get('/myPage/likePost', authenticateJWT, handleGetPostLiked);
 
 // 북마크한 게시물 조회 API
 app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
