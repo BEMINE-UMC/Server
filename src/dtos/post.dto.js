@@ -60,17 +60,26 @@ export const responseFromSearchedPost = (posts) => {
   
 }
 
-// 게시물 전체 조회 (controller->service)
-export const postToAllPosts = (data) => {
+// 게시물 전체 조회 (로그인 전) (controller->service)
+export const postToAllPosts = (query) => {
   return{
-    // userId: parseInt(user.userId), // 로그인 전용
-    categoryId: (data.categoryId == undefined ? undefined : parseInt(data.categoryId)),
-    offset: (data.offset === undefined ? 0 : parseInt(data.offset)), // 기본값 부여
-    limit: (data.limit === undefined ? 20 : parseInt(data.limit)) // 기본값 부여
+    categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+    offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
+    limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
   }
 }
 
-// 게시물 전체 조회 (controller->service)
+// 게시물 전체 조회 (로그인 후) (controller->service)
+export const postToAllPostsLoggedIn = (user, query) => {
+  return{
+    userId: parseInt(user.userId), // 로그인 전용
+    categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+    offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
+    limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
+  }
+}
+
+// 게시물 전체 조회 (로그인 전) (controller->service)
 export const responseFromAllPosts = (posts) => {
   return posts.map(post => {
     const postCreatedAt = new Date(post.post_created_at);
@@ -84,6 +93,26 @@ export const responseFromAllPosts = (posts) => {
       authorName: post.author_name,
       categoryId: post.category_id,
       categoryName: post.category_name
+    }
+  });
+}
+
+// 게시물 전체 조회 (로그인 후) (controller->service)
+export const responseFromAllPostsLoggedIn = (posts) => {
+  return posts.map(post => {
+    const postCreatedAt = new Date(post.post_created_at);
+
+    return {
+      postCreatedAt,
+      postId: post.post_id,
+      title: post.title,
+      thumbnail: post.thumbnail,
+      authorId: post.author_id,
+      authorName: post.author_name,
+      categoryId: post.category_id,
+      categoryName: post.category_name,
+      likedStatus: post.liked_status === null ? false : Boolean(post.liked_status),  // liked_post 테이블에 없는 포스트는 null이므로 false으로 처리
+      scrapStatus: post.scrap_status === null ? false : Boolean(post.scrap_status),  // scrap_post 테이블에 없는 포스트는 null이므로 false으로 처리
     }
   });
 }

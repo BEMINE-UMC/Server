@@ -7,7 +7,7 @@ import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap,
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
-import { handleViewAllPosts } from "./controllers/post.controller.js";
+import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleViewTemplate } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { 
@@ -116,8 +116,11 @@ app.get('/', (req, res) => {
 //메인페이지 좋아요 많은순 템플릿 출력
 app.get('/api/templates/popular',handlePopularTemplates);
 
-// 게시물 전체 조회 API
+// 게시물 전체 조회 API (로그인 전)
 app.get('/posts', handleViewAllPosts);
+
+// 게시물 전체 조회 API (로그인 후)
+app.get('/posts/loggedIn', authenticateJWT, handleViewAllPostsLoggedIn);
 
 //게시물 좋아요 누르기 API
 app.post('/posts/:postId/likes', authenticateJWT, handlerPostLike);

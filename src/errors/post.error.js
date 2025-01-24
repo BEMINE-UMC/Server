@@ -83,6 +83,7 @@ export class InvalidCategoryIdError extends Error {
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
+        this.statusCode = 400;
         this.data = data;
     }
 }
@@ -93,6 +94,7 @@ export class InvalidOffsetError extends Error {
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
+        this.statusCode = 400;
         this.data = data;
     }
 }
