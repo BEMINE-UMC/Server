@@ -1,8 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { postToRecent, postToScrap, createGetLikePostDTO } from "../dtos/post.dto.js";
 import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost, deletePost, getLikePost } from "../services/post.service.js";
 import { getOtherPost, getPostDetailWithLikeStatus, allPostsInfoLoad, allPostsInfoLoadLoggedIn } from "../services/post.service.js";
-import { postToRecent, postToScrap, postToAllPosts, postToAllPostsLoggedIn } from "../dtos/post.dto.js";
+import { postToRecent, postToScrap, postToAllPosts, postToAllPostsLoggedIn,createGetLikePostDTO } from "../dtos/post.dto.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
@@ -842,8 +841,8 @@ export const handlePostDelete = async (req, res, next) => {
                     error: {
                         type: "object",
                         properties: {
-                            errorCode: { type: "string", example: "P047" }, // 에러 코드 변경
-                            reason: { type: "string", example: "작성자가 아닙니다." }, // 에러 메시지 변경
+                            errorCode: { type: "string", example: "P047" },
+                            reason: { type: "string", example: "작성자가 아닙니다." },
                             data: { type: "object", example: {} }
                         }
                     },
@@ -852,13 +851,6 @@ export const handlePostDelete = async (req, res, next) => {
             }
         }
     }
-}
-
-res.status(StatusCodes.OK).json({
-    resultType: "SUCCESS",
-    error: null,
-    success: null
-});
 }
 */
   try {
