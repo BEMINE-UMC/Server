@@ -423,3 +423,14 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
         conn.release();
     }
 }
+
+//사용자 자신이 작성한 게시물 조회
+export const handleGetUserOwnPosts = async(userId) => {
+    const posts = await prisma.post.findMany({
+        where:{
+            userId: userId,
+        }
+    })
+
+    return posts;
+}
