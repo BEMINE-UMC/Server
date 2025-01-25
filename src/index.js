@@ -6,8 +6,8 @@ import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
-import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates } from "./controllers/template.controller.js";
-import { handleViewAllPosts } from "./controllers/post.controller.js";
+import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn } from "./controllers/template.controller.js";
+import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail } from "./controllers/auth.controller.js";
@@ -110,8 +110,11 @@ app.get('/', (req, res) => {
 //메인페이지 좋아요 많은순 템플릿 출력
 app.get('/templates/popular',handlePopularTemplates);
 
-// 게시물 전체 조회 API
+// 게시물 전체 조회 API (로그인 전)
 app.get('/posts', handleViewAllPosts);
+
+// 게시물 전체 조회 API (로그인 후)
+app.get('/user/posts', authenticateJWT, handleViewAllPostsLoggedIn);
 
 //게시물 좋아요 누르기 API
 app.put('/posts/:postId/likes', authenticateJWT, handlerPostLike);
@@ -173,8 +176,11 @@ app.put('/templates/:templateId', handleTemplateCreateAndModify);
 // 템플릿 파일 조회 API
 app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
+// 템플릿 목록 조회 API (로그인 전)
+app.get('/templates', handleViewAllTemplates);
 
-
+// 템플릿 목록 조회 API (로그인 후)
+app.get('/user/templates', authenticateJWT, handleViewAllTemplatesLoggedIn);
 
 //게시글 작성 API 
 app.post('/posts/write', authenticateJWT, handlePostWrite );
