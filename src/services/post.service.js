@@ -321,6 +321,8 @@ export const getUserOwnPosts = async (userId) => {
     try{
     const myposts = await handleGetUserOwnPosts(userId);
 
+    return myposts
+
 }catch(error){
     throw error;
     
