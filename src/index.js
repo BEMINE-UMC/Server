@@ -6,13 +6,8 @@ import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
-import {
-    handlerCreateTemplateLike,
-    handlerGetTempleteView,
-    handlePopularTemplates,
-    handlerTemplateCreate, handlerTemplateUpdate
-} from "./controllers/template.controller.js";
-import { handleViewAllPosts } from "./controllers/post.controller.js";
+import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
+import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail } from "./controllers/auth.controller.js";
@@ -115,14 +110,17 @@ app.get('/', (req, res) => {
 //메인페이지 좋아요 많은순 템플릿 출력
 app.get('/templates/popular',handlePopularTemplates);
 
-// 게시물 전체 조회 API
+// 게시물 전체 조회 API (로그인 전)
 app.get('/posts', handleViewAllPosts);
 
+// 게시물 전체 조회 API (로그인 후)
+app.get('/user/posts', authenticateJWT, handleViewAllPostsLoggedIn);
+
 //게시물 좋아요 누르기 API
-app.post('/posts/:postId/likes', authenticateJWT, handlerPostLike);
+app.put('/posts/:postId/likes', authenticateJWT, handlerPostLike);
 
 //게시물 스크랩 누르기 API
-app.post('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
+app.put('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
 
 //게시물 검색 API
 app.get('/posts/search',handlerPostSearch);
@@ -167,7 +165,7 @@ app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
-app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
+app.put('/templates/:templateId/likes',authenticateJWT,handlerCreateTemplateLike)
 
 // 템플릿 삭제 API
 app.patch('/templates/:templateId', handleTemplateDelete);
@@ -196,8 +194,11 @@ app.put('/templates/:templateId/update',
 // 템플릿 파일 조회 API
 app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
+// 템플릿 목록 조회 API (로그인 전)
+app.get('/templates', handleViewAllTemplates);
 
-
+// 템플릿 목록 조회 API (로그인 후)
+app.get('/user/templates', authenticateJWT, handleViewAllTemplatesLoggedIn);
 
 //게시글 작성 API 
 app.post('/posts/write', authenticateJWT, handlePostWrite );

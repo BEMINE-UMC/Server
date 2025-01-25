@@ -13,7 +13,19 @@ export const createUserPostLike = async (userId, postId) => {
         });
 
         if (existPostLike)
-            return null;
+        {
+            const updatePostLike = await prisma.likedPost.update({
+                where: {
+                    id: existPostLike.id,
+                },
+                data: {
+                    status: !existPostLike.status,
+                    updatedAt: new Date(),
+                },
+            });
+
+            return updatePostLike;
+        };
 
         const createPostLike = await prisma.likedPost.create({
             data: {
@@ -21,6 +33,7 @@ export const createUserPostLike = async (userId, postId) => {
                 postId: parseInt(postId),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                status: true,
             }
         });
 
@@ -66,7 +79,19 @@ export const createUserPostScrap = async (userId, postId) => {
         });
 
         if (existPostScrap)
-            return null;
+        {
+            const updatePostScrap = await prisma.scrapPost.update({
+                where: {
+                    id: existPostScrap.id,
+                },
+                data: {
+                    status: !existPostScrap.status,
+                    updatedAt: new Date(),
+                },
+            });
+
+            return updatePostScrap;
+        };
 
         const createPostScrap = await prisma.scrapPost.create({
             data: {
@@ -74,6 +99,7 @@ export const createUserPostScrap = async (userId, postId) => {
                 postId: parseInt(postId),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                status: true,
             }
         });
 
@@ -254,3 +280,126 @@ export const createRecentViewPost = async (conn, userId, postId) => {
         );
     }
 };
+
+// 게시물 전체 조회 (정보 얻기-로그인 전)
+export const getAllPostsInfo = async (categoryId, offset, limit) => {
+    const conn = await pool.getConnection();
+    try {
+        let posts;
+
+        // 기본 쿼리 정의
+        const baseQuery = `
+            SELECT 
+                p.created_at AS post_created_at,
+                p.id AS post_id,
+                p.title,
+                p.thumbnail,
+                u.id AS author_id,
+                u.name AS author_name,
+                c.id AS category_id,
+                c.name AS category_name
+            FROM post AS p
+            LEFT JOIN category AS c ON p.category_id = c.id
+            LEFT JOIN user AS u ON p.user_id = u.id`;
+
+        // 카테고리가 명시되지 않은 경우
+        if (categoryId === undefined) {
+            [posts] = await conn.query(
+                `${baseQuery}
+                WHERE p.status = 'active'
+                ORDER BY p.created_at DESC
+                LIMIT ? OFFSET ?`, 
+                [limit, offset]
+            );
+        } else { // 카테고리가 명시된 경우
+            const [categoryCheck] = await conn.query(
+                `SELECT 1 FROM category WHERE id = ? LIMIT 1`,
+                [categoryId]
+            );
+            if (categoryCheck.length === 0) {
+                return null;
+            }
+
+            [posts] = await conn.query(
+                `${baseQuery}
+                WHERE p.status = 'active' AND p.category_id = ?
+                ORDER BY p.created_at DESC
+                LIMIT ? OFFSET ?`, 
+                [categoryId, limit, offset]
+            );
+        }
+
+        return posts;
+    } catch (err) {
+        throw new Error (
+            `게시물 전체 조회 중에 오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    } finally {
+        conn.release();
+    }
+}
+
+// 게시물 전체 조회 (정보 얻기-로그인 후)
+export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit) => {
+    const conn = await pool.getConnection();
+    try {
+        let posts;
+
+        // liked_post 테이블에서 user_id === userId이고 status === true인 경우, status도 같이 조회되도록 하기
+
+        // 기본 쿼리 정의
+        const baseQuery = `
+            SELECT 
+                p.created_at AS post_created_at,
+                p.id AS post_id,
+                p.title,
+                p.thumbnail,
+                u.id AS author_id,
+                u.name AS author_name,
+                c.id AS category_id,
+                c.name AS category_name,
+                lp.status AS liked_status,
+                sp.status AS scrap_status
+            FROM post AS p
+            LEFT JOIN category AS c ON p.category_id = c.id
+            LEFT JOIN user AS u ON p.user_id = u.id
+            LEFT JOIN liked_post AS lp ON p.id = lp.post_id AND lp.user_id = ? AND lp.status = true
+            LEFT JOIN scrap_post AS sp ON p.id = sp.post_id AND sp.user_id = ? AND sp.status = true`;
+
+        // 카테고리가 명시되지 않은 경우
+        if (categoryId === undefined) {
+            [posts] = await conn.query(
+                `${baseQuery}
+                WHERE p.status = 'active'
+                ORDER BY p.created_at DESC
+                LIMIT ? OFFSET ?`, 
+                [userId, userId, limit, offset]
+            );
+        } else { // 카테고리가 명시된 경우
+            const [categoryCheck] = await conn.query(
+                `SELECT 1 FROM category WHERE id = ? LIMIT 1`,
+                [categoryId]
+            );
+            if (categoryCheck.length === 0) {
+                return null;
+            }
+
+            [posts] = await conn.query(
+                `${baseQuery}
+                WHERE p.status = 'active' AND p.category_id = ?
+                ORDER BY p.created_at DESC
+                LIMIT ? OFFSET ?`, 
+                [userId, userId, categoryId, limit, offset]
+            );
+        }
+
+        return posts;
+
+    } catch (err) {
+        throw new Error (
+            `게시물 전체 조회 중에 오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    } finally {
+        conn.release();
+    }
+}

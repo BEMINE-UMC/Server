@@ -15,7 +15,7 @@ export const responseFromDetailInfo = (templateInfo) => {
         userId: templateInfo.user_id || "",
         title: templateInfo.title || "",
         filePPT: templateInfo.file_ppt,
-        filePDF: templateInfo.file_ppt,
+        filePDF: templateInfo.file_pdf,
         fileShareState: templateInfo.file_share_state || "",
         thumbnail: templateInfo.thumbnail,
         createdAt,
@@ -114,4 +114,72 @@ export const responseFromTemplateUpdate = (data) =>{
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
     }
+}
+
+// 좋아요 누른 템플릿 응답 DTO
+export const responseFromLikedTemplate = (likedTemplate) => {
+    return {
+        id: likedTemplate.id,
+        userId: likedTemplate.userId,
+        templateId: likedTemplate.templateId,
+        status: likedTemplate.status,
+        createdAt: likedTemplate.createdAt,
+        updatedAt: likedTemplate.updatedAt
+      }
+};
+
+// 템플릿 목록 조회 (로그인 전) (controller->service)
+export const postToAllTemplates = (query) => {
+    return{
+        categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+        offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
+        limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
+    }
+}
+
+// 게시물 전체 조회 (로그인 전) (controller->service)
+export const responseFromAllTemplates = (templates) => {
+    return templates.map(template => {
+        const templateCreatedAt = new Date(template.template_created_at);
+
+        return {
+            templateCreatedAt,
+            templateId: template.template_id,
+            title: template.title,
+            thumbnail: template.thumbnail,
+            authorId: template.author_id,
+            authorName: template.author_name,
+            categoryId: template.category_id,
+            categoryName: template.category_name
+        }
+    });
+}
+
+// 템플릿 목록 조회 (로그인 후) (controller->service)
+export const postToAllTemplatesLoggedIn = (user, query) => {
+    return{
+        userId: parseInt(user.userId),
+        categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+        offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
+        limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
+    }
+}
+
+// 게시물 전체 조회 (로그인 후) (controller->service)
+export const responseFromAllTemplatesLoggedIn = (templates) => {
+    return templates.map(template => {
+        const templateCreatedAt = new Date(template.template_created_at);
+
+        return {
+            templateCreatedAt,
+            templateId: template.template_id,
+            title: template.title,
+            thumbnail: template.thumbnail,
+            authorId: template.author_id,
+            authorName: template.author_name,
+            categoryId: template.category_id,
+            categoryName: template.category_name,
+            likedStatus: template.liked_status === null ? false : Boolean(template.liked_status), // liked_template 테이블에 없는 포스트는 null이므로 false으로 처리
+        }
+    });
 }
