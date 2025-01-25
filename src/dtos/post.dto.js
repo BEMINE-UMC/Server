@@ -81,6 +81,21 @@ export const createPostDetailDTO = (post, isLiked) => {
   }
 };
 
+// 좋아요 누른 게시물 조회 요청 DTO
+export const createGetLikePostDTO = (user) => {
+  return {
+    userId: user.userId
+  }
+};
+
+// 좋아요 누른 게시물 조회 응답 DTO
+export const responseFromLikePost = (userId, data) =>{
+  return{
+    userId: userId,
+    post: data
+  }
+};
+
 // 게시물 전체 조회 (로그인 전) (controller->service)
 export const postToAllPosts = (query) => {
   return{

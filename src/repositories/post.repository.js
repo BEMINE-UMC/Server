@@ -281,6 +281,26 @@ export const createRecentViewPost = async (conn, userId, postId) => {
     }
 };
 
+// 좋아요 누른 게시물 조회
+export const getUserLikePost = async (data) => {
+    const posts = await prisma.likedPost.findMany({
+        where:{userId: data.userId, status: true},
+        select:{
+            post:{
+                select:{
+                    id: true,
+                    thumbnail: true
+                }
+            }
+        },
+        orderBy:{
+            createdAt: 'desc'
+        },
+        take: 16
+    })
+    return posts;
+};
+
 // 게시물 전체 조회 (정보 얻기-로그인 전)
 export const getAllPostsInfo = async (categoryId, offset, limit) => {
     const conn = await pool.getConnection();

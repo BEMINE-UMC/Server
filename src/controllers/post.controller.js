@@ -1,7 +1,8 @@
 import { StatusCodes } from "http-status-codes";
+import { postToRecent, postToScrap, createGetLikePostDTO } from "../dtos/post.dto.js";
+import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost, deletePost, getLikePost } from "../services/post.service.js";
 import { getOtherPost, getPostDetailWithLikeStatus, allPostsInfoLoad, allPostsInfoLoadLoggedIn } from "../services/post.service.js";
 import { postToRecent, postToScrap, postToAllPosts, postToAllPostsLoggedIn } from "../dtos/post.dto.js";
-import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost,deletePost } from "../services/post.service.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
@@ -553,69 +554,52 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
 
 // 좋아요 누른 게시물 조회
 export const handleGetPostLiked = async (req, res) => {
-  /*
-        #swagger.summary = '좋아요 누른 게시물 조회 API';
-        #swagger.tags = ['POST']
-  
-        #swagger.responses[200] = {
-          description: "좋아요 누른 게시물 조회 성공 응답",
-          content: {
-            "application/json": {
-              schema: {
+ /*
+    #swagger.summary = '좋아요 누른 게시물 조회 API';
+    #swagger.tags = ['POST']
+
+    #swagger.responses[200] = {
+      description: "좋아요 누른 게시물 조회 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
                 type: "object",
                 properties: {
-                  resultType: { type: "string", example: "SUCCESS" },
-                  error: { type: "object", nullable: true, example: null },
-                  success: {
+                  userId: { type: "number", example: 1 },
+                  post: {
                     type: "array",
                     items: {
                       type: "object",
                       properties: {
-                        userId: { type: "number", example: 1 },
                         postId: { type: "number", example: 1 },
-                        title: { type: "string", example: "첫 번째 게시물" },
-                        picture: { type: "string", example: "image1_url" }
+                        url: { type: "string", example: "링크주소" }
                       }
                     },
                     example: [
-                      { userId: 1, postId: 1, title: "첫 번째 게시물", picture: "image1_url" },
-                      { userId: 1, postId: 2, title: "두 번째 게시물", picture: "image2_url" }
+                      { postId: 1, url: "thumbnail1.jpg" },
+                      { postId: 2, url: "thumbnail2.jpg" }
                     ]
                   }
                 }
               }
             }
           }
-        };
-  
-        #swagger.responses[400] = {
-          description: "좋아요 누른 게시물 조회 실패 응답",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  resultType: { type: "string", example: "FAIL" },
-                  error: {
-                    type: "object",
-                    properties: {
-                      errorCode: { type: "string", example: "P002" },
-                      reason: { type: "string", example: "존재하지 않는 사용자입니다." },
-                      data: {
-                        type: "object",
-                        properties: {
-                          requestedUserId: { type: "number", example: 1 }
-                        }
-                      }
-                    }
-                  },
-                  success: { type: "object", nullable: true, example: null }
-                }
-              }
-            }
-          }
-        };
-  */
+        }
+      }
+    };
+*/
+
+
+  console.log("좋아요 누른 게시물 조회 요청");
+
+  const likePost = await getLikePost(createGetLikePostDTO(req.user));
+
+  res.status(StatusCodes.OK).success(likePost);
 }
 
 //게시물 스크랩 하기

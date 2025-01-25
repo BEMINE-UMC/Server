@@ -3,9 +3,10 @@ import {
     createdPostScrapedDTO,
     responseFromRecentPost,
     responseFromScrapPost,
-    responseFromSearchedPost
+    responseFromSearchedPost,
+    responseFromLikePost
 } from "../dtos/post.dto.js";
-import { createdGetOtherPostDTO, createPostDetailDTO, responseFromAllPosts, responseFromAllPostsLoggedIn } from "../dtos/post.dto.js";
+import { createdGetOtherPostDTO, createPostDetailDTO, responseFromAllPosts, responseFromAllPostsLoggedIn, createGetLikePostDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
@@ -16,7 +17,7 @@ import {
 } from "../errors/post.error.js";
 
 import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked } from "../repositories/post.repository.js";
-import { getUserOtherPost, createPost, updatePost, getAllPostsInfo, getAllPostsInfoLoggedIn } from "../repositories/post.repository.js";
+import { getUserOtherPost, createPost, updatePost, getAllPostsInfo, getAllPostsInfoLoggedIn, getUserLikePost } from "../repositories/post.repository.js";
 import { getUserInfo } from "../repositories/user.repository.js";
 import { pool } from "../db.config.js";
 import { NotExsistsUserError } from "../errors/user.error.js";
@@ -254,6 +255,19 @@ export const createOrUpdatePost = async (postData) => {
 } finally {
     conn.release();
 }
+}
+
+// 좋아요 누른 게시물 조회
+export const getLikePost = async (data) => {
+    const userLikePosts = await getUserLikePost(data);
+    const userId = data.userId
+
+    const posts = userLikePosts.map(item => ({
+        postId: item.post.id,
+        url: item.post.thumbnail
+    }))
+
+    return responseFromLikePost(userId, posts);
 }
 
 // 게시물 전체 조회 (로그인 전)

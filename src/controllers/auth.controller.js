@@ -335,9 +335,24 @@ export const handleTokenRefresh = async (req, res) => {
 // 인증번호 발송
 export const handlesendEmail = async (req, res) => {
 
-  /*
+/*
   #swagger.summary = '인증번호 발송 API';
   #swagger.tags = ['Auth']
+
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            email: { type: "string", example: "user@example.com" }
+          },
+          required: ["email"]
+        }
+      }
+    }
+  }
 
   #swagger.responses[200] = {
     description: "인증번호 발송 성공 응답",
@@ -351,9 +366,7 @@ export const handlesendEmail = async (req, res) => {
             success: {
               type: "object",
               properties: {
-                email: { type: "string", example: "user@example.com" },
-                accessToken: { type: "string", example: "accessToken" },
-                refreshToken: { type: "string", example: "refreshToken" }
+                message: { type: "string", example: "인증번호가 전송되었습니다!" }
               }
             }
           }
@@ -373,9 +386,14 @@ export const handlesendEmail = async (req, res) => {
             error: {
               type: "object",
               properties: {
-                errorCode: { type: "string", example: "L003" },
-                reason: { type: "string", example: "인증번호 발송 실패" },
-                data: { type: "object", nullable: true, example: {} }
+                errorCode: { type: "string", example: "A018" },
+                reason: { type: "string", example: "이메일은 '@'를 포함하는 문자열이어야 합니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    email: { type: "string", example: "user!example.com" }
+                  }
+                }
               }
             },
             success: { type: "object", nullable: true, example: null }
@@ -403,6 +421,22 @@ export const handlecheckEmail = async (req, res) => {
   #swagger.summary = '인증번호 검증 API';
   #swagger.tags = ['Auth']
 
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            email: { type: "string", example: "user@example.com" },
+            code: { type: "string", example: "123456" }
+          },
+          required: ["email", "code"]
+        }
+      }
+    }
+  }
+
   #swagger.responses[200] = {
     description: "인증번호 검증 성공 응답",
     content: {
@@ -415,9 +449,7 @@ export const handlecheckEmail = async (req, res) => {
             success: {
               type: "object",
               properties: {
-                email: { type: "string", example: "user@example.com" },
-                accessToken: { type: "string", example: "accessToken" },
-                refreshToken: { type: "string", example: "refreshToken" }
+                message: { type: "string", example: "인증되었습니다." }
               }
             }
           }
@@ -437,9 +469,65 @@ export const handlecheckEmail = async (req, res) => {
             error: {
               type: "object",
               properties: {
-                errorCode: { type: "string", example: "L003" },
-                reason: { type: "string", example: "인증번호 검증 실패" },
-                data: { type: "object", nullable: true, example: {} }
+                errorCode: { type: "string", example: "A018" },
+                reason: { type: "string", example: "이메일은 '@'를 포함하는 문자열이어야 합니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    email: { type: "string", example: "user!example.com" }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+
+  #swagger.responses[401] = {
+    description: "인증번호 검증 실패 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A019" },
+                reason: { type: "string", example: "인증번호는 6자리 숫자입니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    code: { type: "string", example: "1234567" }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+
+  #swagger.responses[402] = {
+    description: "인증번호 검증 실패 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A020" },
+                reason: { type: "string", example: "인증번호가 올바르지 않습니다." },
+                data: { type: "object", example: {} }
               }
             },
             success: { type: "object", nullable: true, example: null }
