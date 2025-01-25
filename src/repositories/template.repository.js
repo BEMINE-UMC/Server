@@ -133,6 +133,39 @@ export const findPopularTemplates = async () => {
   }
 };
 
+// 템플릿 생성하기
+export const newTempalteCreate = async(data) =>{
+  const template = await prisma.template.create({
+    data:{
+      title: data.title,
+      userId: data.userId,
+      filePDF: data.filePDF,
+      fileShareState: data.fileShareState,
+      tCategoryId: data.tCategoryId,
+      thumbnail: data.thumbnail,
+      updatedAt: new Date()
+    }
+  });
+
+  return template;
+}
+
+// 템플릿 수정하기
+export const existingTemplateUpdate = async(data) =>{
+  const template = await prisma.template.update({
+    where:{id: data.templateId},
+    data:{
+      title: data.title,
+      filePDF: data.filePDF,
+      fileShareState: data.fileShareState,
+      tCategoryId: data.tCategoryId,
+      thumbnail: data.thumbnail,
+      updatedAt: new Date()
+    }
+  });
+
+  return template;
+}
 
 //템플릿 좋아요 생성
 export const postTemplateLike = async (userId, templateId) => {

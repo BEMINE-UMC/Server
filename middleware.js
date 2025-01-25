@@ -15,7 +15,7 @@ const s3 = new S3Client({
 });
 
 // 확장자 검사 목록
-const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".gif",".TXT"];
+const allowedExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".gif",".TXT", '.pdf','.PDF'];
 
 export const imageUploader = multer({
   storage: multerS3({

@@ -68,6 +68,13 @@ export class NullTemplateLike extends Error {
     }
 }
 
+// 템플릿 카테고리가 없음
+export class NonTemplateCategoryId extends Error {
+    errorCode = 'T001'
+    constructor(reason) {
+        super(reason);
+        this.reason = reason;
+
 //사용자가 이미 해당 템플릿 좋아요를 눌렀을 경우
 export class alreadyExistTemplateLike extends Error {
     errorCode = "T30"
@@ -111,6 +118,16 @@ export class InvalidLimitError extends Error {
     }
 }
 
+// 템플릿이 존재하지 않음
+export class NonExsistsTemplateError extends Error {
+    errorCode = "T002";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = {userId: data.templateId}
+    }
+}
+      
 // 존재하지 않는 categoryId 에러
 export class NonexistentCategoryIdError extends Error {
     errorCode = "T29";

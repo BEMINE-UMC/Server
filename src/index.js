@@ -6,7 +6,7 @@ import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
 import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
-import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn } from "./controllers/template.controller.js";
+import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
@@ -171,7 +171,25 @@ app.put('/templates/:templateId/likes',authenticateJWT,handlerCreateTemplateLike
 app.patch('/templates/:templateId', handleTemplateDelete);
 
 // 템플릿 수정/생성 API
-app.put('/templates/:templateId', handleTemplateCreateAndModify);
+// app.put('/templates/:templateId', handleTemplateCreateAndModify);
+
+// 템플릿 생성
+app.post('/template/create',
+    imageUploader.fields([
+        {name: 'filePDF', maxCount:1},
+        {name: 'thumbnail', maxCount:1},
+    ]),
+    authenticateJWT,
+    handlerTemplateCreate);
+
+// 템플릿 수정
+app.put('/templates/:templateId/update',
+    imageUploader.fields([
+        {name: 'filePDF', maxCount:1},
+        {name: 'thumbnail', maxCount:1},
+    ]),
+    authenticateJWT,
+    handlerTemplateUpdate);
 
 // 템플릿 파일 조회 API
 app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);

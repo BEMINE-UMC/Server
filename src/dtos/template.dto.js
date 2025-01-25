@@ -61,6 +61,61 @@ export const responsePopularTemplates = (templates) => {
     }));
 };
 
+// 템플릿 생성 요청 DTO
+export const templateToCreate = (body, files, user) =>{
+    return {
+        title: body.title,
+        userId: user.userId,
+        filePDF: files.filePDF? files.filePDF[0].location : null,
+        fileShareState: body.fileShareState,
+        thumbnail: files.thumbnail? files.thumbnail[0].location : null,
+        tCategoryId: body.tCategoryId ? parseInt(body.tCategoryId) : null
+    }
+}
+
+// 템플릿 생성 전송 DTO
+export const responseFromTemplateCreate = (data) =>{
+    return{
+        templateId: data.id,
+        userId: data.userId,
+        title: data.title,
+        filePDF: data.filePDF,
+        fileShareState: data.fileShareState,
+        tCategoryId: data.tCategoryId,
+        thumbnail: data.thumbnail,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+    }
+}
+
+// 템플릿 수정 요청 DTO
+export const templateToUpdate = (params,body, files, user) =>{
+    return {
+        templateId: parseInt(params.templateId),
+        title: body.title,
+        userId: user.userId,
+        filePDF: files.filePDF? files.filePDF[0].location : null,
+        fileShareState: body.fileShareState,
+        thumbnail: files.thumbnail? files.thumbnail[0].location : null,
+        tCategoryId: body.tCategoryId ? parseInt(body.tCategoryId) : null
+    }
+}
+
+// 템플릿 수정 전송 DTO
+export const responseFromTemplateUpdate = (data) =>{
+    return{
+        templateId: data.id,
+        userId: data.userId,
+        title: data.title,
+        filePDF: data.filePDF,
+        fileShareState: data.fileShareState,
+        tCategoryId: data.tCategoryId,
+        thumbnail: data.thumbnail,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+    }
+}
+
 // 좋아요 누른 템플릿 응답 DTO
 export const responseFromLikedTemplate = (likedTemplate) => {
     return {
