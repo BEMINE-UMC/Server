@@ -16,7 +16,7 @@ import {
     NotRecentPostsErrors, NotScrapPostsErrors, ContentRequiredError, TitleRequiredError, InvalidImageFormatError, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError
 } from "../errors/post.error.js";
 
-import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked } from "../repositories/post.repository.js";
+import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked, handleGetUserOwnPosts } from "../repositories/post.repository.js";
 import { getUserOtherPost, createPost, updatePost, getAllPostsInfo, getAllPostsInfoLoggedIn, getUserLikePost } from "../repositories/post.repository.js";
 import { getUserInfo } from "../repositories/user.repository.js";
 import { pool } from "../db.config.js";
@@ -314,4 +314,16 @@ export const allPostsInfoLoadLoggedIn = async (data) => {
     }
 
     return responseFromAllPostsLoggedIn(allPostsInfo);
+}
+
+//사용자 본인이 작성한 게시물 조회
+export const getUserOwnPosts = async (userId) => {
+    try{
+    const myposts = await handleGetUserOwnPosts(userId);
+
+}catch(error){
+    throw error;
+    
+}
+
 }

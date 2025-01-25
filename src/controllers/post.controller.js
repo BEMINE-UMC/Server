@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost, deletePost, getLikePost } from "../services/post.service.js";
+import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost, deletePost, getLikePost, getUserOwnPosts } from "../services/post.service.js";
 import { getOtherPost, getPostDetailWithLikeStatus, allPostsInfoLoad, allPostsInfoLoadLoggedIn } from "../services/post.service.js";
 import { postToRecent, postToScrap, postToAllPosts, postToAllPostsLoggedIn,createGetLikePostDTO } from "../dtos/post.dto.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
@@ -784,6 +784,10 @@ export const handlerGetUserPost = async (req, res) => {
                                 errorCode: { type: "string", example: "P006" },
                                 reason: { type: "string", example: "사용자가 작성한 게시물이 없습니다." },
                                 data: {
+                                type: "object",
+                                  properties: {
+                                      userId: { type: "intenger", example: 1}
+                                  }
                                 }
                             }
                         },
@@ -794,7 +798,11 @@ export const handlerGetUserPost = async (req, res) => {
         }
     }
     */
-}
+  console.log("사용자 작성 게시물 조회를 요청하였습니다.");
+  const myposts = await getUserOwnPosts(req.user.userId);
+
+  res.status(StatusCodes.OK).success(myposts);
+  }
 //게시글 삭제 
 export const handlePostDelete = async (req, res, next) => {
   /* 
