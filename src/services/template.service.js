@@ -1,9 +1,6 @@
-import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromLikedTemplate, responseFromTemplateCreate, responseFromTemplateUpdate } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, alreadyExistTemplateLike, NonTemplateCategoryId, NonExsistsTemplateError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate } from "../repositories/template.repository.js";
-import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn, responseFromLikedTemplate } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, getAllTemplatesInfo, getAllTemplatesInfoLoggedIn, postTemplateLike } from "../repositories/template.repository.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate,getAllTemplatesInfo, getAllTemplatesInfoLoggedIn } from "../repositories/template.repository.js";
+import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn, responseFromLikedTemplate,responseFromTemplateCreate, responseFromTemplateUpdate } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike,NonTemplateCategoryId, NonExsistsTemplateError } from "../errors/template.error.js";
 import {deleteImage} from "../../middleware.js";
 
 // 템플릿 상세 정보 불러오기 

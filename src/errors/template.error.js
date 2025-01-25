@@ -74,7 +74,8 @@ export class NonTemplateCategoryId extends Error {
     constructor(reason) {
         super(reason);
         this.reason = reason;
-
+    }
+}
 //사용자가 이미 해당 템플릿 좋아요를 눌렀을 경우
 export class alreadyExistTemplateLike extends Error {
     errorCode = "T30"
@@ -84,6 +85,7 @@ export class alreadyExistTemplateLike extends Error {
         this.reason = reason;
         this.data = data;
     }
+}
 
 // 유효하지 않은 categoryId 에러
 export class InvalidCategoryIdError extends Error {
