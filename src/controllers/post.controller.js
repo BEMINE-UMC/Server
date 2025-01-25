@@ -1,7 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import { getOtherPost, getPostDetailWithLikeStatus } from "../services/post.service.js";
 import { postToRecent, postToScrap, createGetLikePostDTO } from "../dtos/post.dto.js";
 import { createUserLike, createUserScrap, getSearchedPostsList, RecentViewPosts, ScrapPosts, createOrUpdatePost, deletePost, getLikePost } from "../services/post.service.js";
+import { getOtherPost, getPostDetailWithLikeStatus, allPostsInfoLoad, allPostsInfoLoadLoggedIn } from "../services/post.service.js";
+import { postToRecent, postToScrap, postToAllPosts, postToAllPostsLoggedIn } from "../dtos/post.dto.js";
 import { imageUploader, deleteImage } from '../../middleware.js';
 
 
@@ -15,7 +16,7 @@ export const handlerPostLike = async (req, res, next) => {
   res.status(StatusCodes.OK).success(likedPost);
   /* 
      #swagger.summary = '게시물 좋아요 API'
-     #swagger.tags = ['Post']
+     #swagger.tags = ['POST']
      #swagger.description = '게시물 좋아요 누르는 API입니다.'
     
      #swagger.responses[200] = {
@@ -35,37 +36,12 @@ export const handlerPostLike = async (req, res, next) => {
                                      id: { type: "integer", example: 1 },
                                      postId: { type: "integer", example: 1 },
                                      userId: { type: "integer", example: 1 },
+                                     status: { type: "boolean", example: true },
                                      createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                      updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                  }
                              }
                          }
-                     }
-                 }
-             }
-         }
-     }
-     
-     #swagger.responses[400] = {
-         description: "이미 좋아요 누른 상태임",
-         content: {
-             "application/json": {
-                 schema: {
-                     type: "object",
-                     properties: {
-                         resultType: { type: "string", example: "FAIL" },
-                         error: {
-                             type: "object",
-                             properties: {
-                                 errorCode: { type: "string", example: "P001" },
-                                 reason: { type: "string", example: "User already liked this post" },
-                                 data: { 
-                                     type: "object",
-                                     example: {}
-                                 }
-                             }
-                         },
-                         success: { type: "null", example: null }
                      }
                  }
              }
@@ -351,14 +327,41 @@ export const handlerGetScrapPost = async (req, res) => {
   res.status(StatusCodes.OK).success(posts)
 }
 
-// // 게시물 전체 조회 요청
+// 게시물 전체 조회 요청 (로그인 전)
 export const handleViewAllPosts = async (req, res, next) => {
   /* 
-  #swagger.summary = '게시물 전체 조회 API';
-  #swagger.tags = ['Get']
-  #swagger.description = '게시물 전체 조회를 하는 API입니다.'
+  #swagger.summary = '게시물 전체 조회 API (로그인 전)';
+  #swagger.tags = ['Post']
+  #swagger.parameters: [
+    { in: "query",
+      name: "categoryId",
+      schema: { type: "integer" },
+      description: "카테고리 ID",
+      required: false,
+    }
+  ]
+  #swagger.parameters: [
+    { in: "query",
+      name: "offset",
+      schema: { type: "integer" },
+      description: "offset (기본값: 0)",
+      required: false,
+    }
+  ]
+  #swagger.parameters: [
+    { in: "query",
+      name: "limit",
+      schema: { type: "integer" },
+      description: "limit (기본값: 20)",
+      required: false,
+    }
+  ]
+  #swagger.description = '로그인 전 게시물 전체 조회를 하는 API입니다. (로그인 전에는 게시물 좋아요, 스크랩 여부를 볼 수 없음)'
+  #swagger.security = [{
+      "bearerAuth": []
+  }]
   #swagger.responses[200] = {
-      description: "게시물 전체 조회 성공 응답",
+      description: "로그인 전 게시물 전체 조회 성공 응답",
       content: {
           "application/json": {
               schema: {
@@ -374,14 +377,14 @@ export const handleViewAllPosts = async (req, res, next) => {
                                   items: {
                                       type: "object",
                                       properties: {
-                                          postId: { type: "number", example: 1 },
-                                          userId: { type: "number", example: 1 },
-                                          categoryId: { type: "number", example: 1 },
-                                          title: { type: "string", example: "Post Title 1" },
-                                          body: { type: "string", example: "Post Body 1" },
-                                          picture: { type: "string", example: "https://example.com/pictures/pic1.jpg"},
-                                          createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                          updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                          postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                          postId: { type: "number", example: 100 },
+                                          title: { type: "string", example: "Post Title 100" },
+                                          thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
+                                          authorId: { type: "number", example: 5 },
+                                          authorName: { type: "string", example: "Eve" },
+                                          categoryId: { type: "number", example: 4 },
+                                          categoryName: { type: "string", example: "바이럴 마케터" },
                                       }
                                   }
                               },
@@ -399,9 +402,7 @@ export const handleViewAllPosts = async (req, res, next) => {
       }
   }
   #swagger.responses[400] = {
-
-      description: "게시물 전체 조회 실패 응답",
-
+      description: "로그인 전 게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
       content: {
           "application/json": {
               schema: {
@@ -411,7 +412,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                       error: {
                           type: "object",
                           properties: {
-                              errorCode: { type: "string", example: "P001" },
+                              errorCode: { type: "string", example: "P20" },
                               reason: { type: "string", example: "유효하지 않은 categoryId 입니다." },
                               data: {
                                   type: "object",
@@ -429,9 +430,125 @@ export const handleViewAllPosts = async (req, res, next) => {
   }
   */
   try {
+    console.log("\게시물 전체 조회를 요청했습니다! (로그인 전)");
 
+    const posts = await allPostsInfoLoad(postToAllPosts(req.query));
+
+    res.status(StatusCodes.OK).success(posts);
   } catch (error) {
-    next(error);
+      next(error);
+  }
+}
+
+// 게시물 전체 조회 요청 (로그인 후)
+export const handleViewAllPostsLoggedIn = async (req, res, next) => {
+  /* 
+    #swagger.summary = '게시물 전체 조회 API (로그인 후)';
+    #swagger.tags = ['Post']
+    #swagger.parameters: [
+      { in: "query",
+        name: "categoryId",
+        schema: { type: "integer" },
+        description: "카테고리 ID",
+        required: false,
+      }
+    ]
+    #swagger.parameters: [
+      { in: "query",
+        name: "offset",
+        schema: { type: "integer" },
+        description: "offset (기본값: 0)",
+        required: false,
+      }
+    ]
+    #swagger.parameters: [
+      { in: "query",
+        name: "limit",
+        schema: { type: "integer" },
+        description: "limit (기본값: 20)",
+        required: false,
+      }
+    ]
+    #swagger.description = '로그인 후 게시물 전체 조회를 하는 API입니다. (로그인 후에는 사용자에 대한 게시물 좋아요, 스크랩 여부를 볼 수 있음)'
+    #swagger.responses[200] = {
+        description: "로그인 후 게시물 전체 조회 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                data: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                            postId: { type: "number", example: 100 },
+                                            title: { type: "string", example: "Post Title 100" },
+                                            thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
+                                            authorId: { type: "number", example: 5 },
+                                            authorName: { type: "string", example: "Eve" },
+                                            categoryId: { type: "number", example: 4 },
+                                            categoryName: { type: "string", example: "바이럴 마케터" },
+                                            likedStatus: { type: "boolean", example: true },
+                                            scrapStatus: { type: "boolean", example: false }
+                                        }
+                                    }
+                                },
+                                pagination: {
+                                    type: "object", 
+                                    properties: {
+                                        cursor: { type: "number", nullable: true }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #swagger.responses[400] = {
+        description: "로그인 후 게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "FAIL" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                errorCode: { type: "string", example: "P20" },
+                                reason: { type: "string", example: "유효하지 않은 categoryId 입니다." },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        requestedCategoryId: { type: "number", example: 0 }
+                                    }
+                                }
+                            }
+                        },
+                        success: { type: "object", nullable: true, example: null }
+                    }
+                }
+            }
+        }
+    }
+  */
+  try {
+    console.log("\게시물 전체 조회를 요청했습니다! (로그인 후)");
+
+    const posts = await allPostsInfoLoadLoggedIn(postToAllPostsLoggedIn(req.user, req.query));
+
+    res.status(StatusCodes.OK).success(posts);
+  } catch (error) {
+      next(error);
   }
 }
 
@@ -489,7 +606,7 @@ export const handleGetPostLiked = async (req, res) => {
 export const handlerPostScrap = async (req, res) => {
   /* 
   #swagger.summary = '게시물 스크랩 API'
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시물 스크랩 누르는 API입니다.'
   
   
@@ -510,37 +627,12 @@ export const handlerPostScrap = async (req, res) => {
                                   id: { type: "integer", example: 1 },
                                   postId: { type: "integer", example: 1 },
                                   userId: { type: "integer", example: 1 },
+                                  status: { type: "boolean", example: true },
                                   createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                   updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                               }
                           }
                       }
-                  }
-              }
-          }
-      }
-  }
-  
-  #swagger.responses[400] = {
-      description: "이미 스크랩 누른 상태임",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "FAIL" },
-                      error: {
-                          type: "object",
-                          properties: {
-                              errorCode: { type: "string", example: "P003" },
-                              reason: { type: "string", example: "User already scrapted this post" },
-                              data: { 
-                                  type: "object",
-                                  example: {}
-                              }
-                          }
-                      },
-                      success: { type: "null", example: null }
                   }
               }
           }
@@ -557,7 +649,7 @@ export const handlerPostScrap = async (req, res) => {
 export const handlerPostSearch = async (req, res) => {
   /* 
   #swagger.summary = '게시물 검색 API';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시물을 검색하는 API입니다.'
   #swagger.parameters['query'] = {
       in: 'query',
@@ -582,12 +674,15 @@ export const handlerPostSearch = async (req, res) => {
                                   items: {
                                       type: "object",
                                       properties: {
-                                          postId: { type: "number", example: 1 },
+                                          id: { type: "number", example: 1 },
                                           userId: { type: "number", example: 1 },
                                           categoryId: { type: "number", example: 1 },
                                           title: { type: "string", example: "Title" },
                                           body: { type: "string", example: "Body" },
-                                          picture: { type: "string", example: "url"},
+                                          thumbnail: { type: "string", example: "url"},
+                                          image: { type: "string", example: "url"},
+                                          status: { type: "string", example: "status"},
+                                          inactivateDate: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                           createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                           updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
                                       }
@@ -638,7 +733,7 @@ export const handlerPostSearch = async (req, res) => {
 export const handlerGetUserPost = async (req, res) => {
   /* 
     #swagger.summary = '작성한 게시물 조회 API';
-    #swagger.tags = ['User']
+    #swagger.tags = ['POST']
     #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
     
     #swagger.responses[200] = {

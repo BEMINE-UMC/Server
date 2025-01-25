@@ -96,6 +96,7 @@ model ScrapPost {
 model Template {
   id            Int      @id @default(autoincrement()) @db.Int
   userId        Int      @map("user_id")
+  tCategoryId  Int      @map("t_categoryId")
   title         String  @db.VarChar(120)
   filePPT       String?  @db.VarChar(255) @map("file_ppt")
   filePDF       String?  @db.VarChar(255) @map("file_pdf")
@@ -107,9 +108,19 @@ model Template {
   updatedAt     DateTime? @db.DateTime(6) @map("updated_at")
 
   user          User     @relation(fields: [userId], references: [id])
+  templateCategory TemplateCategory @relation(fields: [tCategoryId], references: [id])
   likedTemplates LikedTemplate[]
 
   @@map("template")
+}
+
+model TemplateCategory{
+    id          Int     @id @default(autoincrement())
+    name        String  @db.VarChar(50)
+
+    templates Template[]
+
+    @@map("template_category")
 }
 
 model LikedTemplate {

@@ -1,6 +1,10 @@
-import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates } from "../repositories/template.repository.js";
+import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromLikedTemplate, responseFromTemplateCreate, responseFromTemplateUpdate } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, alreadyExistTemplateLike, NonTemplateCategoryId, NonExsistsTemplateError } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate } from "../repositories/template.repository.js";
+import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn, responseFromLikedTemplate } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, getAllTemplatesInfo, getAllTemplatesInfoLoggedIn, postTemplateLike } from "../repositories/template.repository.js";
+import {deleteImage} from "../../middleware.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
@@ -64,3 +68,96 @@ export const getPopularTemplates = async () => {
     const templates = await findPopularTemplates();
     return responsePopularTemplates(templates);
 };
+
+// 템플릿 생성
+export const templateCreate = async(data) =>{
+    if(!data.tCategoryId)
+        throw new NonTemplateCategoryId('템플릿 카테고리를 선택해주세요');
+
+    const template = await newTempalteCreate(data);
+    return responseFromTemplateCreate(template);
+}
+
+// 템플릿 수정
+export const templateUpdate = async(data) =>{
+    const confirm = await checkTemplateExists(data.templateId);
+    if(!confirm)
+        throw new NonExsistsTemplateError('템플릿이 존재하지 않음', data);
+    const preThumbnail = confirm.thumbnail
+    const prePDF = confirm.filePDF
+
+    if(preThumbnail){
+        await deleteImage(preThumbnail)
+    }
+
+    if(prePDF){
+        await deleteImage(prePDF)
+    }
+
+    const template = await existingTemplateUpdate(data);
+    return responseFromTemplateUpdate(template);
+}
+
+//템플릿 좋아요 누르기
+export const createTemplateLike = async(userId,templateId) => {
+    const likedTemplate = await postTemplateLike(userId,templateId);
+
+    if (likedTemplate==null) {
+            throw new alreadyExistTemplateLike(
+                "User already liked this template",
+                {
+                  userId: userId,
+                  templateId: templateId,
+                }
+            );
+        }
+
+        return responseFromLikedTemplate(likedTemplate);
+
+};
+
+// 템플릿 목록 조회 (로그인 전)
+export const allTemplatesInfoLoad = async (data) => {
+    if (data.categoryId === undefined) {}
+    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
+    }
+    if (data.offset === undefined) {}
+    else if (isNaN(data.offset) || data.offset < 0) {
+        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
+    }
+    if (data.limit === undefined) {}
+    else if (isNaN(data.limit) || data.limit <= 0) {
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+    }
+
+    const allTemplatesInfo = await getAllTemplatesInfo(data.categoryId, data.offset, data.limit);
+    if (allTemplatesInfo === null){
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+    }
+
+    return responseFromAllTemplates(allTemplatesInfo);
+}
+
+// 템플릿 목록 조회 (로그인 후)
+export const allTemplatesInfoLoadLoggedIn = async (data) => {
+    if (data.categoryId === undefined) {}
+    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
+    }
+    if (data.offset === undefined) {}
+    else if (isNaN(data.offset) || data.offset < 0) {
+        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
+    }
+    if (data.limit === undefined) {}
+    else if (isNaN(data.limit) || data.limit <= 0) {
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+    }
+
+    const allTemplatesInfo = await getAllTemplatesInfoLoggedIn(data.userId, data.categoryId, data.offset, data.limit);
+    if (allTemplatesInfo === null){
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+    }
+
+    return responseFromAllTemplatesLoggedIn(allTemplatesInfo);
+}
