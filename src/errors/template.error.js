@@ -50,7 +50,7 @@ export class DatabaseConnectionError extends Error {
 
 // userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때
 export class NonexistentTemplateLike extends Error {
-    errorCode = "TL24";
+    errorCode = "T24";
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
@@ -60,10 +60,54 @@ export class NonexistentTemplateLike extends Error {
 
 // user가 templateId에 좋아요를 한 status null일 때
 export class NullTemplateLike extends Error {
-    errorCode = "TL25";
+    errorCode = "T25";
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
         this.data = data;
+    }
+}
+
+// 유효하지 않은 categoryId 에러
+export class InvalidCategoryIdError extends Error {
+    errorCode = "T26";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
+// 유효하지 않은 offset 에러
+export class InvalidOffsetError extends Error {
+    errorCode = "T27";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
+// 유효하지 않은 limit 에러
+export class InvalidLimitError extends Error {
+    errorCode = "T28";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+        this.statusCode = 400;
+    }
+}
+
+// 존재하지 않는 categoryId 에러
+export class NonexistentCategoryIdError extends Error {
+    errorCode = "T29";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+        this.statusCode = 400;
     }
 }
