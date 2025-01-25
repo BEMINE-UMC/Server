@@ -1,7 +1,12 @@
+//좋아요 누른 게시물 응답 dto
 export const createdPostLikedDTO = (likedPost) => {
   return {
+    id: likedPost.id,
     userId: likedPost.userId,
     postId: likedPost.postId,
+    status: likedPost.status,
+    createdAt: likedPost.createdAt,
+    updatedAt: likedPost.updatedAt
   }
 }
 
@@ -14,10 +19,16 @@ export const createdGetOtherPostDTO = (postInfo) => {
   }
 };
 
+
+//스크랩 한 게시물 응답 dto
 export const createdPostScrapedDTO = (scrapedPost) => {
   return {
+    id: scrapedPost.id,
     userId: scrapedPost.userId,
     postId: scrapedPost.postId,
+    status: scrapedPost.status,
+    createdAt: scrapedPost.createdAt,
+    updatedAt: scrapedPost.updatedAt
   }
 };
 

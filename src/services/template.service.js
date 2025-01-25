@@ -1,6 +1,9 @@
-import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError } from "../errors/template.error.js";
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, getAllTemplatesInfo, getAllTemplatesInfoLoggedIn } from "../repositories/template.repository.js";
+import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromLikedTemplate } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, alreadyExistTemplateLike } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike } from "../repositories/template.repository.js";
+import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn, responseFromLikedTemplate } from "../dtos/template.dto.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike } from "../errors/template.error.js";
+import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, getAllTemplatesInfo, getAllTemplatesInfoLoggedIn, postTemplateLike } from "../repositories/template.repository.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
@@ -63,6 +66,24 @@ export const templateDeletion = async (data) => {
 export const getPopularTemplates = async () => {
     const templates = await findPopularTemplates();
     return responsePopularTemplates(templates);
+};
+
+//템플릿 좋아요 누르기
+export const createTemplateLike = async(userId,templateId) => {
+    const likedTemplate = await postTemplateLike(userId,templateId);
+
+    if (likedTemplate==null) {
+            throw new alreadyExistTemplateLike(
+                "User already liked this template",
+                {
+                  userId: userId,
+                  templateId: templateId,
+                }
+            );
+        }
+
+        return responseFromLikedTemplate(likedTemplate);
+
 };
 
 // 템플릿 목록 조회 (로그인 전)

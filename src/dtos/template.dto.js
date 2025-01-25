@@ -61,6 +61,18 @@ export const responsePopularTemplates = (templates) => {
     }));
 };
 
+// 좋아요 누른 템플릿 응답 DTO
+export const responseFromLikedTemplate = (likedTemplate) => {
+    return {
+        id: likedTemplate.id,
+        userId: likedTemplate.userId,
+        templateId: likedTemplate.templateId,
+        status: likedTemplate.status,
+        createdAt: likedTemplate.createdAt,
+        updatedAt: likedTemplate.updatedAt
+      }
+};
+
 // 템플릿 목록 조회 (로그인 전) (controller->service)
 export const postToAllTemplates = (query) => {
     return{

@@ -15,7 +15,7 @@ export const handlerPostLike = async (req, res, next) => {
   res.status(StatusCodes.OK).success(likedPost);
   /* 
      #swagger.summary = '게시물 좋아요 API'
-     #swagger.tags = ['Post']
+     #swagger.tags = ['POST']
      #swagger.description = '게시물 좋아요 누르는 API입니다.'
     
      #swagger.responses[200] = {
@@ -35,37 +35,12 @@ export const handlerPostLike = async (req, res, next) => {
                                      id: { type: "integer", example: 1 },
                                      postId: { type: "integer", example: 1 },
                                      userId: { type: "integer", example: 1 },
+                                     status: { type: "boolean", example: true },
                                      createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                      updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                  }
                              }
                          }
-                     }
-                 }
-             }
-         }
-     }
-     
-     #swagger.responses[400] = {
-         description: "이미 좋아요 누른 상태임",
-         content: {
-             "application/json": {
-                 schema: {
-                     type: "object",
-                     properties: {
-                         resultType: { type: "string", example: "FAIL" },
-                         error: {
-                             type: "object",
-                             properties: {
-                                 errorCode: { type: "string", example: "P001" },
-                                 reason: { type: "string", example: "User already liked this post" },
-                                 data: { 
-                                     type: "object",
-                                     example: {}
-                                 }
-                             }
-                         },
-                         success: { type: "null", example: null }
                      }
                  }
              }
@@ -647,7 +622,7 @@ export const handleGetPostLiked = async (req, res) => {
 export const handlerPostScrap = async (req, res) => {
   /* 
   #swagger.summary = '게시물 스크랩 API'
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시물 스크랩 누르는 API입니다.'
   
   
@@ -668,37 +643,12 @@ export const handlerPostScrap = async (req, res) => {
                                   id: { type: "integer", example: 1 },
                                   postId: { type: "integer", example: 1 },
                                   userId: { type: "integer", example: 1 },
+                                  status: { type: "boolean", example: true },
                                   createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                                   updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
                               }
                           }
                       }
-                  }
-              }
-          }
-      }
-  }
-  
-  #swagger.responses[400] = {
-      description: "이미 스크랩 누른 상태임",
-      content: {
-          "application/json": {
-              schema: {
-                  type: "object",
-                  properties: {
-                      resultType: { type: "string", example: "FAIL" },
-                      error: {
-                          type: "object",
-                          properties: {
-                              errorCode: { type: "string", example: "P003" },
-                              reason: { type: "string", example: "User already scrapted this post" },
-                              data: { 
-                                  type: "object",
-                                  example: {}
-                              }
-                          }
-                      },
-                      success: { type: "null", example: null }
                   }
               }
           }
@@ -715,7 +665,7 @@ export const handlerPostScrap = async (req, res) => {
 export const handlerPostSearch = async (req, res) => {
   /* 
   #swagger.summary = '게시물 검색 API';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.description = '게시물을 검색하는 API입니다.'
   #swagger.parameters['query'] = {
       in: 'query',
@@ -740,12 +690,15 @@ export const handlerPostSearch = async (req, res) => {
                                   items: {
                                       type: "object",
                                       properties: {
-                                          postId: { type: "number", example: 1 },
+                                          id: { type: "number", example: 1 },
                                           userId: { type: "number", example: 1 },
                                           categoryId: { type: "number", example: 1 },
                                           title: { type: "string", example: "Title" },
                                           body: { type: "string", example: "Body" },
-                                          picture: { type: "string", example: "url"},
+                                          thumbnail: { type: "string", example: "url"},
+                                          image: { type: "string", example: "url"},
+                                          status: { type: "string", example: "status"},
+                                          inactivateDate: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                           createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
                                           updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
                                       }
@@ -796,7 +749,7 @@ export const handlerPostSearch = async (req, res) => {
 export const handlerGetUserPost = async (req, res) => {
   /* 
     #swagger.summary = '작성한 게시물 조회 API';
-    #swagger.tags = ['User']
+    #swagger.tags = ['POST']
     #swagger.description = '사용자 자신이 쓴 게시물 조회 API입니다.'
     
     #swagger.responses[200] = {

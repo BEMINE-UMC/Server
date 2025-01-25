@@ -1,4 +1,5 @@
 import { pool } from "../db.config.js";
+import { prisma } from "../db.config.js";
 
 // 템플릿 존재 여부 확인하기
 export const checkTemplateExists = async (templateId) => {
@@ -131,6 +132,50 @@ export const findPopularTemplates = async () => {
       conn.release();
   }
 };
+
+
+//템플릿 좋아요 생성
+export const postTemplateLike = async (userId, templateId) => {
+  try {
+          const existtemplateLike = await prisma.likedTemplate.findFirst({
+              where: {
+                  templateId: parseInt(templateId),
+                  userId: parseInt(userId),
+              },
+          });
+
+          if (existtemplateLike)
+          {
+            const updateLikeTemplate = await prisma.likedTemplate.update({
+              where: {
+                  id: existtemplateLike.id,
+              },
+              data: {
+                  status: !existtemplateLike.status,
+                  updatedAt: new Date(),
+              },
+          });
+
+          return updateLikeTemplate;
+          }
+
+          const createTemplateLike = await prisma.likedTemplate.create({
+              data: {
+                  userId: parseInt(userId),
+                  templateId: parseInt(templateId),
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                  status: true,
+              }
+          });
+
+          return createTemplateLike;
+      } catch (error) {
+          console.error("Error in createUserTemplateLike: ", error);
+          throw error;
+      }
+
+}
 
 // 템플릿 목록 조회 (정보 얻기-로그인 전)
 export const getAllTemplatesInfo = async (categoryId, offset, limit) => {

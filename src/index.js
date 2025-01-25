@@ -117,10 +117,10 @@ app.get('/posts', handleViewAllPosts);
 app.get('/user/posts', authenticateJWT, handleViewAllPostsLoggedIn);
 
 //게시물 좋아요 누르기 API
-app.post('/posts/:postId/likes', authenticateJWT, handlerPostLike);
+app.put('/posts/:postId/likes', authenticateJWT, handlerPostLike);
 
 //게시물 스크랩 누르기 API
-app.post('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
+app.put('/posts/:postId/scrapts',authenticateJWT, handlerPostScrap);
 
 //게시물 검색 API
 app.get('/posts/search',handlerPostSearch);
@@ -165,7 +165,7 @@ app.get('/myPage/bookMark', authenticateJWT, handlerGetScrapPost)
 app.patch('/profile/modify', imageUploader.single('photo'), authenticateJWT, handlerPatchMyProfile)
 
 //템플릿 좋아요 누르기 API
-app.post('/api/v1/users/:userId/templates/:templateId/like',handlerCreateTemplateLike)
+app.put('/templates/:templateId/likes',authenticateJWT,handlerCreateTemplateLike)
 
 // 템플릿 삭제 API
 app.patch('/templates/:templateId', handleTemplateDelete);

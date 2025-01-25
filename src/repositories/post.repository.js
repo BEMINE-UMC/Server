@@ -13,7 +13,19 @@ export const createUserPostLike = async (userId, postId) => {
         });
 
         if (existPostLike)
-            return null;
+        {
+            const updatePostLike = await prisma.likedPost.update({
+                where: {
+                    id: existPostLike.id,
+                },
+                data: {
+                    status: !existPostLike.status,
+                    updatedAt: new Date(),
+                },
+            });
+
+            return updatePostLike;
+        };
 
         const createPostLike = await prisma.likedPost.create({
             data: {
@@ -21,6 +33,7 @@ export const createUserPostLike = async (userId, postId) => {
                 postId: parseInt(postId),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                status: true,
             }
         });
 
@@ -66,7 +79,19 @@ export const createUserPostScrap = async (userId, postId) => {
         });
 
         if (existPostScrap)
-            return null;
+        {
+            const updatePostScrap = await prisma.scrapPost.update({
+                where: {
+                    id: existPostScrap.id,
+                },
+                data: {
+                    status: !existPostScrap.status,
+                    updatedAt: new Date(),
+                },
+            });
+
+            return updatePostScrap;
+        };
 
         const createPostScrap = await prisma.scrapPost.create({
             data: {
@@ -74,6 +99,7 @@ export const createUserPostScrap = async (userId, postId) => {
                 postId: parseInt(postId),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                status: true,
             }
         });
 

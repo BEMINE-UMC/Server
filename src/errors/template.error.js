@@ -68,6 +68,16 @@ export class NullTemplateLike extends Error {
     }
 }
 
+//사용자가 이미 해당 템플릿 좋아요를 눌렀을 경우
+export class alreadyExistTemplateLike extends Error {
+    errorCode = "T30"
+    constructor(reason, data){
+        super(reason);
+        this.statusCode = 400;
+        this.reason = reason;
+        this.data = data;
+    }
+
 // 유효하지 않은 categoryId 에러
 export class InvalidCategoryIdError extends Error {
     errorCode = "T26";
