@@ -273,15 +273,15 @@ export const getLikePost = async (data) => {
 // 게시물 전체 조회 (로그인 전)
 export const allPostsInfoLoad = async (data) => {
     if (data.categoryId === undefined) {}
-    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+    else if (!Number.isInteger(data.categoryId) || data.categoryId <= 0) {
         throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
     }
     if (data.offset === undefined) {}
-    else if (isNaN(data.offset) || data.offset < 0) {
+    else if (!Number.isInteger(data.offset) || data.offset < 0) {
         throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
     }
     if (data.limit === undefined) {}
-    else if (isNaN(data.limit) || data.limit <= 0) {
+    else if (!Number.isInteger(data.limit) || data.limit <= 0) {
         throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
     }
 
@@ -296,15 +296,15 @@ export const allPostsInfoLoad = async (data) => {
 // 게시물 전체 조회 (로그인 후)
 export const allPostsInfoLoadLoggedIn = async (data) => {
     if (data.categoryId === undefined) {}
-    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+    else if (!Number.isInteger(data.categoryId) || data.categoryId <= 0) {
         throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", { requestedcategoryId : data.categoryId} );
     }
     if (data.offset === undefined) {}
-    else if (isNaN(data.offset) || data.offset < 0) {
+    else if (!Number.isInteger(data.offset) || data.offset < 0) {
         throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
     }
     if (data.limit === undefined) {}
-    else if (isNaN(data.limit) || data.limit <= 0) {
+    else if (!Number.isInteger(data.limit) || data.limit <= 0) {
         throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
     }
 

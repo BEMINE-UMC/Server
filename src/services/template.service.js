@@ -5,16 +5,15 @@ import {deleteImage} from "../../middleware.js";
 
 // 템플릿 상세 정보 불러오기 
 export const detailTemplateInfoLoad = async (data) => { 
-    if (isNaN(data.templateId) || data.templateId <= 0) {
+    if (!Number.isInteger(data.templateId) || data.templateId <= 0) {
         throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : data.templateId });
     }
-    
     const templateExistence = await checkTemplateExists(data.templateId); 
-    if (!templateExistence) { // templateExistence이 null일 때 (=템플릿이 존재하지 않을 때)
-        throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : data.templateId }); 
+    if (!templateExistence) { // 처음 생성하는 템플릿일 때 
+        return responseFromDetailInfo({ templateId: data.templateId });
     }
 
-    const templateInfo = await getDetailTemplateInfo(data.templateId);
+    const templateInfo = await getDetailTemplateInfo(data.templateId); // 수정 했던 템플릿일 때
 
     return responseFromDetailInfo(templateInfo);
 }
@@ -22,7 +21,7 @@ export const detailTemplateInfoLoad = async (data) => {
 
 // 템플릿 파일 조회하기 
 export const templateFileInfo = async (data) => {
-    if (isNaN(data.templateId) || data.templateId <= 0) {
+    if (!Number.isInteger(data.templateId) || data.templateId <= 0) {
         throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : data.templateId });
     }
     const templateExistence = await checkTemplateExists(data.templateId); 
@@ -31,18 +30,16 @@ export const templateFileInfo = async (data) => {
     }
 
     const templateViewInfo = await getTemplateFileInfo(data.userId, data.templateId);
-    if (templateViewInfo === 0) { // templateViewInfo가 0일 때 (= userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때)
-        throw new NonexistentTemplateLike("Template에 대한 좋아요 여부 정보가 없습니다.",  { requestedUserId: data.userId, requestedTemplateId : data.templateId });
-    } else if (templateViewInfo === null ) { // templateViewInfo가 null일 때 (= user가 templateId에 좋아요를 한 status null일 때)
+    if (templateViewInfo === null ) { // templateViewInfo가 null일 때 (= user가 templateId에 좋아요를 한 status null일 때)
         throw new NullTemplateLike("Template 좋아요 status이 null입니다. null인 이유를 확인해주세요.", { requestedUserId: data.userId, requestedTemplateId : data.templateId });
     }
 
-    return responseFromTemplateAndLike(templateViewInfo); // 여기부터 수정!!
+    return responseFromTemplateAndLike(templateViewInfo);
 }
 
   // 템플릿 삭제하기 
 export const templateDeletion = async (data) => {
-    if (isNaN(data.templateId) || data.templateId <= 0) {
+    if (!Number.isInteger(data.templateId) || data.templateId <= 0) {
         throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : data.templateId });
     }
     const templateExistence = await checkTemplateExists(data.templateId);
@@ -116,15 +113,15 @@ export const createTemplateLike = async(userId,templateId) => {
 // 템플릿 목록 조회 (로그인 전)
 export const allTemplatesInfoLoad = async (data) => {
     if (data.categoryId === undefined) {}
-    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+    else if (!Number.isInteger(data.categoryId) || data.categoryId <= 0) {
         throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
     }
     if (data.offset === undefined) {}
-    else if (isNaN(data.offset) || data.offset < 0) {
+    else if (!Number.isInteger(data.offset) || data.offset < 0) {
         throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
     }
     if (data.limit === undefined) {}
-    else if (isNaN(data.limit) || data.limit <= 0) {
+    else if (!Number.isInteger(data.limit) || data.limit <= 0) {
         throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
     }
 
@@ -139,15 +136,15 @@ export const allTemplatesInfoLoad = async (data) => {
 // 템플릿 목록 조회 (로그인 후)
 export const allTemplatesInfoLoadLoggedIn = async (data) => {
     if (data.categoryId === undefined) {}
-    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+    else if (!Number.isInteger(data.categoryId) || data.categoryId <= 0) {
         throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
     }
     if (data.offset === undefined) {}
-    else if (isNaN(data.offset) || data.offset < 0) {
+    else if (!Number.isInteger(data.offset) || data.offset < 0) {
         throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
     }
     if (data.limit === undefined) {}
-    else if (isNaN(data.limit) || data.limit <= 0) {
+    else if (!Number.isInteger(data.limit) || data.limit <= 0) {
         throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
     }
 

@@ -1,25 +1,20 @@
 // 템플릿 상세 정보 조회 DTO (controller->service)
 export const templateToDetailInfo = (template)=>{
     return{
-      templateId: parseInt(template.templateId),
+        templateId: parseInt(template.templateId),
     }
-  }
+}
 
 // 템플릿 상세 정보 조회 DTO (service->controller)
-export const responseFromDetailInfo = (templateInfo) => {
-    const createdAt = new Date(templateInfo.created_at);
-    const updatedAt = new Date(templateInfo.updated_at);
-
+export const responseFromDetailInfo = (templateInfo) => { // 처음 생성하는 템플릿은 모두 빈 문자열이 가도록 함!
     return {
-        templateId: templateInfo.id || "",
-        userId: templateInfo.user_id || "",
+        templateId: templateInfo.templateId,
+        thumbnail: templateInfo.thumbnail || "",
+        filePDF: templateInfo.file_pdf || "",
         title: templateInfo.title || "",
-        filePPT: templateInfo.file_ppt,
-        filePDF: templateInfo.file_pdf,
         fileShareState: templateInfo.file_share_state || "",
-        thumbnail: templateInfo.thumbnail,
-        createdAt,
-        updatedAt, 
+        templateCategoryId: templateInfo.t_categoryId || "",
+        templateCategoryName: templateInfo.t_categoryName || ""
     };
 };
 
@@ -41,11 +36,19 @@ export const responseFromTemplateAndLike = (templateViewInfo) => {
     };
 };
 
+// 템플릿 삭제 전 DTO (controller->service)
+export const templateToDeletion = (template) => {
+    return{
+        templateId: parseInt(template.templateId),
+    }
+};
+
 // 템플릿 삭제 후 DTO (service->controller)
 export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
 
     return {
+        message: "템플릿 삭제가 정상 처리되었습니다!",
         status: deletedTemplateInfo.status,
         inactiveDate,
     };
@@ -137,7 +140,7 @@ export const postToAllTemplates = (query) => {
     }
 }
 
-// 게시물 전체 조회 (로그인 전) (controller->service)
+// 템플릿 목록 조회 (로그인 전) (service->controller)
 export const responseFromAllTemplates = (templates) => {
     return templates.map(template => {
         const templateCreatedAt = new Date(template.template_created_at);
@@ -165,7 +168,7 @@ export const postToAllTemplatesLoggedIn = (user, query) => {
     }
 }
 
-// 게시물 전체 조회 (로그인 후) (controller->service)
+// 템플릿 목록 조회 (로그인 후) (service->controller)
 export const responseFromAllTemplatesLoggedIn = (templates) => {
     return templates.map(template => {
         const templateCreatedAt = new Date(template.template_created_at);

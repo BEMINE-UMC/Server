@@ -1,14 +1,14 @@
 import { StatusCodes } from "http-status-codes";
 import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates, allTemplatesInfoLoad, allTemplatesInfoLoadLoggedIn, createTemplateLike, templateCreate, templateUpdate } from "../services/template.service.js";
-import { templateToCreate, templateToDetailInfo, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn, templateToUpdate } from "../dtos/template.dto.js";
+import { templateToCreate, templateToDetailInfo, templateToDeletion, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn, templateToUpdate } from "../dtos/template.dto.js";
 
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 상세 정보 조회 API';
+    #swagger.summary = '템플릿 상세 정보 조회 API (템플릿 올리기 화면)';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿의 상세 정보를 조회하는 API입니다. (템플릿 올리기 화면의 기능)'
+    #swagger.description = '템플릿 올리기 화면에서 템플릿의 정보를 조회하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.security = [{
         "bearerAuth": []
     }]
@@ -24,15 +24,13 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
-                                templateId: { type: "number", example: 1 },
-                                userId: { type: "number", example: 1 },
-                                title: { type: "string", example: "Portfolio1 Template" },
-                                filePPT: { type: "string", example: "https://example.com/files/template1.pptx" },
-                                filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
-                                fileShareState: { type: "string", example: "public" },
+                                templateId: { type: "integer", example: 1 },
                                 thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg" },
-                                createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
+                                title: { type: "string", example: "Template Title 1" },
+                                fileShareState: { type: "string", example: "savable" },
+                                templateCategoryId: { type: "integer", example: 1 },
+                                templateCategoryName: { type: "string", example: "콘텐츠 마케터" }
                             }
                         }
                     }
@@ -41,7 +39,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 상세 정보 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 상세 정보 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {
@@ -206,7 +204,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         console.log("\n템플릿 전체 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const deletedTemplate = await templateDeletion(templateToDetailInfo(req.params));
+        const deletedTemplate = await templateDeletion(templateToDeletion(req.params));
         res.status(StatusCodes.OK).success(deletedTemplate);
     } catch (error) {
         next(error);
@@ -599,9 +597,9 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
 // 템플릿 파일 요청
 export const handleGetTemplateFile = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 파일 조회 API';
+    #swagger.summary = '템플릿 파일 조회 API (템플릿 페이지)';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿 파일 조회 API입니다.'
+    #swagger.description = '한 템플릿의 PDF 파일을 조회하는 API입니다. (템플릿 페이지)'
     #swagger.responses[200] = {
         description: "템플릿 파일 조회 성공 응답. (추가적인 성공 응답 예시는 노션 API 명세서를 참고해주세요)",
         content: {

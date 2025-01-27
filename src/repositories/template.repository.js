@@ -9,10 +9,10 @@ export const checkTemplateExists = async (templateId) => {
     const [templates] = await conn.query(`SELECT * FROM template WHERE id = ?;`, templateId);
 
     if (templates.length === 0) { // 조회된 템플릿 데이터가 없다면
-      return null;
+      return false;
     }
 
-    return templates[0];
+    return true;
   } catch (err) {
     throw new Error (
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
@@ -27,9 +27,18 @@ export const getDetailTemplateInfo = async (templateId) => {
     const conn = await pool.getConnection();
 
     try {
-      const [templates] = await conn.query(`SELECT * FROM template WHERE id = ?;`, templateId); 
+      const [templateInfo] = await conn.query(`SELECT thumbnail, file_pdf, title, file_share_state, t_categoryId FROM template WHERE id = ?;`, [templateId]); 
+      const [templateCategory] = await conn.query(`SELECT name FROM template_category WHERE id = (SELECT t_categoryId from template WHERE id = ?);`, [templateId]);
 
-      return templates[0];
+      return {
+        templateId: templateId,
+        thumbnail: templateInfo[0].thumbnail,
+        file_pdf: templateInfo[0].file_pdf,
+        title: templateInfo[0].title,
+        file_share_state: templateInfo[0].file_share_state,
+        t_categoryId: templateInfo[0].t_categoryId,
+        t_categoryName: templateCategory[0].name
+      };
 
     } catch (err) {
       throw new Error (
@@ -40,25 +49,35 @@ export const getDetailTemplateInfo = async (templateId) => {
     }
 };
 
-// 템플릿 단일 조회하기 (정보 얻기)
+// 템플릿 파일 조회하기 (정보 얻기)
 export const getTemplateFileInfo = async (userId, templateId) => {
   const conn = await pool.getConnection();
   try {
-    /* PDF파일과 파일 저장 유무값을 불러오기 */
-    const [templateInfo] = await conn.query(`SELECT file_pdf, file_ppt, file_share_state FROM template WHERE id = ?;`, [templateId]);
+    let templateFile;
+
+    /* 파일 저장 유무값을 불러오기 */
+    const [templateShareState] = await conn.query(`SELECT file_share_state FROM template WHERE id = ?`, [templateId]);
+    
+    /* (비공개가 아닌 모든 file_share_state 경우에) PDF 파일을 불러오기 */
+    if (templateShareState[0].file_share_state !== 'private' || templateShareState[0].file_share_state !== '비공개') {
+      [templateFile] = await conn.query(`SELECT file_pdf, file_ppt FROM template WHERE id = ?`, [templateId]);
+    } else { // (비공개라면 빈 값으로 채우기)
+      templateFile = { file_pdf: '', file_ppt: '' };
+    }
+
     /* 템플릿 좋아요 상태값을 불러오기 */
     const [templateLike] = await conn.query('SELECT status FROM liked_template WHERE user_id = ? AND template_id = ?', [userId, templateId]);
     if (templateLike.length === 0) { // 조회된 템플릿 좋아요 여부 데이터가 없다면
-      return 0;
+      templateLike[0].status = false;
     } else if (templateLike[0].status === null ) {
       return null;
     }
     
     /* PDF파일, 파일 저장 유무값, 템플릿 좋아요 상태값을 묶어서 반환 */
     return {
-      file_pdf: templateInfo[0].file_pdf,
-      file_ppt: templateInfo[0].file_ppt,
-      file_share_state: templateInfo[0].file_share_state,
+      file_pdf: templateFile[0].file_pdf,
+      file_ppt: templateFile[0].file_ppt,
+      file_share_state: templateShareState[0].file_share_state,
       like_status: templateLike[0].status
     };
   } catch (err) {
@@ -78,7 +97,7 @@ export const deleteTemplate = async (templateId) => {
     /* status값 확인하기 */
     const [templateStatus] = await conn.query(`SELECT status FROM template WHERE id = ?;`, [templateId]);
 
-    if(templateStatus[0].status === 'inactive'){
+    if(templateStatus[0].status === 'inactive' || templateStatus[0].status === '비활성'){
       return 'inactive';
     } else if (templateStatus[0].status === null){
       return null;
@@ -89,7 +108,7 @@ export const deleteTemplate = async (templateId) => {
       `UPDATE template 
        SET status = 'inactive', 
            inactive_date = CURRENT_TIMESTAMP(6) 
-       WHERE id = ? AND status = 'active';`, // status은 null 가능함
+       WHERE id = ? AND (status = 'active' OR status = '활성');`, // status은 null 가능함
       [templateId]
     );
 
@@ -224,24 +243,27 @@ export const getAllTemplatesInfo = async (categoryId, offset, limit) => {
               t.title,
               t.thumbnail,
               u.id AS author_id,
-              u.name AS author_name
+              u.name AS author_name,
+              tc.id AS category_id,
+              tc.name AS category_name
           FROM template AS t
-          LEFT JOIN user AS u ON t.user_id = u.id`; 
-          // !! SELECT c.id, c.name은 ERD 변경 후 추가 예정
-          // !! LEFT JOIN category는 ERD 변경 후 추가 예정
+          LEFT JOIN user AS u ON t.user_id = u.id
+          LEFT JOIN template_category AS tc ON t_categoryId = tc.id`; 
 
+      /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
+      /* 공통 조건2: file_share_state이 비공개면 목록에 보이지 않음 */
       // 카테고리가 명시되지 않은 경우
       if (categoryId === undefined) {
           [templates] = await conn.query(
               `${baseQuery}
-              WHERE t.status = 'active'
+              WHERE (t.status = 'active' OR t.status = '활성') AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [limit, offset]
           );
       } else { // 카테고리가 명시된 경우
           const [categoryCheck] = await conn.query(
-              `SELECT 1 FROM category WHERE id = ? LIMIT 1`,
+              `SELECT 1 FROM template_category WHERE id = ? LIMIT 1`,
               [categoryId]
           );
           if (categoryCheck.length === 0) {
@@ -250,7 +272,7 @@ export const getAllTemplatesInfo = async (categoryId, offset, limit) => {
 
           [templates] = await conn.query(
               `${baseQuery}
-              WHERE t.status = 'active' AND t.category_id = ?
+              WHERE (t.status = 'active' OR t.status = '활성') AND t.t_categoryId = ?  AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [categoryId, limit, offset]
@@ -282,25 +304,28 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
               t.thumbnail,
               u.id AS author_id,
               u.name AS author_name,
-              lt.status AS liked_status
+              lt.status AS liked_status,
+              tc.id AS category_id,
+              tc.name AS category_name
           FROM template AS t
           LEFT JOIN user AS u ON t.user_id = u.id
-          LEFT JOIN liked_template AS lt ON t.id = lt.template_id AND lt.user_id = ? AND lt.status = true`; 
-          // !! SELECT c.id, c.name은 ERD 변경 후 추가 예정
-          // !! LEFT JOIN category는 ERD 변경 후 추가 예정
+          LEFT JOIN liked_template AS lt ON t.id = lt.template_id AND lt.user_id = ? AND lt.status = true
+          LEFT JOIN template_category AS tc ON t_categoryId = tc.id`; 
 
+      /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
+      /* 공통 조건2: file_share_state이 비공개면 목록에 보이지 않음 */
       // 카테고리가 명시되지 않은 경우
       if (categoryId === undefined) {
           [templates] = await conn.query(
               `${baseQuery}
-              WHERE t.status = 'active'
+              WHERE (t.status = 'active' OR t.status = '활성') AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [userId, limit, offset]
           );
       } else { // 카테고리가 명시된 경우
           const [categoryCheck] = await conn.query(
-              `SELECT 1 FROM category WHERE id = ? LIMIT 1`,
+              `SELECT 1 FROM template_category WHERE id = ? LIMIT 1`,
               [categoryId]
           );
           if (categoryCheck.length === 0) {
@@ -309,7 +334,7 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
 
           [templates] = await conn.query(
               `${baseQuery}
-              WHERE t.status = 'active' AND t.category_id = ?
+              WHERE (t.status = 'active' OR t.status = '활성') AND t.t_categoryId = ? AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [userId, categoryId, limit, offset]
