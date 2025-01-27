@@ -134,7 +134,7 @@ export const deleteTemplate = async (templateId) => {
     );
 
     /* 업데이트 결과 반환 */
-    const [newUpdates] = await conn.query(`SELECT status, inactive_date FROM template WHERE id = ?;`, [templateId]);
+    const [newUpdates] = await conn.query(`SELECT id, status, inactive_date FROM template WHERE id = ?;`, [templateId]);
 
     return newUpdates[0];
     

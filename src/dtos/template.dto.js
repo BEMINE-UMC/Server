@@ -48,7 +48,8 @@ export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
 
     return {
-        message: "템플릿 삭제가 정상 처리되었습니다!",
+        message: "템플릿이 정상적으로 삭제되었습니다!",
+        templateId: deletedTemplateInfo.id,
         status: deletedTemplateInfo.status,
         inactiveDate,
     };

@@ -147,7 +147,7 @@ export const handleTemplateDelete = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 삭제 API';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿을 삭제하는 API입니다.'
+    #swagger.description = '템플릿을 삭제하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.security = [{
         "bearerAuth": []
     }]
@@ -163,8 +163,10 @@ export const handleTemplateDelete = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
+                                message: { type: "string", example: "템플릿이 정상적으로 삭제되었습니다!"},
                                 templateId: { type: "integer", example: 1 },
-                                message: { type: "string", example: "템플릿이 정상적으로 삭제되었습니다."}
+                                status: { type: "string", example: "inactive" },
+                                inactiveDate: { type: "string", format: "date", example: "2025-01-27T12:40:39.649Z"}
                             }
                         }
                     }
@@ -173,7 +175,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 삭제 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 삭제 실패 응답.",
         content: {
             "application/json": {
                 schema: {
