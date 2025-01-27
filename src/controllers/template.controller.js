@@ -612,8 +612,8 @@ export const handleGetTemplateFile = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
+                                templateId: { type: "integer", example: 1 },
                                 filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
-                                filePPT: { type: "string", example: "https://example.com/files/template1.pptx" },
                                 fileShareState: { type: "string", example: "저장 가능" },
                                 fileLikeStatus: { type: "boolean", example: true },
                             }

@@ -76,8 +76,6 @@ export const getTemplateFileInfo = async (userId, templateId) => {
   try {
     let templateFile;
 
-    /* 파일 status이 null인 경우 */
-
     /* 파일 저장 유무값을 불러오기 */
     const [templateShareState] = await conn.query(`SELECT file_share_state FROM template WHERE id = ?`, [templateId]);
     
@@ -89,15 +87,16 @@ export const getTemplateFileInfo = async (userId, templateId) => {
     }
 
     /* 템플릿 좋아요 상태값을 불러오기 */
-    const [templateLike] = await conn.query('SELECT status FROM liked_template WHERE user_id = ? AND template_id = ?', [userId, templateId]);
-    if (templateLike.length === 0) { // 조회된 템플릿 좋아요 여부 데이터가 없다면
-      templateLike[0].status = false;
-    } else if (templateLike[0].status === null ) {
+    let [templateLike] = await conn.query('SELECT status FROM liked_template WHERE user_id = ? AND template_id = ?', [userId, templateId]);
+    if (!templateLike || templateLike.length === 0) { // 좋아요한 이력이 없다면
+      templateLike = [{ status: false }];
+    } else if (templateLike[0].status === null ) { // 조회된 템플릿 좋아요 여부 데이터가 없다면
       return null;
     }
     
     /* PDF파일, 파일 저장 유무값, 템플릿 좋아요 상태값을 묶어서 반환 */
     return {
+      templateId: templateId,
       file_pdf: templateFile[0].file_pdf,
       file_share_state: templateShareState[0].file_share_state,
       like_status: templateLike[0].status

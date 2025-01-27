@@ -29,6 +29,7 @@ export const templateToFileInfo = (user, params)=>{
 // 템플릿 파일 조회 DTO (service->controller)
 export const responseFromTemplateAndLike = (templateViewInfo) => {
     return {
+        templateId: templateViewInfo.templateId,
         filePDF: templateViewInfo.file_pdf,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,

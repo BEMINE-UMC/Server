@@ -32,6 +32,10 @@ export const templateFileInfo = async (data) => {
     if (!templateExistence) { // templateExistence이 null일 때 (=템플릿이 존재하지 않을 때)
         throw new NonexistentTemplateError("존재하지 않는 template 입니다.",  { requestedTemplateId : data.templateId }); 
     }
+    const templateStatusIsNull = await checkTemplateStatusNull(data.templateId);
+    if (templateStatusIsNull) {
+        throw new NullStatusTemplateError("템플릿의 상태값이 null입니다. Null인 이유를 확인해주세요.", { requestedTemplateId : data.templateId })
+    }
 
     const templateViewInfo = await getTemplateFileInfo(data.userId, data.templateId);
     if (templateViewInfo === 'private'){
