@@ -3,20 +3,21 @@ import {
     createdPostScrapedDTO,
     responseFromRecentPost,
     responseFromScrapPost,
-    responseFromSearchedPost
+    responseFromSearchedPost,
+    responseFromLikePost
 } from "../dtos/post.dto.js";
-import { createdGetOtherPostDTO, createPostDetailDTO } from "../dtos/post.dto.js";
+import { createdGetOtherPostDTO, createPostDetailDTO, responseFromAllPosts, responseFromAllPostsLoggedIn, createGetLikePostDTO } from "../dtos/post.dto.js";
 import {
     alreadyExistPostLike,
     alreadyExistPostScrap,
     NonExistUserError,
     NotFoundSearchedPost,
 
-    NotRecentPostsErrors, NotScrapPostsErrors, ContentRequiredError, TitleRequiredError, InvalidImageFormatError
+    NotRecentPostsErrors, NotScrapPostsErrors, ContentRequiredError, TitleRequiredError, InvalidImageFormatError, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError
 } from "../errors/post.error.js";
 
-import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked } from "../repositories/post.repository.js";
-import { getUserOtherPost, createPost, updatePost } from "../repositories/post.repository.js";
+import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked, handleGetUserOwnPosts } from "../repositories/post.repository.js";
+import { getUserOtherPost, createPost, updatePost, getAllPostsInfo, getAllPostsInfoLoggedIn, getUserLikePost } from "../repositories/post.repository.js";
 import { getUserInfo } from "../repositories/user.repository.js";
 import { pool } from "../db.config.js";
 import { NotExsistsUserError } from "../errors/user.error.js";
@@ -254,4 +255,77 @@ export const createOrUpdatePost = async (postData) => {
 } finally {
     conn.release();
 }
+}
+
+// 좋아요 누른 게시물 조회
+export const getLikePost = async (data) => {
+    const userLikePosts = await getUserLikePost(data);
+    const userId = data.userId
+
+    const posts = userLikePosts.map(item => ({
+        postId: item.post.id,
+        url: item.post.thumbnail
+    }))
+
+    return responseFromLikePost(userId, posts);
+}
+
+// 게시물 전체 조회 (로그인 전)
+export const allPostsInfoLoad = async (data) => {
+    if (data.categoryId === undefined) {}
+    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
+    }
+    if (data.offset === undefined) {}
+    else if (isNaN(data.offset) || data.offset < 0) {
+        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
+    }
+    if (data.limit === undefined) {}
+    else if (isNaN(data.limit) || data.limit <= 0) {
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+    }
+
+    const allPostsInfo = await getAllPostsInfo(data.categoryId, data.offset, data.limit);
+    if (allPostsInfo === null){
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+    }
+
+    return responseFromAllPosts(allPostsInfo);
+}
+
+// 게시물 전체 조회 (로그인 후)
+export const allPostsInfoLoadLoggedIn = async (data) => {
+    if (data.categoryId === undefined) {}
+    else if (isNaN(data.categoryId) || data.categoryId <= 0) {
+        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", { requestedcategoryId : data.categoryId} );
+    }
+    if (data.offset === undefined) {}
+    else if (isNaN(data.offset) || data.offset < 0) {
+        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
+    }
+    if (data.limit === undefined) {}
+    else if (isNaN(data.limit) || data.limit <= 0) {
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+    }
+
+    const allPostsInfo = await getAllPostsInfoLoggedIn(data.userId, data.categoryId, data.offset, data.limit);
+    if (allPostsInfo === null){
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+    }
+
+    return responseFromAllPostsLoggedIn(allPostsInfo);
+}
+
+//사용자 본인이 작성한 게시물 조회
+export const getUserOwnPosts = async (userId) => {
+    try{
+    const myposts = await handleGetUserOwnPosts(userId);
+
+    return myposts
+
+}catch(error){
+    throw error;
+    
+}
+
 }
