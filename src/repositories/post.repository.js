@@ -322,11 +322,12 @@ export const getAllPostsInfo = async (categoryId, offset, limit) => {
             LEFT JOIN category AS c ON p.category_id = c.id
             LEFT JOIN user AS u ON p.user_id = u.id`;
 
+        /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
         // 카테고리가 명시되지 않은 경우
         if (categoryId === undefined) {
             [posts] = await conn.query(
                 `${baseQuery}
-                WHERE p.status = 'active'
+                WHERE p.status = 'active' OR p.status = '활성'
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [limit, offset]
@@ -342,7 +343,7 @@ export const getAllPostsInfo = async (categoryId, offset, limit) => {
 
             [posts] = await conn.query(
                 `${baseQuery}
-                WHERE p.status = 'active' AND p.category_id = ?
+                WHERE (p.status = 'active' OR p.status = '활성') AND p.category_id = ?
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [categoryId, limit, offset]
@@ -386,11 +387,12 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
             LEFT JOIN liked_post AS lp ON p.id = lp.post_id AND lp.user_id = ? AND lp.status = true
             LEFT JOIN scrap_post AS sp ON p.id = sp.post_id AND sp.user_id = ? AND sp.status = true`;
 
+        /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
         // 카테고리가 명시되지 않은 경우
         if (categoryId === undefined) {
             [posts] = await conn.query(
                 `${baseQuery}
-                WHERE p.status = 'active'
+                WHERE p.status = 'active' OR p.status = '활성'
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [userId, userId, limit, offset]
@@ -406,7 +408,7 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
 
             [posts] = await conn.query(
                 `${baseQuery}
-                WHERE p.status = 'active' AND p.category_id = ?
+                WHERE (p.status = 'active' OR p.status = '활성') AND p.category_id = ?
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [userId, userId, categoryId, limit, offset]

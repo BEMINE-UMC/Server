@@ -138,7 +138,7 @@ export const allTemplatesInfoLoad = async (data) => {
 
     const allTemplatesInfo = await getAllTemplatesInfo(data.categoryId, data.offset, data.limit);
     if (allTemplatesInfo === null){
-        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", { requestedCategoryId : data.categoryId });
     }
 
     return responseFromAllTemplates(allTemplatesInfo);
@@ -161,7 +161,7 @@ export const allTemplatesInfoLoadLoggedIn = async (data) => {
 
     const allTemplatesInfo = await getAllTemplatesInfoLoggedIn(data.userId, data.categoryId, data.offset, data.limit);
     if (allTemplatesInfo === null){
-        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", data.categoryId);
+        throw new NonexistentCategoryIdError("존재하지 않는 categoryId 입니다.", { requestedCategoryId : data.categoryId });
     }
 
     return responseFromAllTemplatesLoggedIn(allTemplatesInfo);
