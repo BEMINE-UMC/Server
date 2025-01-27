@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO } from "../dtos/auth.dto.js";
-import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode } from "../repositories/auth.repository.js";
+import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO, createdNewPasswordDTO } from "../dtos/auth.dto.js";
+import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw } from "../repositories/auth.repository.js";
 import { NonExistRefreshError } from "../errors/auth.error.js";
 
 dotenv.config();
@@ -101,4 +101,11 @@ export const verifyEmailCode = async (email, code) => {
     const savedCode = await getVerificationCode(validatedEmail);
 
     return savedCode === validatedCode;
+};
+
+// 비밀번호 재발급 api
+export const patchNewPassword = async (name, email, password) => {
+    const newPassword = await patchNewPw(name, email, password);
+
+    return createdNewPasswordDTO(newPassword);
 };
