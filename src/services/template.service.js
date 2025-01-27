@@ -133,7 +133,7 @@ export const allTemplatesInfoLoad = async (data) => {
     }
     if (data.limit === undefined) {}
     else if (!Number.isInteger(data.limit) || data.limit <= 0) {
-        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", { requestedLimit : data.limit });
     }
 
     const allTemplatesInfo = await getAllTemplatesInfo(data.categoryId, data.offset, data.limit);
