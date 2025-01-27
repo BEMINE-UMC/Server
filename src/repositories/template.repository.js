@@ -22,6 +22,28 @@ export const checkTemplateExists = async (templateId) => {
   }
 };
 
+// 템플릿 inactive 여부 확인하기
+export const checkInactiveTemplate = async (templateId) => {
+  const conn = await pool.getConnection();
+
+  try {
+    const [templateStatus] = await conn.query(`SELECT status FROM template WHERE id = ?;`, [templateId]);
+
+    if(templateStatus[0].status === 'inactive' || templateStatus[0].status === '비활성'){
+      return true;
+    } else {
+      return false;
+    }
+
+  } catch (err) {
+    throw new Error (
+      `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+    );
+  } finally {
+    conn.release();
+  }
+}
+
 // 템플릿 status이 null인지 확인하기
 export const checkTemplateStatusNull = async (templateId) => {
   const conn = await pool.getConnection();
@@ -118,9 +140,7 @@ export const deleteTemplate = async (templateId) => {
     /* status값 확인하기 */
     const [templateStatus] = await conn.query(`SELECT status FROM template WHERE id = ?;`, [templateId]);
 
-    if(templateStatus[0].status === 'inactive' || templateStatus[0].status === '비활성'){
-      return 'inactive';
-    } else if (templateStatus[0].status === null){
+    if (templateStatus[0].status === null){
       return null;
     }
 
