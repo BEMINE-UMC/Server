@@ -54,7 +54,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -163,7 +163,7 @@ export const handleTemplateDelete = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
-                                templateId: { type: "number", example: 1 },
+                                templateId: { type: "integer", example: 1 },
                                 message: { type: "string", example: "템플릿이 정상적으로 삭제되었습니다."}
                             }
                         }
@@ -188,7 +188,7 @@ export const handleTemplateDelete = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -639,7 +639,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -795,20 +795,20 @@ export const handleViewAllTemplates = async(req, res, next) => {
                                         type: "object",
                                         properties: {
                                             templateCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                            templateId: { type: "number", example: 100 },
-                                            title: { type: "string", example: "Template Title 100" },
-                                            thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                            authorId: { type: "number", example: 5 },
-                                            authorName: { type: "string", example: "Eve" },
-                                            categoryId: { type: "number", example: 4 },
-                                            categoryName: { type: "string", example: "바이럴 마케터" },
+                                            templateId: { type: "integer", example: 1 },
+                                            title: { type: "string", example: "Template Title 1" },
+                                            thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg"},
+                                            authorId: { type: "integer", example: 1 },
+                                            authorName: { type: "string", example: "Alice" },
+                                            categoryId: { type: "integer", example: 1 },
+                                            categoryName: { type: "string", example: "콘텐츠 마케터" },
                                         }
                                     }
                                 },
                                 pagination: {
                                     type: "object", 
                                     properties: {
-                                        cursor: { type: "number", nullable: true }
+                                        cursor: { type: "integer", nullable: true }
                                     }
                                 }
                             }
@@ -834,7 +834,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTemplateId: { type: "number", example: -1 }
+                                        requestedCategoryId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -886,7 +886,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
         required: false,
     }
     ]
-    #swagger.description = '로그인 후 템플릿 목록 조회를 하는 API입니다. (로그인 후에는 사용자에 대한 템플릿 좋아요 여부를 볼 수 있음)'
+    #swagger.description = '로그인 후 템플릿 목록 조회를 하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.responses[200] = {
         description: "로그인 후 템플릿 목록 조회 성공 응답",
         content: {
@@ -904,22 +904,22 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
                                     items: {
                                         type: "object",
                                         properties: {
-                                            postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                            postId: { type: "number", example: 100 },
-                                            title: { type: "string", example: "Template Title 100" },
-                                            thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                            authorId: { type: "number", example: 5 },
-                                            authorName: { type: "string", example: "Eve" },
-                                            categoryId: { type: "number", example: 4 },
-                                            categoryName: { type: "string", example: "바이럴 마케터" },
-                                            likedStatus: { type: "boolean", example: true },
+                                            templateCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                            templateId: { type: "integer", example: 1 },
+                                            title: { type: "string", example: "Template Title 1" },
+                                            thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg"},
+                                            authorId: { type: "integer", example: 1 },
+                                            authorName: { type: "string", example: "Alice" },
+                                            categoryId: { type: "integer", example: 1 },
+                                            categoryName: { type: "string", example: "콘텐츠 마케터" },
+                                            likedStatus: { type: "boolean", example: false },
                                         }
                                     }
                                 },
                                 pagination: {
                                     type: "object", 
                                     properties: {
-                                        cursor: { type: "number", nullable: true }
+                                        cursor: { type: "integer", nullable: true }
                                     }
                                 }
                             }
@@ -930,7 +930,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "로그인 후 템플릿 목록 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "로그인 후 템플릿 목록 조회 실패 응답.",
         content: {
             "application/json": {
                 schema: {
@@ -945,7 +945,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedCategoryId: { type: "number", example: -1 }
+                                        requestedCategoryId: { type: "integer", example: -1 }
                                     }
                                 }
                             }

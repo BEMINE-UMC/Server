@@ -377,12 +377,12 @@ export const handleViewAllPosts = async (req, res, next) => {
                                       type: "object",
                                       properties: {
                                           postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                          postId: { type: "number", example: 100 },
+                                          postId: { type: "integer", example: 100 },
                                           title: { type: "string", example: "Post Title 100" },
                                           thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                          authorId: { type: "number", example: 5 },
+                                          authorId: { type: "integer", example: 5 },
                                           authorName: { type: "string", example: "Eve" },
-                                          categoryId: { type: "number", example: 4 },
+                                          categoryId: { type: "integer", example: 4 },
                                           categoryName: { type: "string", example: "바이럴 마케터" },
                                       }
                                   }
@@ -390,7 +390,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                               pagination: {
                                   type: "object", 
                                   properties: {
-                                      cursor: { type: "number", nullable: true }
+                                      cursor: { type: "integer", nullable: true }
                                   }
                               }
                           }
@@ -416,7 +416,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                               data: {
                                   type: "object",
                                   properties: {
-                                      requestedCategoryId: { type: "number", example: 0 }
+                                      requestedCategoryId: { type: "integer", example: 0 }
                                   }
                               }
                           }
@@ -487,12 +487,12 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                         type: "object",
                                         properties: {
                                             postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                            postId: { type: "number", example: 100 },
+                                            postId: { type: "integer", example: 100 },
                                             title: { type: "string", example: "Post Title 100" },
                                             thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                            authorId: { type: "number", example: 5 },
+                                            authorId: { type: "integer", example: 5 },
                                             authorName: { type: "string", example: "Eve" },
-                                            categoryId: { type: "number", example: 4 },
+                                            categoryId: { type: "integer", example: 4 },
                                             categoryName: { type: "string", example: "바이럴 마케터" },
                                             likedStatus: { type: "boolean", example: true },
                                             scrapStatus: { type: "boolean", example: false }
@@ -502,7 +502,7 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                 pagination: {
                                     type: "object", 
                                     properties: {
-                                        cursor: { type: "number", nullable: true }
+                                        cursor: { type: "integer", nullable: true }
                                     }
                                 }
                             }
@@ -528,7 +528,7 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedCategoryId: { type: "number", example: 0 }
+                                        requestedCategoryId: { type: "integer", example: 0 }
                                     }
                                 }
                             }

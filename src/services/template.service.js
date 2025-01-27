@@ -148,15 +148,15 @@ export const allTemplatesInfoLoad = async (data) => {
 export const allTemplatesInfoLoadLoggedIn = async (data) => {
     if (data.categoryId === undefined) {}
     else if (!Number.isInteger(data.categoryId) || data.categoryId <= 0) {
-        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", data.categoryId);
+        throw new InvalidCategoryIdError("유효하지 않은 categoryId 입니다.", { requestedCategoryId : data.categoryId });
     }
     if (data.offset === undefined) {}
     else if (!Number.isInteger(data.offset) || data.offset < 0) {
-        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", data.offset);
+        throw new InvalidOffsetError("유효하지 않은 offset 입니다.", { requestedOffset : data.offset });
     }
     if (data.limit === undefined) {}
     else if (!Number.isInteger(data.limit) || data.limit <= 0) {
-        throw new InvalidLimitError("유효하지 않은 limit 입니다.", data.limit);
+        throw new InvalidLimitError("유효하지 않은 limit 입니다.", { requestedLimit : data.limit });
     }
 
     const allTemplatesInfo = await getAllTemplatesInfoLoggedIn(data.userId, data.categoryId, data.offset, data.limit);
