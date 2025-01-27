@@ -773,7 +773,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
         required: false,
     }
     ]
-    #swagger.description = '로그인 전 템플릿 목록을 조회를 하는 API입니다. (로그인 전에는 템플릿 좋아요 여부를 볼 수 없음)'
+    #swagger.description = '로그인 전 템플릿 목록을 조회를 하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.security = [{
         "bearerAuth": []
     }]
@@ -819,7 +819,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "로그인 전 템플릿 목록 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "로그인 전 템플릿 목록 조회 실패 응답.",
         content: {
             "application/json": {
                 schema: {

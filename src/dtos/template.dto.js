@@ -134,7 +134,7 @@ export const responseFromLikedTemplate = (likedTemplate) => {
 // 템플릿 목록 조회 (로그인 전) (controller->service)
 export const postToAllTemplates = (query) => {
     return{
-        categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+        categoryId: (query.categoryId === undefined ? undefined : parseInt(query.categoryId)),
         offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
         limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
     }
