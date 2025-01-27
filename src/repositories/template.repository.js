@@ -22,6 +22,27 @@ export const checkTemplateExists = async (templateId) => {
   }
 };
 
+// 템플릿 status이 null인지 확인하기
+export const checkTemplateStatusNull = async (templateId) => {
+  const conn = await pool.getConnection();
+
+  try {
+    const [template] = await conn.query(`SELECT status FROM template WHERE id = ?;`, templateId);
+
+    if(template[0].status === null) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    throw new Error (
+      `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
+    );
+  } finally {
+    conn.release();
+  }
+}
+
 // 템플릿 상세 정보 불러오기 (정보 얻기)
 export const getDetailTemplateInfo = async (templateId) => { 
     const conn = await pool.getConnection();
@@ -55,14 +76,16 @@ export const getTemplateFileInfo = async (userId, templateId) => {
   try {
     let templateFile;
 
+    /* 파일 status이 null인 경우 */
+
     /* 파일 저장 유무값을 불러오기 */
     const [templateShareState] = await conn.query(`SELECT file_share_state FROM template WHERE id = ?`, [templateId]);
     
-    /* (비공개가 아닌 모든 file_share_state 경우에) PDF 파일을 불러오기 */
-    if (templateShareState[0].file_share_state !== 'private' || templateShareState[0].file_share_state !== '비공개') {
-      [templateFile] = await conn.query(`SELECT file_pdf, file_ppt FROM template WHERE id = ?`, [templateId]);
-    } else { // (비공개라면 빈 값으로 채우기)
-      templateFile = { file_pdf: '', file_ppt: '' };
+    /* (비공개가 아닌 모든 file_share_state 경우에만) PDF 파일을 불러오기 */
+    if (templateShareState[0].file_share_state === 'private' || templateShareState[0].file_share_state === '비공개'){
+      return 'private';
+    } else {
+      [templateFile] = await conn.query(`SELECT file_pdf FROM template WHERE id = ?`, [templateId]);
     }
 
     /* 템플릿 좋아요 상태값을 불러오기 */
@@ -76,7 +99,6 @@ export const getTemplateFileInfo = async (userId, templateId) => {
     /* PDF파일, 파일 저장 유무값, 템플릿 좋아요 상태값을 묶어서 반환 */
     return {
       file_pdf: templateFile[0].file_pdf,
-      file_ppt: templateFile[0].file_ppt,
       file_share_state: templateShareState[0].file_share_state,
       like_status: templateLike[0].status
     };

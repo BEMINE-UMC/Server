@@ -599,9 +599,9 @@ export const handleGetTemplateFile = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 파일 조회 API (템플릿 페이지)';
     #swagger.tags = ['Template']
-    #swagger.description = '한 템플릿의 PDF 파일을 조회하는 API입니다. (템플릿 페이지)'
+    #swagger.description = '템플릿 페이지에서 한 템플릿을 조회하기 위한 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.responses[200] = {
-        description: "템플릿 파일 조회 성공 응답. (추가적인 성공 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 파일 조회 성공 응답",
         content: {
             "application/json": {
                 schema: {
@@ -624,7 +624,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 파일 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 파일 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {

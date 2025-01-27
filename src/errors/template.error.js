@@ -49,7 +49,7 @@ export class DatabaseConnectionError extends Error {
 }
 
 // userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때
-export class NonexistentTemplateLike extends Error { // --> 이제 사용 안 함!!
+export class PrivateTemplateError extends Error {
     errorCode = "T24";
     constructor(reason, data) {
         super(reason);

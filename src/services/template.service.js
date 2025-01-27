@@ -1,6 +1,6 @@
-import { checkTemplateExists, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate,getAllTemplatesInfo, getAllTemplatesInfoLoggedIn } from "../repositories/template.repository.js";
+import { checkTemplateExists, checkTemplateStatusNull, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate,getAllTemplatesInfo, getAllTemplatesInfoLoggedIn } from "../repositories/template.repository.js";
 import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn, responseFromLikedTemplate,responseFromTemplateCreate, responseFromTemplateUpdate } from "../dtos/template.dto.js";
-import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, NonexistentTemplateLike, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike,NonTemplateCategoryId, NonExsistsTemplateError } from "../errors/template.error.js";
+import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, PrivateTemplateError, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike,NonTemplateCategoryId, NonExsistsTemplateError } from "../errors/template.error.js";
 import {deleteImage} from "../../middleware.js";
 
 // 템플릿 상세 정보 불러오기 
@@ -8,11 +8,15 @@ export const detailTemplateInfoLoad = async (data) => {
     if (!Number.isInteger(data.templateId) || data.templateId <= 0) {
         throw new InvalidTemplateIdError("유효하지 않은 templateId 입니다.", { requestedTemplateId : data.templateId });
     }
+    const templateStatusIsNull = await checkTemplateStatusNull(data.templateId);
+    if (templateStatusIsNull) {
+        throw new NullStatusTemplateError("템플릿의 상태값이 null입니다. Null인 이유를 확인해주세요.", { requestedTemplateId : data.templateId })
+    }
+
     const templateExistence = await checkTemplateExists(data.templateId); 
     if (!templateExistence) { // 처음 생성하는 템플릿일 때 
         return responseFromDetailInfo({ templateId: data.templateId });
     }
-
     const templateInfo = await getDetailTemplateInfo(data.templateId); // 수정 했던 템플릿일 때
 
     return responseFromDetailInfo(templateInfo);
@@ -30,6 +34,9 @@ export const templateFileInfo = async (data) => {
     }
 
     const templateViewInfo = await getTemplateFileInfo(data.userId, data.templateId);
+    if (templateViewInfo === 'private'){
+        throw new PrivateTemplateError("비공개 template 입니다. 템플릿 파일 조회가 불가합니다.", { requestedTemplateId : data.templateId })
+    }
     if (templateViewInfo === null ) { // templateViewInfo가 null일 때 (= user가 templateId에 좋아요를 한 status null일 때)
         throw new NullTemplateLike("Template 좋아요 status이 null입니다. null인 이유를 확인해주세요.", { requestedUserId: data.userId, requestedTemplateId : data.templateId });
     }

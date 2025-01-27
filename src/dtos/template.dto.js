@@ -30,7 +30,6 @@ export const templateToFileInfo = (user, params)=>{
 export const responseFromTemplateAndLike = (templateViewInfo) => {
     return {
         filePDF: templateViewInfo.file_pdf,
-        filePPT: templateViewInfo.file_ppt,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,
     };
