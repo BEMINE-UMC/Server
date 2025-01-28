@@ -101,3 +101,32 @@ export class CodeNotValidateError extends Error {
         this.statusCode = 400;
     }
 }
+
+export class NameNotExistError extends Error {
+    errorCode = "A021";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
+export class EmailNotExistError extends Error {
+    errorCode = "A022";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
+export class SamePasswordError extends Error {
+    errorCode = "A023";
+    constructor(reason) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+    }
+}

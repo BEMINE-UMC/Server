@@ -46,3 +46,9 @@ export const createdVerifyEmailDTO = (email, code) => {
     code
   };
 };
+
+export const createdNewPasswordDTO = (data) => {
+  return {
+    userId: data.id
+  }
+};
