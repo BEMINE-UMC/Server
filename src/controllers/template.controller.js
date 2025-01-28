@@ -1,14 +1,14 @@
 import { StatusCodes } from "http-status-codes";
 import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates, allTemplatesInfoLoad, allTemplatesInfoLoadLoggedIn, createTemplateLike, templateCreate, templateUpdate } from "../services/template.service.js";
-import { templateToCreate, templateToDetailInfo, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn, templateToUpdate } from "../dtos/template.dto.js";
+import { templateToCreate, templateToDetailInfo, templateToDeletion, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn, templateToUpdate } from "../dtos/template.dto.js";
 
 
 // 템플릿 상세 정보 불러오기 요청
 export const handleDetailTemplateInfoLoad = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 상세 정보 조회 API';
+    #swagger.summary = '템플릿 상세 정보 조회 API (템플릿 올리기 화면)';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿의 상세 정보를 조회하는 API입니다. (템플릿 올리기 화면의 기능)'
+    #swagger.description = '템플릿 올리기 화면에서 템플릿의 정보를 조회하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.security = [{
         "bearerAuth": []
     }]
@@ -24,15 +24,13 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
-                                templateId: { type: "number", example: 1 },
-                                userId: { type: "number", example: 1 },
-                                title: { type: "string", example: "Portfolio1 Template" },
-                                filePPT: { type: "string", example: "https://example.com/files/template1.pptx" },
-                                filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
-                                fileShareState: { type: "string", example: "public" },
+                                templateId: { type: "integer", example: 1 },
                                 thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg" },
-                                createdAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                updatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" }
+                                filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
+                                title: { type: "string", example: "Template Title 1" },
+                                fileShareState: { type: "string", example: "savable" },
+                                templateCategoryId: { type: "integer", example: 1 },
+                                templateCategoryName: { type: "string", example: "콘텐츠 마케터" }
                             }
                         }
                     }
@@ -41,7 +39,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 상세 정보 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 상세 정보 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {
@@ -56,7 +54,7 @@ export const handleDetailTemplateInfoLoad = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -149,7 +147,7 @@ export const handleTemplateDelete = async (req, res, next) => {
     /* 
     #swagger.summary = '템플릿 삭제 API';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿을 삭제하는 API입니다.'
+    #swagger.description = '템플릿을 삭제하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.security = [{
         "bearerAuth": []
     }]
@@ -165,8 +163,10 @@ export const handleTemplateDelete = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
-                                templateId: { type: "number", example: 1 },
-                                message: { type: "string", example: "템플릿이 정상적으로 삭제되었습니다."}
+                                message: { type: "string", example: "템플릿이 정상적으로 삭제되었습니다!"},
+                                templateId: { type: "integer", example: 1 },
+                                status: { type: "string", example: "inactive" },
+                                inactiveDate: { type: "string", format: "date", example: "2025-01-27T12:40:39.649Z"}
                             }
                         }
                     }
@@ -175,7 +175,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 삭제 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 삭제 실패 응답.",
         content: {
             "application/json": {
                 schema: {
@@ -190,7 +190,7 @@ export const handleTemplateDelete = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -206,7 +206,7 @@ export const handleTemplateDelete = async (req, res, next) => {
         console.log("\n템플릿 전체 불러오기를 요청했습니다!");
         console.log(`요청된 템플릿 아이디입니다: ${req.params.templateId}`);
 
-        const deletedTemplate = await templateDeletion(templateToDetailInfo(req.params));
+        const deletedTemplate = await templateDeletion(templateToDeletion(req.params));
         res.status(StatusCodes.OK).success(deletedTemplate);
     } catch (error) {
         next(error);
@@ -599,11 +599,11 @@ export const handlerCreateTemplateLike = async (req, res, next) => {
 // 템플릿 파일 요청
 export const handleGetTemplateFile = async (req, res, next) => {
     /* 
-    #swagger.summary = '템플릿 파일 조회 API';
+    #swagger.summary = '템플릿 파일 조회 API (템플릿 페이지)';
     #swagger.tags = ['Template']
-    #swagger.description = '템플릿 파일 조회 API입니다.'
+    #swagger.description = '템플릿 페이지에서 한 템플릿을 조회하기 위한 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.responses[200] = {
-        description: "템플릿 파일 조회 성공 응답. (추가적인 성공 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 파일 조회 성공 응답",
         content: {
             "application/json": {
                 schema: {
@@ -614,8 +614,8 @@ export const handleGetTemplateFile = async (req, res, next) => {
                         success: {
                             type: "object",
                             properties: {
+                                templateId: { type: "integer", example: 1 },
                                 filePDF: { type: "string", example: "https://example.com/files/template1.pdf" },
-                                filePPT: { type: "string", example: "https://example.com/files/template1.pptx" },
                                 fileShareState: { type: "string", example: "저장 가능" },
                                 fileLikeStatus: { type: "boolean", example: true },
                             }
@@ -626,7 +626,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "템플릿 파일 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "템플릿 파일 조회 실패 응답",
         content: {
             "application/json": {
                 schema: {
@@ -641,7 +641,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTempalteId: { type: "number", example: 0 }
+                                        requestedTempalteId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -775,7 +775,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
         required: false,
     }
     ]
-    #swagger.description = '로그인 전 템플릿 목록을 조회를 하는 API입니다. (로그인 전에는 템플릿 좋아요 여부를 볼 수 없음)'
+    #swagger.description = '로그인 전 템플릿 목록을 조회를 하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.security = [{
         "bearerAuth": []
     }]
@@ -797,20 +797,20 @@ export const handleViewAllTemplates = async(req, res, next) => {
                                         type: "object",
                                         properties: {
                                             templateCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                            templateId: { type: "number", example: 100 },
-                                            title: { type: "string", example: "Template Title 100" },
-                                            thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                            authorId: { type: "number", example: 5 },
-                                            authorName: { type: "string", example: "Eve" },
-                                            categoryId: { type: "number", example: 4 },
-                                            categoryName: { type: "string", example: "바이럴 마케터" },
+                                            templateId: { type: "integer", example: 1 },
+                                            title: { type: "string", example: "Template Title 1" },
+                                            thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg"},
+                                            authorId: { type: "integer", example: 1 },
+                                            authorName: { type: "string", example: "Alice" },
+                                            categoryId: { type: "integer", example: 1 },
+                                            categoryName: { type: "string", example: "콘텐츠 마케터" },
                                         }
                                     }
                                 },
                                 pagination: {
                                     type: "object", 
                                     properties: {
-                                        cursor: { type: "number", nullable: true }
+                                        cursor: { type: "integer", nullable: true }
                                     }
                                 }
                             }
@@ -821,7 +821,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "로그인 전 템플릿 목록 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "로그인 전 템플릿 목록 조회 실패 응답.",
         content: {
             "application/json": {
                 schema: {
@@ -836,7 +836,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedTemplateId: { type: "number", example: -1 }
+                                        requestedCategoryId: { type: "integer", example: 0 }
                                     }
                                 }
                             }
@@ -888,7 +888,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
         required: false,
     }
     ]
-    #swagger.description = '로그인 후 템플릿 목록 조회를 하는 API입니다. (로그인 후에는 사용자에 대한 템플릿 좋아요 여부를 볼 수 있음)'
+    #swagger.description = '로그인 후 템플릿 목록 조회를 하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.responses[200] = {
         description: "로그인 후 템플릿 목록 조회 성공 응답",
         content: {
@@ -906,22 +906,22 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
                                     items: {
                                         type: "object",
                                         properties: {
-                                            postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                            postId: { type: "number", example: 100 },
-                                            title: { type: "string", example: "Template Title 100" },
-                                            thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                            authorId: { type: "number", example: 5 },
-                                            authorName: { type: "string", example: "Eve" },
-                                            categoryId: { type: "number", example: 4 },
-                                            categoryName: { type: "string", example: "바이럴 마케터" },
-                                            likedStatus: { type: "boolean", example: true },
+                                            templateCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
+                                            templateId: { type: "integer", example: 1 },
+                                            title: { type: "string", example: "Template Title 1" },
+                                            thumbnail: { type: "string", example: "https://example.com/images/thumb1.jpg"},
+                                            authorId: { type: "integer", example: 1 },
+                                            authorName: { type: "string", example: "Alice" },
+                                            categoryId: { type: "integer", example: 1 },
+                                            categoryName: { type: "string", example: "콘텐츠 마케터" },
+                                            likedStatus: { type: "boolean", example: false },
                                         }
                                     }
                                 },
                                 pagination: {
                                     type: "object", 
                                     properties: {
-                                        cursor: { type: "number", nullable: true }
+                                        cursor: { type: "integer", nullable: true }
                                     }
                                 }
                             }
@@ -932,7 +932,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "로그인 후 템플릿 목록 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "로그인 후 템플릿 목록 조회 실패 응답.",
         content: {
             "application/json": {
                 schema: {
@@ -947,7 +947,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedCategoryId: { type: "number", example: -1 }
+                                        requestedCategoryId: { type: "integer", example: -1 }
                                     }
                                 }
                             }

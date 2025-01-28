@@ -191,7 +191,7 @@ app.put('/templates/:templateId/update',
     authenticateJWT,
     handlerTemplateUpdate);
 
-// 템플릿 파일 조회 API
+// 템플릿 파일 조회 API (템플릿 페이지)
 app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
 // 템플릿 목록 조회 API (로그인 전)
