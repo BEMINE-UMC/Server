@@ -555,6 +555,102 @@ export const handlecheckEmail = async (req, res) => {
 // 비밀번호 재설정
 export const handleNewPassword = async (req, res) => {
 
+  /*
+    #swagger.summary = '비밀번호 재설정 API';
+    #swagger.tags = ['Auth']
+  
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              name: { type: "string", example: "username" },
+              email: { type: "string", example: "user@example.com" },
+              password: { type: "string", example: "password123" }
+            },
+            required: ["name", "email", "password"]
+          }
+        }
+      }
+    }
+  
+    #swagger.responses[200] = {
+      description: "비밀번호 재설정 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  data: {
+                    type: "object",
+                    properties: {
+                      userId: { type: "integer", example: 1 }
+                    }
+                  },
+                  message: { type: "string", example: "비밀번호가 변경되었습니다!" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    #swagger.responses[400] = {
+      description: "비밀번호 재설정 실패 응답 - 4자 이상, 15자 이하 조건 위반",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "A010" },
+                  reason: { type: "string", example: "비밀번호는 4자 이상, 15자 이하여야 합니다." },
+                  data: { type: "object", nullable: true, example: null }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+
+    #swagger.responses[401] = {
+      description: "비밀번호 재설정 실패 응답 - 기존 비밀번호와 동일",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "A023" },
+                  reason: { type: "string", example: "새로운 비밀번호가 기존 비밀번호와 동일합니다." },
+                  data: { type: "object", nullable: true, example: null }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+  */
+
+
   console.log("비밀번호 재설정 요청");
 
   const { name, email, password } = req.body;
