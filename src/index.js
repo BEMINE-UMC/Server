@@ -4,7 +4,7 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
-import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+import {handlerGetUserEmail, handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
@@ -221,7 +221,9 @@ app.patch('/posts/:postId', authenticateJWT,handlePostDelete);
 //게시글 상세조회
 app.get('/posts/:postId',authenticateJWT,getPostDetail);
 
-//게시글 상세 조회회
+//사용자 이메일 찾기 API
+app.patch('/users/search/email',handlerGetUserEmail);
+
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {

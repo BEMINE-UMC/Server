@@ -1,6 +1,6 @@
 import {StatusCodes} from "http-status-codes";
-import {userToHistory, userToProfile} from "../dtos/user.dto.js";
-import {userHistory, userProfileModify} from "../services/user.service.js";
+import {userForEmail, userToHistory, userToProfile} from "../dtos/user.dto.js";
+import {userEmailGet, userHistory, userProfileModify} from "../services/user.service.js";
 
 
 // 연혁 조회 요청
@@ -158,4 +158,82 @@ export const handlerPatchMyProfile = async (req, res) => {
     */
     const user = await userProfileModify(userToProfile(req.user,req.file))
     res.status(StatusCodes.OK).success(user)
+}
+
+//사용자 이메일 찾기 요청
+export const handlerGetUserEmail = async (req,res) => {
+/*
+  #swagger.summary = '사용자 이메일 찾기 API';
+  #swagger.tags = ['User']
+
+  #swagger.requestBody = {
+  required: true,
+  content: {
+    "application/json": {
+      schema: {
+        type: "object",
+        properties: {
+          name: { type: "string", example: "usernmae"},
+          password: { type: "string", example: "password1234" }
+        },
+        required: ["name", "password"]
+      }
+    }
+  }
+};
+
+  #swagger.responses[200] = {
+    description: "사용자 이메일 찾기 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                id: { type: "number", example: 1 },
+                name: { type: "string", example: "username" },
+                email: { type: "string", example: "user@example.com" }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  #swagger.responses[400] = {
+    description: "사용자 이메일 찾기 실패 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "U030" },
+                reason: { type: "string", example: "해당 정보의 이메일이 존재하지 않습니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    username: { type: "string", example: "username"},
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  };
+*/
+
+const userEmail = await userEmailGet(userForEmail(req.body));
+  res.status(StatusCodes.OK).success(userEmail);
 }

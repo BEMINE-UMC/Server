@@ -1,6 +1,6 @@
-import {getUserHistory, getUserInfo, patchUserProfile} from "../repositories/user.repository.js";
-import {responseFromHistory, responseFromPatchUserProfile} from "../dtos/user.dto.js";
-import {NotExsistsUserError } from "../errors/user.error.js";
+import {getUserEmail, getUserHistory, getUserInfo, patchUserProfile} from "../repositories/user.repository.js";
+import {responseFromHistory, responseFromPatchUserProfile, responseFromUserEmail} from "../dtos/user.dto.js";
+import {NoCorrectUserEmail, NotExsistsUserError } from "../errors/user.error.js";
 import {deleteImage} from "../../middleware.js";
 
 // 연혁 조회하기
@@ -35,4 +35,17 @@ export const userProfileModify = async (data) => {
     const updateUser = await patchUserProfile(data)
 
     return responseFromPatchUserProfile(updateUser);
+}
+
+//사용자 이메일 찾기
+export const userEmailGet = async (data) => {
+    const userEmail = await getUserEmail(data);
+
+    if(!userEmail)
+    {
+        throw new NoCorrectUserEmail("해당 정보의 이메일이 존재하지 않습니다.",data.name);
+    }
+
+    return responseFromUserEmail(userEmail);
+
 }
