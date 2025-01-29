@@ -4,13 +4,13 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
-import {handlerGetUserEmail, handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+import { handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword } from "./controllers/auth.controller.js";
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
 

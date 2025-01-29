@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO, createdNewPasswordDTO } from "../dtos/auth.dto.js";
-import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw } from "../repositories/auth.repository.js";
-import { NonExistRefreshError } from "../errors/auth.error.js";
+import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO, createdNewPasswordDTO, responseFromUserEmail } from "../dtos/auth.dto.js";
+import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw, getUserEmail } from "../repositories/auth.repository.js";
+import { NoCorrectUserEmail, NonExistRefreshError } from "../errors/auth.error.js";
 
 dotenv.config();
 
@@ -108,4 +108,17 @@ export const patchNewPassword = async (name, email, password) => {
     const newPassword = await patchNewPw(name, email, password);
 
     return createdNewPasswordDTO(newPassword);
+};
+
+//사용자 이메일 찾기
+export const userEmailGet = async (data) => {
+    const userEmail = await getUserEmail(data);
+
+    if(!userEmail)
+    {
+        throw new NoCorrectUserEmail("해당 정보의 이메일이 존재하지 않습니다.",data.name);
+    }
+
+    return responseFromUserEmail(userEmail);
+
 };
