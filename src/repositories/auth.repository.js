@@ -120,3 +120,30 @@ export const patchNewPw = async (name, email, password) => {
         throw error;
     }
 };
+
+// 사용자 이메일 조회
+export const getUserEmail = async(data) => {
+    try{
+        const user = await prisma.user.findFirst({
+            where: {
+                name: data.name
+            }
+        });
+    
+        //해당 이름을 가진 사용자가 없을 때
+        if(user==null)
+        {
+            return null;
+        }
+    
+        //사용자가 임력한 비밀번호가 일치하지 않을때
+        const isCorrectPassword = await bcrypt.compare(data.password,user.password);
+        if(!isCorrectPassword)
+        {
+            return null;
+        }
+        return user;
+    }catch(error){
+        throw error;
+    }
+};

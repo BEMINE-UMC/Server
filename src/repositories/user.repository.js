@@ -34,4 +34,3 @@ export const patchUserProfile = async (data) => {
 
     return user;
 }
-

@@ -1,6 +1,6 @@
 import {StatusCodes} from "http-status-codes";
-import {userToHistory, userToProfile} from "../dtos/user.dto.js";
-import {userHistory, userProfileModify} from "../services/user.service.js";
+import { userToHistory, userToProfile} from "../dtos/user.dto.js";
+import { userHistory, userProfileModify} from "../services/user.service.js";
 
 
 // 연혁 조회 요청

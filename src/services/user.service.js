@@ -1,6 +1,6 @@
-import {getUserHistory, getUserInfo, patchUserProfile} from "../repositories/user.repository.js";
+import { getUserHistory, getUserInfo, patchUserProfile} from "../repositories/user.repository.js";
 import {responseFromHistory, responseFromPatchUserProfile} from "../dtos/user.dto.js";
-import {NotExsistsUserError } from "../errors/user.error.js";
+import { NotExsistsUserError } from "../errors/user.error.js";
 import {deleteImage} from "../../middleware.js";
 
 // 연혁 조회하기
