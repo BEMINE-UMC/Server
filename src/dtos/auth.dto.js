@@ -46,3 +46,25 @@ export const createdVerifyEmailDTO = (email, code) => {
     code
   };
 };
+
+export const createdNewPasswordDTO = (data) => {
+  return {
+    userId: data.id
+  }
+};
+
+//사용자 이메일 찾기 요청 DTP
+export const userForEmail = (body) => {
+  return{
+      name: body.name,
+      password: body.password
+  }
+};
+//사용자 이메일 찾기 응답 DTO
+export const responseFromUserEmail = (data) => {
+  return{
+      id: data.id,
+      name: data.name,
+      email: data.email
+  }
+};

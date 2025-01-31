@@ -330,7 +330,7 @@ export const handlerGetScrapPost = async (req, res) => {
 export const handleViewAllPosts = async (req, res, next) => {
   /* 
   #swagger.summary = '게시물 전체 조회 API (로그인 전)';
-  #swagger.tags = ['Post']
+  #swagger.tags = ['POST']
   #swagger.parameters: [
     { in: "query",
       name: "categoryId",
@@ -355,7 +355,7 @@ export const handleViewAllPosts = async (req, res, next) => {
       required: false,
     }
   ]
-  #swagger.description = '로그인 전 게시물 전체 조회를 하는 API입니다. (로그인 전에는 게시물 좋아요, 스크랩 여부를 볼 수 없음)'
+  #swagger.description = '로그인 전 게시물 전체 조회를 하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
   #swagger.security = [{
       "bearerAuth": []
   }]
@@ -377,12 +377,12 @@ export const handleViewAllPosts = async (req, res, next) => {
                                       type: "object",
                                       properties: {
                                           postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                          postId: { type: "number", example: 100 },
+                                          postId: { type: "integer", example: 100 },
                                           title: { type: "string", example: "Post Title 100" },
                                           thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                          authorId: { type: "number", example: 5 },
+                                          authorId: { type: "integer", example: 5 },
                                           authorName: { type: "string", example: "Eve" },
-                                          categoryId: { type: "number", example: 4 },
+                                          categoryId: { type: "integer", example: 4 },
                                           categoryName: { type: "string", example: "바이럴 마케터" },
                                       }
                                   }
@@ -390,7 +390,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                               pagination: {
                                   type: "object", 
                                   properties: {
-                                      cursor: { type: "number", nullable: true }
+                                      cursor: { type: "integer", nullable: true }
                                   }
                               }
                           }
@@ -401,7 +401,7 @@ export const handleViewAllPosts = async (req, res, next) => {
       }
   }
   #swagger.responses[400] = {
-      description: "로그인 전 게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+      description: "로그인 전 게시물 전체 조회 실패 응답.",
       content: {
           "application/json": {
               schema: {
@@ -416,7 +416,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                               data: {
                                   type: "object",
                                   properties: {
-                                      requestedCategoryId: { type: "number", example: 0 }
+                                      requestedCategoryId: { type: "integer", example: 0 }
                                   }
                               }
                           }
@@ -443,7 +443,7 @@ export const handleViewAllPosts = async (req, res, next) => {
 export const handleViewAllPostsLoggedIn = async (req, res, next) => {
   /* 
     #swagger.summary = '게시물 전체 조회 API (로그인 후)';
-    #swagger.tags = ['Post']
+    #swagger.tags = ['POST']
     #swagger.parameters: [
       { in: "query",
         name: "categoryId",
@@ -468,7 +468,7 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
         required: false,
       }
     ]
-    #swagger.description = '로그인 후 게시물 전체 조회를 하는 API입니다. (로그인 후에는 사용자에 대한 게시물 좋아요, 스크랩 여부를 볼 수 있음)'
+    #swagger.description = '로그인 후 게시물 전체 조회를 하는 API입니다. (더 자세한 내용은 노션 API 명세서에서 확인해주세요)'
     #swagger.responses[200] = {
         description: "로그인 후 게시물 전체 조회 성공 응답",
         content: {
@@ -487,12 +487,12 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                         type: "object",
                                         properties: {
                                             postCreatedAt: { type: "string", format: "date", example: "2025-01-10T00:41:23.000Z" },
-                                            postId: { type: "number", example: 100 },
+                                            postId: { type: "integer", example: 100 },
                                             title: { type: "string", example: "Post Title 100" },
                                             thumbnail: { type: "string", example: "https://example.com/pictures/pic100.jpg"},
-                                            authorId: { type: "number", example: 5 },
+                                            authorId: { type: "integer", example: 5 },
                                             authorName: { type: "string", example: "Eve" },
-                                            categoryId: { type: "number", example: 4 },
+                                            categoryId: { type: "integer", example: 4 },
                                             categoryName: { type: "string", example: "바이럴 마케터" },
                                             likedStatus: { type: "boolean", example: true },
                                             scrapStatus: { type: "boolean", example: false }
@@ -502,7 +502,7 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                 pagination: {
                                     type: "object", 
                                     properties: {
-                                        cursor: { type: "number", nullable: true }
+                                        cursor: { type: "integer", nullable: true }
                                     }
                                 }
                             }
@@ -513,7 +513,7 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
         }
     }
     #swagger.responses[400] = {
-        description: "로그인 후 게시물 전체 조회 실패 응답. (추가적인 실패 응답 예시는 노션 API 명세서를 참고해주세요)",
+        description: "로그인 후 게시물 전체 조회 실패 응답.",
         content: {
             "application/json": {
                 schema: {
@@ -528,7 +528,7 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                 data: {
                                     type: "object",
                                     properties: {
-                                        requestedCategoryId: { type: "number", example: 0 }
+                                        requestedCategoryId: { type: "integer", example: 0 }
                                     }
                                 }
                             }

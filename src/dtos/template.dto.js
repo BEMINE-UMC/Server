@@ -1,25 +1,20 @@
 // 템플릿 상세 정보 조회 DTO (controller->service)
 export const templateToDetailInfo = (template)=>{
     return{
-      templateId: parseInt(template.templateId),
+        templateId: parseInt(template.templateId),
     }
-  }
+}
 
 // 템플릿 상세 정보 조회 DTO (service->controller)
-export const responseFromDetailInfo = (templateInfo) => {
-    const createdAt = new Date(templateInfo.created_at);
-    const updatedAt = new Date(templateInfo.updated_at);
-
+export const responseFromDetailInfo = (templateInfo) => { // 처음 생성하는 템플릿은 모두 빈 문자열이 가도록 함!
     return {
-        templateId: templateInfo.id || "",
-        userId: templateInfo.user_id || "",
+        templateId: templateInfo.templateId,
+        thumbnail: templateInfo.thumbnail || "",
+        filePDF: templateInfo.file_pdf || "",
         title: templateInfo.title || "",
-        filePPT: templateInfo.file_ppt,
-        filePDF: templateInfo.file_pdf,
         fileShareState: templateInfo.file_share_state || "",
-        thumbnail: templateInfo.thumbnail,
-        createdAt,
-        updatedAt, 
+        templateCategoryId: templateInfo.t_categoryId || "",
+        templateCategoryName: templateInfo.t_categoryName || ""
     };
 };
 
@@ -34,11 +29,18 @@ export const templateToFileInfo = (user, params)=>{
 // 템플릿 파일 조회 DTO (service->controller)
 export const responseFromTemplateAndLike = (templateViewInfo) => {
     return {
+        templateId: templateViewInfo.templateId,
         filePDF: templateViewInfo.file_pdf,
-        filePPT: templateViewInfo.file_ppt,
         fileShareState: templateViewInfo.file_share_state || "",
         fileLikeStatus: templateViewInfo.like_status,
     };
+};
+
+// 템플릿 삭제 전 DTO (controller->service)
+export const templateToDeletion = (template) => {
+    return{
+        templateId: parseInt(template.templateId),
+    }
 };
 
 // 템플릿 삭제 후 DTO (service->controller)
@@ -46,6 +48,8 @@ export const responseFromTemplateDeletion = (deletedTemplateInfo) => {
     const inactiveDate = new Date(deletedTemplateInfo.inactive_date);
 
     return {
+        message: "템플릿이 정상적으로 삭제되었습니다!",
+        templateId: deletedTemplateInfo.id,
         status: deletedTemplateInfo.status,
         inactiveDate,
     };
@@ -131,13 +135,13 @@ export const responseFromLikedTemplate = (likedTemplate) => {
 // 템플릿 목록 조회 (로그인 전) (controller->service)
 export const postToAllTemplates = (query) => {
     return{
-        categoryId: (query.categoryId == undefined ? undefined : parseInt(query.categoryId)),
+        categoryId: (query.categoryId === undefined ? undefined : parseInt(query.categoryId)),
         offset: (query.offset === undefined ? 0 : parseInt(query.offset)), // 기본값 부여
         limit: (query.limit === undefined ? 20 : parseInt(query.limit)) // 기본값 부여
     }
 }
 
-// 게시물 전체 조회 (로그인 전) (controller->service)
+// 템플릿 목록 조회 (로그인 전) (service->controller)
 export const responseFromAllTemplates = (templates) => {
     return templates.map(template => {
         const templateCreatedAt = new Date(template.template_created_at);
@@ -165,7 +169,7 @@ export const postToAllTemplatesLoggedIn = (user, query) => {
     }
 }
 
-// 게시물 전체 조회 (로그인 후) (controller->service)
+// 템플릿 목록 조회 (로그인 후) (service->controller)
 export const responseFromAllTemplatesLoggedIn = (templates) => {
     return templates.map(template => {
         const templateCreatedAt = new Date(template.template_created_at);

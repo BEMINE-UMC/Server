@@ -4,7 +4,8 @@ export class InvalidTemplateIdError extends Error {
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
-        this.data = data;
+        this.data = data,
+        this.statusCode = 400;
     }
 }
 
@@ -14,7 +15,8 @@ export class NonexistentTemplateError extends Error {
     constructor(reason, data){
         super(reason);
         this.reason = reason;
-        this.data = data;
+        this.data = data,
+        this.statusCode = 400;
     }
 }
 
@@ -24,7 +26,8 @@ export class InactiveTemplateError extends Error {
     constructor(reason, data){
         super(reason);
         this.reason = reason;
-        this.data = data;
+        this.data = data,
+        this.statusCode = 400;
     }
 }
 
@@ -34,7 +37,8 @@ export class NullStatusTemplateError extends Error {
     constructor(reason, data){
         super(reason);
         this.reason = reason;
-        this.data = data;
+        this.data = data,
+        this.statusCode = 400;
     }
 }
 
@@ -48,13 +52,14 @@ export class DatabaseConnectionError extends Error {
     }
 }
 
-// userId와 templateId가 매칭되는 템플릿 좋아요 정보가 존재하지 않을 때
-export class NonexistentTemplateLike extends Error {
+// 비공개 template을 조회하려고 할 때 (ex: 템플릿 페이지)
+export class PrivateTemplateError extends Error {
     errorCode = "T24";
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
-        this.data = data;
+        this.data = data,
+        this.statusCode = 400;
     }
 }
 
@@ -64,7 +69,8 @@ export class NullTemplateLike extends Error {
     constructor(reason, data) {
         super(reason);
         this.reason = reason;
-        this.data = data;
+        this.data = data,
+        this.statusCode = 400;
     }
 }
 

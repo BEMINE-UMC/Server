@@ -4,13 +4,13 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
-import {handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+import { handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail } from "./controllers/auth.controller.js";
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
 
@@ -140,6 +140,9 @@ app.post('/users/login', handleLogin);
 // Access Token 재발급 API (Refresh Token 활용)
 app.post('/users/refresh', handleTokenRefresh);
 
+// 비밀번호 재설정 API
+app.patch('/users/search/password', handleNewPassword)
+
 // 사용자 연혁 조회 API
 app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
 
@@ -191,7 +194,7 @@ app.put('/templates/:templateId/update',
     authenticateJWT,
     handlerTemplateUpdate);
 
-// 템플릿 파일 조회 API
+// 템플릿 파일 조회 API (템플릿 페이지)
 app.get('/templates/:templateId/view', authenticateJWT, handleGetTemplateFile);
 
 // 템플릿 목록 조회 API (로그인 전)
@@ -218,7 +221,9 @@ app.patch('/posts/:postId', authenticateJWT,handlePostDelete);
 //게시글 상세조회
 app.get('/posts/:postId',authenticateJWT,getPostDetail);
 
-//게시글 상세 조회회
+//사용자 이메일 찾기 API
+app.patch('/users/search/email',handlerGetUserEmail);
+
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {
