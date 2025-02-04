@@ -206,14 +206,15 @@ app.get('/user/templates', authenticateJWT, handleViewAllTemplatesLoggedIn);
 //게시글 작성 API 
 app.post('/posts/write', authenticateJWT, handlePostWrite );
 
-//게시글에 이미지 첨부 시 이미지 업로드 API 
+//게시글에 이미지 첨부 시 이미지 업로드 API  
 app.post('/posts/image/uploads', authenticateJWT, imageUploader.single('image'), (req, res) => {
+    // #swagger.ignore = true
     if (!req.file) {
         return res.status(400).json({ error: 'File upload failed' });
     }
+    //임시
     res.status(200).json({ imageUrl: req.file.location });
 });
-//게시글 이미지 업로드 API (분리)
 
 // 게시글 삭제
 app.patch('/posts/:postId', authenticateJWT,handlePostDelete);
