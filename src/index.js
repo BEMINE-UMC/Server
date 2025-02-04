@@ -212,7 +212,6 @@ app.post('/posts/image/uploads', authenticateJWT, imageUploader.single('image'),
     if (!req.file) {
         return res.status(400).json({ error: 'File upload failed' });
     }
-    //임시
     res.status(200).json({ imageUrl: req.file.location });
 });
 
