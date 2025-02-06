@@ -22,3 +22,12 @@ export class NotFileAllowedError extends Error {
         this.allowed = allowed
     }
 }
+export class UpdateHistoryError extends Error {
+    errorCode = "U041";
+    constructor(reason = "연혁 수정에 실패했습니다.") {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = {};
+    }
+}
