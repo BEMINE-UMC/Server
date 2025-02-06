@@ -1,6 +1,6 @@
-# Server
+# 📝 포트폴리오 정보 공유 서비스 BeMine
 
-# Be-Mine Front Repository
+![Image](https://github.com/user-attachments/assets/299adbd3-2400-4bb4-8819-3cb8daff9cbc)
 
 ## Stack
 
