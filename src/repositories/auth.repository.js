@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 import { pool } from "../db.config.js";
 import bcrypt from 'bcrypt';
 import { ExistEmailError, ExistNameError, UserNotExistError, InvalidPasswordError, PasswordLengthError, 
-    NameNotExistError, EmailNotExistError, SamePasswordError } from "../errors/auth.error.js";
+    NameNotExistError, EmailNotExistError, SamePasswordError, UserIdNotExistError } from "../errors/auth.error.js";
 
 // 메모리 기반 임시 저장소
 const verificationStore = new Map();
@@ -75,11 +75,16 @@ export const getVerificationCode = async (email) => {
 };
 
 // 비밀번호 재발급
-export const patchNewPw = async (name, email, password) => {
+export const patchNewPw = async (userId, password) => {
     const conn = await pool.getConnection();
 
     try {
-        const [user] = await conn.query('SELECT password FROM user WHERE name = ? AND email = ?', [name, email]);
+        const [userName] = await conn.query("SELECT * FROM user WHERE id = ?", [userId]);
+        if (userName.length === 0) {
+            throw new UserIdNotExistError("존재하지 않는 사용자입니다.", { userId: userId });
+        }
+
+        const [user] = await conn.query('SELECT password FROM user WHERE id = ?', [userId]);
 
         const existingHashedPassword = user[0].password;
 
@@ -95,23 +100,13 @@ export const patchNewPw = async (name, email, password) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const [updatePW] = await conn.query(
-            'UPDATE user SET password = ? WHERE name = ? AND email = ?;',
-            [hashedPassword, name, email]
+            'UPDATE user SET password = ? WHERE id = ?;',
+            [hashedPassword, userId]
         );
 
-        const [userName] = await pool.query("SELECT * FROM user WHERE name = ?", [name]);
-        if (userName.length === 0) {
-            throw new NameNotExistError("존재하지 않는 닉네임입니다.", { name: name });
-        }
-
-        const [userEmail] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
-        if (userEmail.length === 0) {
-            throw new EmailNotExistError("존재하지 않는 이메일입니다.", { email: email });
-        }
-
         const [getUser] = await conn.query(
-            'SELECT id FROM user WHERE name = ? AND email = ?;',
-            [name, email]
+            'SELECT id FROM user WHERE id = ?;',
+            [userId]
         );
 
         return getUser[0];
@@ -144,6 +139,31 @@ export const getUserEmail = async(data) => {
         }
         return user;
     }catch(error){
+        throw error;
+    }
+};
+
+// 닉네임, 이메일 검증
+export const verifyUserData = async (name, email) => {
+    const conn = await pool.getConnection();
+
+    try {
+        const [userName] = await conn.query("SELECT * FROM user WHERE name = ?", [name]);
+        if (userName.length === 0) {
+            throw new NameNotExistError("존재하지 않는 닉네임입니다.", { name: name });
+        }
+
+        const [userEmail] = await conn.query("SELECT * FROM user WHERE email = ?", [email]);
+        if (userEmail.length === 0) {
+            throw new EmailNotExistError("존재하지 않는 이메일입니다.", { email: email });
+        }
+
+        const [getUser] = await conn.query(
+            'SELECT id FROM user WHERE name = ? AND email = ?;', [name, email]);
+
+        return getUser[0];
+    } catch (error) {
+        console.error("Error in verifyUserData: ", error);
         throw error;
     }
 };

@@ -2,8 +2,9 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO, createdNewPasswordDTO, responseFromUserEmail } from "../dtos/auth.dto.js";
-import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw, getUserEmail } from "../repositories/auth.repository.js";
+import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO, 
+    createdNewPasswordDTO, responseFromUserEmail, createdUserDataDTO } from "../dtos/auth.dto.js";
+import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw, getUserEmail, verifyUserData } from "../repositories/auth.repository.js";
 import { NoCorrectUserEmail, NonExistRefreshError } from "../errors/auth.error.js";
 
 dotenv.config();
@@ -104,10 +105,10 @@ export const verifyEmailCode = async (email, code) => {
 };
 
 // 비밀번호 재발급 api
-export const patchNewPassword = async (name, email, password) => {
-    const newPassword = await patchNewPw(name, email, password);
+export const patchNewPassword = async (userId, password) => {
+    const newPasswordId = await patchNewPw(userId, password);
 
-    return createdNewPasswordDTO(newPassword);
+    return createdNewPasswordDTO(newPasswordId);
 };
 
 //사용자 이메일 찾기
@@ -120,5 +121,11 @@ export const userEmailGet = async (data) => {
     }
 
     return responseFromUserEmail(userEmail);
+};
 
+// 닉네임, 이메일 검증
+export const verifyData = async (name, email) => {
+    const userData = await verifyUserData(name, email);
+
+    return createdUserDataDTO(userData);
 };
