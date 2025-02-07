@@ -1,6 +1,6 @@
 # 📝 포트폴리오 정보 공유 서비스 BeMine
 
-![Image](https://github.com/user-attachments/assets/299adbd3-2400-4bb4-8819-3cb8daff9cbc)
+![Image](https://github.com/user-attachments/assets/d7ab853d-8831-4b5f-9a0a-5fcc66f82e81)
 
 ## Stack
 
