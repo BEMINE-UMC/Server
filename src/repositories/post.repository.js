@@ -55,16 +55,19 @@ export const getUserOtherPost = async (userId) => {
 
         if (user.length === 0) {
             throw new NonExistUserError("존재하지 않는 사용자입니다.", { requestedUserId: userId });
-          }
+        }
 
         const [posts] = await conn.query(`SELECT * FROM post WHERE user_id = ?;`, [userId]);
 
         console.log(posts);
 
         return posts;
+
     } catch (error) {
         console.error("Error in getUserOtherPost: ", error);
         throw error;
+    } finally {
+        conn.release(); // 커넥션 반환
     }
 };
 
