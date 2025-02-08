@@ -50,3 +50,23 @@ export const historyModifyDTO = (data) => ({
     body: data.body,
     updatedAt: data.updated_at
 });
+
+// 연혁 생성 응답 DTO
+export const historyCreateDTO = (user, body)=>{
+    return{
+        userId: parseInt(user.userId),
+        title: body.title,
+        body: body.body
+    }
+}
+
+// 연혁 생성 전송 DTO
+export const responseFromCreateHistory = (data) =>{
+    return{
+        historyId: data.id,
+        userId: parseInt(data.userId),
+        title: data.title,
+        body: data.body,
+        createAt: data.created_at
+    }
+}

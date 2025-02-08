@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { userToHistory, userToProfile ,historyModifyDTO } from "../dtos/user.dto.js";
-import { userHistory, userProfileModify ,userHistoryModify } from "../services/user.service.js";
+import {userToHistory, userToProfile, historyModifyDTO, historyCreateDTO} from "../dtos/user.dto.js";
+import {userHistory, userProfileModify, userHistoryModify, userHistoryCreate} from "../services/user.service.js";
 
 
 // 연혁 조회 요청
@@ -269,3 +269,81 @@ export const handlerPatchUserHistory = async (req, res) => {
   }));
   res.status(StatusCodes.OK).success(history);
 };
+
+//연혁 생성
+export const handlerCreateUserHistory = async (req, res) => {
+  const history = await userHistoryCreate(historyCreateDTO(req.user,req.body));
+  res.status(StatusCodes.OK).success(history);
+  /*
+    #swagger.summary = '사용자 연혁 생성 API'
+    #swagger.tags = ['User']
+
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              title: { type: "string", example: "학력/전공" },
+              body: { type: "string", example: "가천대학교 컴퓨터공학과 졸업" }
+            },
+            required: ["userId", "title", "body"]
+          }
+        }
+      }
+    }
+
+    #swagger.responses[200] = {
+      description: "사용자 연혁 생성 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  userId: { type: "number", example: 1 },
+                  title: { type: "string", example: "학력 및 전공" },
+                  body: { type: "string", example: "어쩌고 저쩌고" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #swagger.responses[400] = {
+      description: "사용자 연혁 생성 실패 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "U001" },
+                  reason: { type: "string", example: "존재하지 않는 유저입니다." },
+                  data: {
+                    type: "object",
+                    properties: {
+                      userId: { type: "number", example: 1 }
+                    }
+                  }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+*/
+
+}

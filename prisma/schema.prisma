@@ -140,7 +140,6 @@ model LikedTemplate {
 model UserHistory {
   id        Int      @id @default(autoincrement()) @db.Int
   userId    Int      @map("user_id")
-  num       Int
   title     String?  @db.VarChar(80)
   body      String?  @db.VarChar(350)
   createdAt DateTime? @default(now()) @db.DateTime(6) @map("created_at")
