@@ -51,7 +51,7 @@ export const historyModifyDTO = (data) => ({
     updatedAt: data.updated_at
 });
 
-// 연혁 생성 응답 DTO
+// 연혁 생성 요청 DTO
 export const historyCreateDTO = (user, body)=>{
     return{
         userId: parseInt(user.userId),
@@ -70,5 +70,22 @@ export const responseFromCreateHistory = (data) =>{
         title: data.history.title,
         body: data.history.body,
         createAt: data.history.created_at
+    }
+}
+
+// 마이페이지 사용자 정보 조회 요청 DTO 
+export const userToInfo = (data) =>{
+    return{
+        userId: parseInt(data.userId)
+    }
+}
+
+// 마이페이지 사용자 정보 조회 전송 DTO
+export const responseFromAllUserInfo = (data) =>{
+    return{
+        name: data.name,
+        introduction: data.introduction,
+        photo: data.photo,
+        history: data.userHistories
     }
 }
