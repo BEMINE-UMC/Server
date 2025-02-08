@@ -556,6 +556,128 @@ export const handlecheckEmail = async (req, res) => {
 // 비밀번호 재설정
 export const handleNewPassword = async (req, res) => {
 
+  /*
+  #swagger.summary = '비밀번호 재설정 API';
+  #swagger.tags = ['Auth']
+
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            userId: { type: "integer", example: 1 },
+            password: { type: "string", example: "password123" }
+          },
+          required: ["userId", "password"]
+        }
+      }
+    }
+  }
+
+  #swagger.responses[200] = {
+    description: "비밀번호 재설정 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "integer", example: 1 }
+                  }
+                },
+                message: { type: "string", example: "비밀번호가 변경되었습니다!" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #swagger.responses[400] = {
+    description: "비밀번호 재설정 실패 - 비밀번호 길이 오류",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A010" },
+                reason: { type: "string", example: "비밀번호는 4자 이상, 15자 이하여야 합니다." },
+                data: { type: "object", nullable: true, example: null }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+  
+  #swagger.responses[401] = {
+    description: "비밀번호 재설정 실패 - 기존 비밀번호와 동일",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A023" },
+                reason: { type: "string", example: "새로운 비밀번호가 기존 비밀번호와 동일합니다." },
+                data: { type: "object", nullable: true, example: null }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+  
+  #swagger.responses[402] = {
+    description: "비밀번호 재설정 실패 - 존재하지 않는 사용자",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A024" },
+                reason: { type: "string", example: "존재하지 않는 사용자입니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "integer", example: 66 }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+*/
+
   console.log("비밀번호 재설정 요청");
 
   const { userId, password } = req.body;
@@ -649,6 +771,110 @@ export const handlerGetUserEmail = async (req,res) => {
 
 // 닉네임, 이메일 검증
 export const handleVerifyData = async (req, res) => {
+
+  /*
+  #swagger.summary = '닉네임 및 이메일 검증 API';
+  #swagger.tags = ['Auth']
+
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            name: { type: "string", example: "username" },
+            email: { type: "string", example: "user@example.com" }
+          },
+          required: ["name", "email"]
+        }
+      }
+    }
+  }
+
+  #swagger.responses[200] = {
+    description: "닉네임, 이메일 검증 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    userId: { type: "integer", example: 1 }
+                  }
+                },
+                message: { type: "string", example: "닉네임, 이메일 검증 성공!" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #swagger.responses[400] = {
+    description: "닉네임 검증 실패 - 존재하지 않는 닉네임",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A021" },
+                reason: { type: "string", example: "존재하지 않는 닉네임입니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string", example: "username1" }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+  
+  #swagger.responses[401] = {
+    description: "이메일 검증 실패 - 존재하지 않는 이메일",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A022" },
+                reason: { type: "string", example: "존재하지 않는 이메일입니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    email: { type: "string", example: "user10@example.com" }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+*/
 
   console.log("닉네임, 이메일 검증 요청");
 
