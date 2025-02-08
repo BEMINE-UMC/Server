@@ -8,7 +8,7 @@ import {
     handlerCreateUserHistory,
     handlerGetUserHistory,
     handlerPatchMyProfile,
-    handlerPatchUserHistory
+    handlerPatchUserHistory, handlerShowUserInfo
 } from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
@@ -238,6 +238,8 @@ app.patch('/users/search/email',handlerGetUserEmail);
 // 연혁 생성
 app.post('/myPage/history/create',authenticateJWT, handlerCreateUserHistory)
 
+// 사용자 정보 조회
+app.get('/myPage',authenticateJWT ,handlerShowUserInfo)
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
