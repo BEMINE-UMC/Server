@@ -68,3 +68,9 @@ export const responseFromUserEmail = (data) => {
       email: data.email
   }
 };
+
+export const createdUserDataDTO = (data) => {
+  return {
+    userId: data.id
+  }
+};
