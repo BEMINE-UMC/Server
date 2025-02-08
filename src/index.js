@@ -4,13 +4,13 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
-import { handlerGetUserHistory, handlerPatchMyProfile} from "./controllers/user.controller.js";
+import { handlerGetUserHistory, handlerPatchMyProfile,handlerPatchUserHistory} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail } from "./controllers/auth.controller.js";
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail, handleVerifyData } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
 
@@ -140,11 +140,17 @@ app.post('/users/login', handleLogin);
 // Access Token 재발급 API (Refresh Token 활용)
 app.post('/users/refresh', handleTokenRefresh);
 
+// 닉네임, 이메일 검증 API
+app.post('/users/search/data', handleVerifyData)
+
 // 비밀번호 재설정 API
 app.patch('/users/search/password', handleNewPassword)
 
 // 사용자 연혁 조회 API
 app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
+
+//사용자 연혁 수정 API
+app.patch('/myPage/history', authenticateJWT, handlerPatchUserHistory);
 
 //사용자가 작성한 다른 게시물 불러오기 API
 app.get('/users/posts/other', authenticateJWT, handleOtherPost);
@@ -206,14 +212,14 @@ app.get('/user/templates', authenticateJWT, handleViewAllTemplatesLoggedIn);
 //게시글 작성 API 
 app.post('/posts/write', authenticateJWT, handlePostWrite );
 
-//게시글에 이미지 첨부 시 이미지 업로드 API 
+//게시글에 이미지 첨부 시 이미지 업로드 API  
 app.post('/posts/image/uploads', authenticateJWT, imageUploader.single('image'), (req, res) => {
+    // #swagger.ignore = true
     if (!req.file) {
         return res.status(400).json({ error: 'File upload failed' });
     }
     res.status(200).json({ imageUrl: req.file.location });
 });
-//게시글 이미지 업로드 API (분리)
 
 // 게시글 삭제
 app.patch('/posts/:postId', authenticateJWT,handlePostDelete);

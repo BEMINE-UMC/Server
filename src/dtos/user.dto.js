@@ -42,3 +42,11 @@ export const responseFromPatchUserProfile = (data) =>{
         photo: data.photo
     }
 }
+
+//연혁 수정 응답 DTO
+export const historyModifyDTO = (data) => ({
+    userId: parseInt(data.userId),
+    title: data.title,
+    body: data.body,
+    updatedAt: data.updated_at
+});
