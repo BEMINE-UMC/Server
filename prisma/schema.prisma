@@ -174,3 +174,18 @@ model Ad {
 
   @@map("ad")
 }
+
+model TemplateSurvey {
+  id         Int      @id @default(autoincrement()) @db.Int
+  userId     Int      @map("user_id")
+  templateId Int      @map("template_id")
+  starCount  Int      @map("star_count")
+  content    String   @db.VarChar(30)
+  createdAt  DateTime @default(now()) @db.DateTime(6) @map("created_at")
+  updatedAt  DateTime @db.DateTime(6) @updatedAt @db.DateTime(6) @map("updated_at")
+
+  user       User     @relation(fields: [userId], references: [id])
+  template   Template @relation(fields: [templateId], references: [id])
+
+  @@map("template_survey")
+}
