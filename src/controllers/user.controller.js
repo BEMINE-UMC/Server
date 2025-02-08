@@ -284,6 +284,7 @@ export const handlerCreateUserHistory = async (req, res) => {
           schema: {
             type: "object",
             properties: {
+              introduction: {type: "string", example: "안녕 나를소개하지" },
               title: { type: "string", example: "학력/전공" },
               body: { type: "string", example: "가천대학교 컴퓨터공학과 졸업" }
             },
@@ -306,6 +307,8 @@ export const handlerCreateUserHistory = async (req, res) => {
                 type: "object",
                 properties: {
                   userId: { type: "number", example: 1 },
+                  introduction: {type: "string", example: "안녕 나를소개하지" },
+                  historyId: { type: "number", example: 1 },
                   title: { type: "string", example: "학력 및 전공" },
                   body: { type: "string", example: "어쩌고 저쩌고" }
                 }
@@ -344,5 +347,4 @@ export const handlerCreateUserHistory = async (req, res) => {
       }
     }
 */
-
 }

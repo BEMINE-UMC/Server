@@ -3,7 +3,7 @@ import {
     getUserHistory,
     getUserInfo,
     patchUserProfile,
-    updateUserHistory
+    updateUserHistory, updateUserIntroduction
 } from "../repositories/user.repository.js";
 import {responseFromCreateHistory, responseFromHistory, responseFromPatchUserProfile} from "../dtos/user.dto.js";
 import { NotExsistsUserError , UpdateHistoryError} from "../errors/user.error.js";
@@ -67,6 +67,7 @@ export const userHistoryCreate = async (data) => {
     }
 
     const history = await createUserHistory(data);
-    console.log(history)
-    return responseFromCreateHistory(history);
+    const user = await updateUserIntroduction(data.userId, data.introduction)
+    const introduction = user.introduction;
+    return responseFromCreateHistory({history,introduction});
 }
