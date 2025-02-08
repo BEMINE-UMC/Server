@@ -1,5 +1,11 @@
-import { getUserHistory, getUserInfo, patchUserProfile , updateUserHistory} from "../repositories/user.repository.js";
-import {responseFromHistory, responseFromPatchUserProfile} from "../dtos/user.dto.js";
+import {
+    createUserHistory,
+    getUserHistory,
+    getUserInfo,
+    patchUserProfile,
+    updateUserHistory
+} from "../repositories/user.repository.js";
+import {responseFromCreateHistory, responseFromHistory, responseFromPatchUserProfile} from "../dtos/user.dto.js";
 import { NotExsistsUserError , UpdateHistoryError} from "../errors/user.error.js";
 import {deleteImage} from "../../middleware.js";
 
@@ -52,3 +58,15 @@ export const userHistoryModify = async (data) => {
         
         return data;
 };
+
+// 연혁 생성
+export const userHistoryCreate = async (data) => {
+    const confirm = await getUserInfo(data);
+    if (!confirm){
+        throw new NotExsistsUserError("존재하지 않는 사용자입니다.", {userId: data.userId})
+    }
+
+    const history = await createUserHistory(data);
+    console.log(history)
+    return responseFromCreateHistory(history);
+}
