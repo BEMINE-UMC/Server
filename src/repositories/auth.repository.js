@@ -12,16 +12,15 @@ export const postUserInformation = async ({ name, email, password }) => {
     const conn = await pool.getConnection();
 
     try {
-        // 이메일 중복 검사
-        const [existingUser] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
+        // 이메일 및 닉네임 정보 검사
+        const [existingUser] = await conn.query("SELECT email, name FROM user WHERE email = ? OR name = ?", [email, name]);
         if (existingUser.length > 0) {
-            throw new ExistEmailError("해당 이메일은 이미 존재합니다.", { email: email });
-        }
-
-        // 닉네임 중복 검사
-        const [existingName] = await pool.query("SELECT * FROM user WHERE name = ?", [name]);
-        if (existingName.length > 0) {
-            throw new ExistNameError("해당 닉네임은 이미 존재합니다.", { name: name });
+            if (existingUser[0].email === email) {
+                throw new ExistEmailError("해당 이메일은 이미 존재합니다.", { email });
+            }
+            if (existingUser[0].name === name) {
+                throw new ExistNameError("해당 닉네임은 이미 존재합니다.", { name });
+            }
         }
 
         // 사용자 정보 삽입
@@ -34,8 +33,11 @@ export const postUserInformation = async ({ name, email, password }) => {
     } catch (error) {
         console.error("Error in postUserInformation: ", error);
         throw error;
+    } finally {
+        conn.release(); //커넥션 반환
     }
 };
+
 
 // 로그인
 export const getUserInfo = async ({ email, password }) => {
@@ -58,8 +60,11 @@ export const getUserInfo = async ({ email, password }) => {
     } catch (error) {
         console.error("Error in getUserInfo: ", error);
         throw error;
+    } finally {
+        conn.release(); // 커넥션을 반환
     }
 };
+
 
 // 인증번호 저장
 export const saveVerificationCode = async (email, code) => {
@@ -79,7 +84,7 @@ export const patchNewPw = async (userId, password) => {
     const conn = await pool.getConnection();
 
     try {
-        const [userName] = await conn.query("SELECT * FROM user WHERE id = ?", [userId]);
+        const [userName] = await conn.query("SELECT id FROM user WHERE id = ?", [userId]);
         if (userName.length === 0) {
             throw new UserIdNotExistError("존재하지 않는 사용자입니다.", { userId: userId });
         }
@@ -104,15 +109,13 @@ export const patchNewPw = async (userId, password) => {
             [hashedPassword, userId]
         );
 
-        const [getUser] = await conn.query(
-            'SELECT id FROM user WHERE id = ?;',
-            [userId]
-        );
+        return { id: userId };
 
-        return getUser[0];
     } catch (error) {
         console.error("Error in patchNewPw: ", error);
         throw error;
+    } finally {
+        conn.release(); // 커넥션 반환
     }
 };
 
@@ -162,8 +165,11 @@ export const verifyUserData = async (name, email) => {
             'SELECT id FROM user WHERE name = ? AND email = ?;', [name, email]);
 
         return getUser[0];
+
     } catch (error) {
         console.error("Error in verifyUserData: ", error);
         throw error;
+    } finally {
+        conn.release(); // 커넥션 반환
     }
 };
