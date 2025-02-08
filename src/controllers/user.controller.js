@@ -1,6 +1,12 @@
 import { StatusCodes } from "http-status-codes";
-import {userToHistory, userToProfile, historyModifyDTO, historyCreateDTO} from "../dtos/user.dto.js";
-import {userHistory, userProfileModify, userHistoryModify, userHistoryCreate} from "../services/user.service.js";
+import {userToHistory, userToProfile, historyModifyDTO, historyCreateDTO, userToInfo} from "../dtos/user.dto.js";
+import {
+  userHistory,
+  userProfileModify,
+  userHistoryModify,
+  userHistoryCreate,
+  showUserInfo
+} from "../services/user.service.js";
 
 
 // 연혁 조회 요청
@@ -333,6 +339,73 @@ export const handlerCreateUserHistory = async (req, res) => {
                     type: "object",
                     properties: {
                       userId: { type: "number", example: 1 }
+                    }
+                  }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+*/
+}
+
+// 사용자 정보 조회
+export const handlerShowUserInfo = async (req, res) => {
+  const user = await showUserInfo(userToInfo(req.user));
+  res.status(StatusCodes.OK).success(user);
+  /*
+    #swagger.summary = '마이페이지 사용자 정보 조회 API'
+    #swagger.tags = ['User']
+
+    #swagger.responses[200] = {
+      description: "마이페이지 사용자 정보 조회 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "null", example: null },
+              name: { type: "string", example: "유궁둔" },
+              introduction: { type: "string", example: "내가 궁둔이다" },
+              photo: { type: "string", example: "profile.jpg" },
+              history: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "integer", example: 1 },
+                    title: { type: "string", example: "학력" },
+                    body: { type: "string", example: "XX대학교 컴퓨터공학과 졸업" },
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #swagger.responses[400] = {
+      description: "잘못된 요청 (유효하지 않은 사용자 ID)",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "U001" },
+                  reason: { type: "string", example: "존재하지 않는 사용자입니다." },
+                  data: {
+                    type: "object",
+                    properties: {
+                      userId: { type: "integer", example: 1 }
                     }
                   }
                 }

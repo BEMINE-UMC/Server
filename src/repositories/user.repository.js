@@ -76,3 +76,24 @@ export const createUserHistory = async (data) => {
 
     return history;
 }
+
+// 마이페이지 사용자 정보 조회
+export const getUserProfile =async(data) =>{
+    const user = await prisma.user.findUnique({
+        where: {id: data.userId},
+        select:{
+            name: true,
+            introduction: true,
+            photo: true,
+            userHistories:{
+                select:{
+                    id: true,
+                    title: true,
+                    body: true,
+                }
+            }
+        }
+    });
+
+    return user;
+}
