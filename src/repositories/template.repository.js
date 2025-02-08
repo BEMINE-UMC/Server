@@ -320,6 +320,15 @@ export const getAllTemplatesInfo = async (categoryId, offset, limit) => {
           );
       }
 
+      // 각 template에 대해 template_survey 개수 조회
+      for (const template of templates) {
+        const [surveyCount] = await conn.query(
+          `SELECT COUNT(*) AS survey_count FROM template_survey WHERE template_id = ?`,
+          [template.template_id]
+        );
+        template.survey_count = surveyCount[0].survey_count;
+      }
+
       return templates;
   } catch (err) {
       throw new Error (
@@ -380,6 +389,15 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
               LIMIT ? OFFSET ?`, 
               [userId, categoryId, limit, offset]
           );
+      }
+
+      // 각 template에 대해 template_survey 개수 조회
+      for (const template of templates) {
+        const [surveyCount] = await conn.query(
+          `SELECT COUNT(*) AS survey_count FROM template_survey WHERE template_id = ?`,
+          [template.template_id]
+        );
+        template.survey_count = surveyCount[0].survey_count;
       }
 
       return templates;
