@@ -15,7 +15,6 @@ export const getUserHistory = async (data) => {
     const history = await prisma.userHistory.findMany({
         where: {userId: data.userId},
         select:{
-            num: true,
             title: true,
             body: true
         }
