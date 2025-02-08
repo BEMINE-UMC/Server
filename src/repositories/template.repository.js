@@ -409,3 +409,25 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
       conn.release();
   }
 };
+
+//템플릿 설문 생성
+export const postTemplateSurvey = async (data) => {
+  try{
+    const newSurvey = await prisma.templateSurvey.create({
+      data: {
+          userId: parseInt(data.userId),
+          templateId: parseInt(data.templateId),
+          starCount: parseInt(data.starCount),
+          content: data.content,
+          createdAt: new Date(),
+          updatedAt: new Date()
+      }
+  });
+
+  return newSurvey;
+
+  }catch (error) {
+    console.error("Error in createUserTemplateLike: ", error);
+          throw error;
+  }
+}

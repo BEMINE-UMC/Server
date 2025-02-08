@@ -1,4 +1,4 @@
-import { checkTemplateExists, checkInactiveTemplate, checkTemplateStatusNull, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate,getAllTemplatesInfo, getAllTemplatesInfoLoggedIn } from "../repositories/template.repository.js";
+import { checkTemplateExists, checkInactiveTemplate, checkTemplateStatusNull, getTemplateFileInfo, deleteTemplate, getDetailTemplateInfo , findPopularTemplates, postTemplateLike, newTempalteCreate, existingTemplateUpdate,getAllTemplatesInfo, getAllTemplatesInfoLoggedIn, postTemplateSurvey } from "../repositories/template.repository.js";
 import {  responseFromTemplateDeletion, responseFromTemplateAndLike, responsePopularTemplates, responseFromDetailInfo, responseFromAllTemplates, responseFromAllTemplatesLoggedIn, responseFromLikedTemplate,responseFromTemplateCreate, responseFromTemplateUpdate } from "../dtos/template.dto.js";
 import { InvalidTemplateIdError, NonexistentTemplateError, InactiveTemplateError, NullStatusTemplateError, PrivateTemplateError, NullTemplateLike, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError, alreadyExistTemplateLike,NonTemplateCategoryId, NonExsistsTemplateError } from "../errors/template.error.js";
 import {deleteImage} from "../../middleware.js";
@@ -176,4 +176,11 @@ export const allTemplatesInfoLoadLoggedIn = async (data) => {
     }
 
     return responseFromAllTemplatesLoggedIn(allTemplatesInfo);
+}
+
+//템플릿 설문 생성
+export const createTemplateSurvey = async (data) => {
+    const survey = postTemplateSurvey(data);
+
+    return survey;
 }
