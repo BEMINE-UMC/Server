@@ -55,6 +55,7 @@ export const historyModifyDTO = (data) => ({
 export const historyCreateDTO = (user, body)=>{
     return{
         userId: parseInt(user.userId),
+        introduction: body.introduction,
         title: body.title,
         body: body.body
     }
@@ -63,11 +64,12 @@ export const historyCreateDTO = (user, body)=>{
 // 연혁 생성 전송 DTO
 export const responseFromCreateHistory = (data) =>{
     return{
-        historyId: data.id,
-        userId: parseInt(data.userId),
-        title: data.title,
-        body: data.body,
-        createAt: data.created_at
+        userId: parseInt(data.history.userId),
+        introduction: data.introduction,
+        historyId: data.history.id,
+        title: data.history.title,
+        body: data.history.body,
+        createAt: data.history.created_at
     }
 }
 

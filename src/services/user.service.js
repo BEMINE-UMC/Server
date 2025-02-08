@@ -3,7 +3,7 @@ import {
     getUserHistory,
     getUserInfo, getUserProfile,
     patchUserProfile,
-    updateUserHistory
+    updateUserHistory, updateUserIntroduction
 } from "../repositories/user.repository.js";
 import {
     responseFromAllUserInfo,
@@ -72,7 +72,12 @@ export const userHistoryCreate = async (data) => {
     }
 
     const history = await createUserHistory(data);
-    return responseFromCreateHistory(history);
+
+    const user = await updateUserIntroduction(data.userId, data.introduction)
+    const introduction = user.introduction;
+    return responseFromCreateHistory({history,introduction});
+
+
 }
 
 // 사용자 정보 조회
