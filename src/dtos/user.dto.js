@@ -1,9 +1,9 @@
 
 
-// 연혁 조회 요청 DTO
 import {NotFileAllowedError} from "../errors/user.error.js";
 import {deleteImage} from "../../middleware.js";
 
+// 연혁 조회 요청 DTO
 export const userToHistory = (user) =>{
     return{
         userId: parseInt(user.userId)

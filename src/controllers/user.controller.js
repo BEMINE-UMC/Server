@@ -35,7 +35,6 @@ export const handlerGetUserHistory = async (req, res) => {
                 items: {
                   type: "object",
                   properties: {
-                    num: { type: "number", example: 1 },
                     title: { type: "string", example: "학력 및 전공" },
                     body: { type: "string", example: "어쩌고 저쩌고" }
                   }
