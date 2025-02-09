@@ -12,6 +12,7 @@ export const userToHistory = (user) =>{
 
 // 연혁 조회 전송 DTO
 export const responseFromHistory = (data) =>{
+    console.log(data)
     return {
         userId: data.userId,
         history: data.history

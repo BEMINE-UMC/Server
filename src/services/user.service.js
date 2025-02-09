@@ -1,7 +1,7 @@
 import {
     createUserHistory,
     getUserHistory,
-    getUserInfo, getUserProfile,
+    getUserInfo, getUserPhoto, getUserProfile, historyCreateAndUserIntroduction,
     patchUserProfile,
     updateUserHistory, updateUserIntroduction
 } from "../repositories/user.repository.js";
@@ -16,23 +16,24 @@ import {deleteImage} from "../../middleware.js";
 
 // 연혁 조회하기
 export const userHistory = async (data) =>{
-    const confirm = await getUserInfo(data);
+    // 연혁 가져오기(user가 없으면 null, 연혁이 없으면 histories가 빈배열로 넘어옴)
+    const userHistoryInfo = await getUserHistory(data)
+
     // 존재하는 사용자인지 검사
-    if(confirm === null)
+    if(!userHistoryInfo)
         throw new NotExsistsUserError("존재하지 않는 사용자입니다.", data)
 
-    // 연혁 가져오기
-    const history = await getUserHistory(data)
-    const userId = data.userId
+    const userId = userHistoryInfo.id
+    const history = userHistoryInfo.userHistories;
     return responseFromHistory({userId, history});
 }
 
 // 유저 프로필 수정하기
 export const userProfileModify = async (data) => {
-    const confirm = await getUserInfo(data);
+    const confirm = await getUserPhoto(data);
 
     // 존재하는 사용자인지 검사
-    if(confirm === null)
+    if(!confirm)
         throw new NotExsistsUserError("존재하지 않는 사용자입니다.", data.userId)
 
     // 이전 이미지의 URL을 받음
@@ -40,7 +41,7 @@ export const userProfileModify = async (data) => {
 
     // 이전 이미지가 존재할 경우 삭제
     if(preProfile){
-        const responseDel = await deleteImage(preProfile)
+        await deleteImage(preProfile)
     }
 
     const updateUser = await patchUserProfile(data)
@@ -71,13 +72,9 @@ export const userHistoryCreate = async (data) => {
         throw new NotExsistsUserError("존재하지 않는 사용자입니다.", {userId: data.userId})
     }
 
-    const history = await createUserHistory(data);
-
-    const user = await updateUserIntroduction(data.userId, data.introduction)
+    const {history, user} = await historyCreateAndUserIntroduction(data);
     const introduction = user.introduction;
     return responseFromCreateHistory({history,introduction});
-
-
 }
 
 // 사용자 정보 조회
