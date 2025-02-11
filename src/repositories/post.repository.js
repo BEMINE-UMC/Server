@@ -55,16 +55,19 @@ export const getUserOtherPost = async (userId) => {
 
         if (user.length === 0) {
             throw new NonExistUserError("존재하지 않는 사용자입니다.", { requestedUserId: userId });
-          }
+        }
 
         const [posts] = await conn.query(`SELECT * FROM post WHERE user_id = ?;`, [userId]);
 
         console.log(posts);
 
         return posts;
+
     } catch (error) {
         console.error("Error in getUserOtherPost: ", error);
         throw error;
+    } finally {
+        conn.release(); // 커넥션 반환
     }
 };
 
@@ -114,20 +117,23 @@ export const createUserPostScrap = async (userId, postId) => {
 
 // 최근 본 게시물 테이블에서 게시물 ID 조회
 export const getRecentPosts = async (userId)=>{
-    const posts = await prisma.recentViewPost.findMany({
-        where:{userId: userId},
+    const posts = await prisma.user.findUnique({
+        where:{id: userId},
         select:{
-            post:{
+            id: true,
+            recentViews:{
+                take:16,
+                orderBy:{createdAt: 'desc'},
                 select:{
-                    id: true,
-                    thumbnail: true
+                    post:{
+                        select:{
+                            id:true,
+                            thumbnail:true
+                        }
+                    }
                 }
             }
-        },
-        orderBy:{
-            createdAt: 'desc'
-        },
-        take: 16
+        }
     })
     return posts;
 }
@@ -147,20 +153,25 @@ export const getSearchPosts = async  (words)=> {
 
 // 스크랩한 게시물 조회
 export const getScrapPosts = async (data)=>{
-    const posts = await prisma.scrapPost.findMany({
-        where:{userId: data.userId, status: true},
+    const posts = await prisma.user.findUnique({
+        where:{id: data.userId},
         select:{
-            post:{
+            id: true,
+            scrapPosts:{
+                where:{ status: true},
+                take: 16,
+                orderBy:{createdAt: 'desc'},
                 select:{
-                    id: true,
-                    thumbnail: true
+                    post:{
+                        select:{
+                            id:true,
+                            thumbnail:true
+                        }
+                    }
                 }
             }
-        },
-        orderBy:{
-            createdAt: 'desc'
-        },
-        take: 16
+        }
+
     })
     return posts;
 }

@@ -4,7 +4,12 @@ import cors from 'cors';
 import swaggerUiExpress from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
-import { handlerGetUserHistory, handlerPatchMyProfile,handlerPatchUserHistory} from "./controllers/user.controller.js";
+import {
+    handlerCreateUserHistory,
+    handlerGetUserHistory,
+    handlerPatchMyProfile,
+    handlerPatchUserHistory, handlerShowUserInfo
+} from "./controllers/user.controller.js";
 import {handlerGetRecentPost, handlerGetScrapPost, } from "./controllers/post.controller.js";
 import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplates, handleViewAllTemplates, handleViewAllTemplatesLoggedIn, handlerTemplateCreate, handlerTemplateUpdate } from "./controllers/template.controller.js";
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
@@ -229,6 +234,12 @@ app.get('/posts/:postId',authenticateJWT,getPostDetail);
 
 //사용자 이메일 찾기 API
 app.patch('/users/search/email',handlerGetUserEmail);
+
+// 연혁 생성
+app.post('/myPage/history/create',authenticateJWT, handlerCreateUserHistory)
+
+// 사용자 정보 조회
+app.get('/myPage',authenticateJWT ,handlerShowUserInfo)
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {

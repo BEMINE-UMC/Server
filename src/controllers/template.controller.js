@@ -804,6 +804,7 @@ export const handleViewAllTemplates = async(req, res, next) => {
                                             authorName: { type: "string", example: "Alice" },
                                             categoryId: { type: "integer", example: 1 },
                                             categoryName: { type: "string", example: "콘텐츠 마케터" },
+                                            surveyCount: { type: "integer", example: 0 },
                                         }
                                     }
                                 },
@@ -915,6 +916,7 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
                                             categoryId: { type: "integer", example: 1 },
                                             categoryName: { type: "string", example: "콘텐츠 마케터" },
                                             likedStatus: { type: "boolean", example: false },
+                                            surveyCount: { type: "integer", example: 0 },
                                         }
                                     }
                                 },

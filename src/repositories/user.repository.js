@@ -12,12 +12,15 @@ export const getUserInfo = async (data) =>{
 
 // 연혁 조회하기
 export const getUserHistory = async (data) => {
-    const history = await prisma.userHistory.findMany({
-        where: {userId: data.userId},
-        select:{
-            num: true,
-            title: true,
-            body: true
+    const history = await prisma.user.findUnique({
+        where: {id: data.userId},
+        include: {
+            userHistories:{
+                select: {
+                    title: true,
+                    body: true
+                }
+            }
         }
     })
     return history;
@@ -29,6 +32,10 @@ export const patchUserProfile = async (data) => {
         where: {id: data.userId},
         data:{
             photo:data.photo
+        },
+        select:{
+            id: true,
+            photo: true
         }
     })
 
@@ -63,3 +70,90 @@ export const updateUserHistory = async (data) => {
         conn.release();
     }
 };
+
+
+// 연혁 생성
+export const createUserHistory = async (data) => {
+    const history = await prisma.UserHistory.create({
+        data:{
+            userId: data.userId,
+            title: data.title,
+            body: data.body
+        }
+    })
+
+    return history;
+}
+
+
+// 자기소개 업데이트
+export const updateUserIntroduction = async (userId, introduction) => {
+    const user = await prisma.user.update({
+        where: {id: userId},
+        data: {
+            introduction: introduction
+        }
+    })
+    
+    return user;
+}
+
+// 마이페이지 사용자 정보 조회
+export const getUserProfile =async(data) =>{
+    const user = await prisma.user.findUnique({
+        where: {id: data.userId},
+        select:{
+            name: true,
+            introduction: true,
+            photo: true,
+            userHistories:{
+                select:{
+                    id: true,
+                    title: true,
+                    body: true,
+                }
+            }
+        }
+    });
+
+
+    return user;
+}
+
+// 유저 프로필 사진 가져오기
+export const getUserPhoto = async(data) =>{
+    const userPhoto = await prisma.user.findUnique({
+        where: {id: data.userId},
+        select:{
+            photo: true
+        }
+    })
+
+    return userPhoto;
+}
+
+// 연혁 생성과 자기소개를 트랜잭션으로 묶어서 처리
+export const historyCreateAndUserIntroduction = async (data) =>{
+    const [history, user] = await prisma.$transaction([
+        prisma.userHistory.create({
+            data:{
+                userId: data.userId,
+                title: data.title,
+                body: data.body
+            },
+            select:{
+                id: true,
+                userId: true,
+                title: true,
+                body: true
+            }
+        }),
+        prisma.user.update({
+            where:{id : data.userId},
+            data:{introduction: data.introduction},
+            select: {introduction: true}
+        })
+    ]);
+
+    return {history,user}
+}
