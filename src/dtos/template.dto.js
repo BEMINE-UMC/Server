@@ -189,3 +189,13 @@ export const responseFromAllTemplatesLoggedIn = (templates) => {
         }
     });
 }
+
+//설문 조사 요청 dto
+export const requestDtoToSurvey = (userId, params, body) => {
+    return {
+        userId: userId,
+        templateId: params.templateId,
+        starCount: body.starCount,
+        content: body.content,
+    }
+}
