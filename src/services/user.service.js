@@ -3,13 +3,15 @@ import {
     getUserHistory,
     getUserInfo, getUserPhoto, getUserProfile, historyCreateAndUserIntroduction,
     patchUserProfile,
-    updateUserHistory, updateUserIntroduction
+     updateUserIntroduction,
+     updateHistoryAndIntroduction
 } from "../repositories/user.repository.js";
 import {
     responseFromAllUserInfo,
     responseFromCreateHistory,
     responseFromHistory,
-    responseFromPatchUserProfile
+    responseFromPatchUserProfile,
+    responseHistoryDTO
 } from "../dtos/user.dto.js";
 import { NotExsistsUserError , UpdateHistoryError} from "../errors/user.error.js";
 import {deleteImage} from "../../middleware.js";
@@ -49,20 +51,30 @@ export const userProfileModify = async (data) => {
     return responseFromPatchUserProfile(updateUser);
 }
 
+//연혁 수정
 export const userHistoryModify = async (data) => {
-        // 사용자 존재 여부 확인
-        const user = await getUserInfo(data);
-        if (!user) {
-            throw new NotExsistsUserError("존재하지 않는 사용자입니다.", data);
-        }
-        
-        // 연혁 정보 업데이트
-        const updated = await updateUserHistory(data);
-        if (!updated) {
-            throw new UpdateHistoryError("연혁 수정에 실패했습니다.");
-        }
-        
-        return data;
+    // 사용자 존재 여부 검증
+    const user = await getUserInfo(data);
+    if (!user) {
+        throw new NotExsistsUserError("존재하지 않는 사용자입니다.", data);
+    }
+
+    // 비즈니스 로직 
+    const result = await updateHistoryAndIntroduction(data);
+    if (!result) {
+        throw new UpdateHistoryError("연혁 수정에 실패했습니다.");
+    }
+
+    // 응답 데이터 생성 및 반환
+    return {
+        userId: data.userId,
+        introduction: data.introduction,
+        histories: result.map(history => ({
+            title: history.title,
+            body: history.body,
+            updatedAt: history.updatedAt
+        }))
+    };
 };
 
 // 연혁 생성
