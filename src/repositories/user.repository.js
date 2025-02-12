@@ -42,31 +42,44 @@ export const patchUserProfile = async (data) => {
     return user;
 }
 
-export const updateUserHistory = async (data) => {
-    // 데이터베이스 연결을 획득합니다
+//연혁수정 , 자기소개 수정
+export const updateHistoryAndIntroduction = async (data) => {
     const conn = await pool.getConnection();
-    
     try {
-        // 연혁 정보를 업데이트하는 쿼리를 실행합니다
-        const query = `
-            UPDATE user_history 
-            SET title = ?, 
-                body = ?, 
-                updated_at = NOW()
-            WHERE user_id = ?
-        `;
+        await conn.beginTransaction();
         
-        // 쿼리를 실행하고 결과를 확인합니다
-        const [result] = await conn.query(query, [
-            data.title, 
-            data.body, 
-            data.userId
-        ]);
+        // 기존 함수 사용
+        await updateUserIntroduction(data.userId, data.introduction);
         
-        // 업데이트된 행이 있는지 확인하여 반환합니다
-        return result.affectedRows > 0;
+        // 연혁 업데이트
+        const [histories] = await conn.query(
+            'SELECT id FROM user_history WHERE user_id = ? ORDER BY id ASC',
+            [data.userId]
+        );
+        // 4개 다 update 할거
+        for(let i = 0; i < data.histories.length; i++) {
+            await conn.query(
+                'UPDATE user_history SET title = ?, body = ? , updated_at = NOW() WHERE id = ? AND user_id = ?',
+                [
+                    data.histories[i].title,
+                    data.histories[i].body,
+                    histories[i].id,
+                    data.userId
+                ]
+            );
+        }
+            // 업데이트된 데이터 조회
+            const [updatedHistories] = await conn.query(
+                'SELECT id, title, body, updated_at FROM user_history WHERE user_id = ? ORDER BY id ASC',
+                [data.userId]
+            );
+        
+        await conn.commit();
+        return updatedHistories;
+    } catch (error) {
+        await conn.rollback();
+        throw error;
     } finally {
-        // 데이터베이스 연결을 반드시 해제합니다
         conn.release();
     }
 };
