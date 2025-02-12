@@ -12,6 +12,7 @@ export const userToHistory = (user) =>{
 
 // 연혁 조회 전송 DTO
 export const responseFromHistory = (data) =>{
+    console.log(data)
     return {
         userId: data.userId,
         history: data.history
@@ -44,29 +45,52 @@ export const responseFromPatchUserProfile = (data) =>{
 }
 
 //연혁 수정 응답 DTO
-export const historyModifyDTO = (data) => ({
-    userId: parseInt(data.userId),
-    title: data.title,
-    body: data.body,
-    updatedAt: data.updated_at
+export const responseHistoryDTO = (data) => ({
+    userId: data.userId,
+    introduction: data.introduction,
+    histories: data.histories.map(history => ({
+        title: history.title,
+        body: history.body , 
+        updatedAt : history.updated_at
+    }))
 });
 
-// 연혁 생성 응답 DTO
+// 연혁 생성 요청 DTO
 export const historyCreateDTO = (user, body)=>{
     return{
         userId: parseInt(user.userId),
+        introduction: body.introduction,
         title: body.title,
-        body: body.body
+        body: body.body , 
+        updatedAt : history.updated_at
     }
 }
 
 // 연혁 생성 전송 DTO
 export const responseFromCreateHistory = (data) =>{
     return{
-        historyId: data.id,
-        userId: parseInt(data.userId),
-        title: data.title,
-        body: data.body,
-        createAt: data.created_at
+        userId: parseInt(data.history.userId),
+        introduction: data.introduction,
+        historyId: data.history.id,
+        title: data.history.title,
+        body: data.history.body,
+        createAt: data.history.created_at
+    }
+}
+
+// 마이페이지 사용자 정보 조회 요청 DTO 
+export const userToInfo = (data) =>{
+    return{
+        userId: parseInt(data.userId)
+    }
+}
+
+// 마이페이지 사용자 정보 조회 전송 DTO
+export const responseFromAllUserInfo = (data) =>{
+    return{
+        name: data.name,
+        introduction: data.introduction,
+        photo: data.photo,
+        history: data.userHistories
     }
 }
