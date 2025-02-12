@@ -61,8 +61,7 @@ export const historyCreateDTO = (user, body)=>{
         userId: parseInt(user.userId),
         introduction: body.introduction,
         title: body.title,
-        body: body.body , 
-        updatedAt : history.updated_at
+        body: body.body
     }
 }
 
@@ -94,3 +93,4 @@ export const responseFromAllUserInfo = (data) =>{
         history: data.userHistories
     }
 }
+
