@@ -155,7 +155,9 @@ export const responseFromAllTemplates = (templates) => {
             authorName: template.author_name,
             categoryId: template.category_id,
             categoryName: template.category_name,
-            surveyCount: template.survey_count
+            surveyCountDesign: template.survey_count_design,
+            surveyCountCredible: template.survey_count_credible,
+            surveyCountUseful: template.survey_count_useful,
         }
     });
 }
@@ -185,7 +187,9 @@ export const responseFromAllTemplatesLoggedIn = (templates) => {
             categoryId: template.category_id,
             categoryName: template.category_name,
             likedStatus: template.liked_status === null ? false : Boolean(template.liked_status), // liked_template 테이블에 없는 포스트는 null이므로 false으로 처리
-            surveyCount: template.survey_count,
+            surveyCountDesign: template.survey_count_design,
+            surveyCountCredible: template.survey_count_credible,
+            surveyCountUseful: template.survey_count_useful,
         }
     });
 }
