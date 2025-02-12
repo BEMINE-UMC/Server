@@ -986,7 +986,7 @@ export const handlerCreateTemplateSurvey = async(req, res, next) => {
                     type: "object",
                     properties: {
                         starCount: { type: "integer", example: 5 },
-                        content: { type: "string", example: "이 템플릿이 매우 유용했어요!" }
+                        content: { type: "string", example: "유용성" }
                     }
                 }
             }
