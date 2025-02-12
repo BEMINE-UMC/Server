@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates, allTemplatesInfoLoad, allTemplatesInfoLoadLoggedIn, createTemplateLike, templateCreate, templateUpdate } from "../services/template.service.js";
-import { templateToCreate, templateToDetailInfo, templateToDeletion, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn, templateToUpdate } from "../dtos/template.dto.js";
+import { detailTemplateInfoLoad, templateDeletion , templateFileInfo , getPopularTemplates, allTemplatesInfoLoad, allTemplatesInfoLoadLoggedIn, createTemplateLike, templateCreate, templateUpdate, createTemplateSurvey } from "../services/template.service.js";
+import { templateToCreate, templateToDetailInfo, templateToDeletion, templateToFileInfo, postToAllTemplates, postToAllTemplatesLoggedIn, templateToUpdate, requestDtoToSurvey } from "../dtos/template.dto.js";
 
 
 // 템플릿 상세 정보 불러오기 요청
@@ -971,3 +971,57 @@ export const handleViewAllTemplatesLoggedIn = async(req, res, next) => {
         next(error);
     }
 };
+
+export const handlerCreateTemplateSurvey = async(req, res, next) => {
+    /* 
+    #swagger.summary = '템플릿 설문 생성 API';
+    #swagger.tags = ['Template']
+    #swagger.description = '템플릿 설문을 생성하는 API입니다.'
+    
+    #swagger.requestBody = {
+        required: true,
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        starCount: { type: "integer", example: 5 },
+                        content: { type: "string", example: "유용성" }
+                    }
+                }
+            }
+        }
+    }
+
+    #swagger.responses[200] = {
+        description: "템플릿 설문 생성 성공 응답",
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        resultType: { type: "string", example: "SUCCESS" },
+                        error: { type: "object", nullable: true, example: null },
+                        success: {
+                            type: "object",
+                            properties: {
+                                id: { type: "integer", example: 1 },
+                                templateId: { type: "integer", example: 1 },
+                                userId: { type: "integer", example: 1 },
+                                starCount: { type: "integer", example: 5 },
+                                content: { type: "string", example: "이 템플릿이 매우 유용했어요!" },
+                                createdAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
+                                updatedAt: { type: "string", format: "date-time", example: "2025-01-10T12:00:00Z" },
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+*/
+
+    const survey = await createTemplateSurvey(requestDtoToSurvey(req.user.userId,req.params,req.body));
+
+    res.status(StatusCodes.OK).success(survey);
+}
