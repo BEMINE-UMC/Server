@@ -13,7 +13,16 @@ import {
     NonExistUserError,
     NotFoundSearchedPost,
 
-    NotRecentPostsErrors, NotScrapPostsErrors, ContentRequiredError, TitleRequiredError, InvalidImageFormatError, InvalidCategoryIdError, InvalidOffsetError, InvalidLimitError, NonexistentCategoryIdError
+    NotRecentPostsErrors,
+    NotScrapPostsErrors,
+    ContentRequiredError,
+    TitleRequiredError,
+    InvalidImageFormatError,
+    InvalidCategoryIdError,
+    InvalidOffsetError,
+    InvalidLimitError,
+    NonexistentCategoryIdError,
+    PostNotFoundError
 } from "../errors/post.error.js";
 
 import { createUserPostLike, createUserPostScrap, getRecentPosts, getSearchPosts, findPostForDelete, updatePostStatus, getScrapPosts,getPostById,checkPostLiked, handleGetUserOwnPosts } from "../repositories/post.repository.js";
@@ -77,15 +86,14 @@ export const createUserScrap = async (userId, postId) => {
 
 // 최근 본 게시물 조회
 export const RecentViewPosts = async (data) => {
-    const recentPosts = await getRecentPosts(data.userId);
+    const results = await getRecentPosts(data.userId);
     const userId = data.userId
 
-    const confirm = await getUserInfo(data);
-
     // 존재하는 사용자인지 검사
-    if (confirm === null)
-        throw new NotExsistsUserError("유저가 존재하지 않음", data.userId)
+    if (!results)
+        throw new NotExsistsUserError("유저가 존재하지 않음", userId)
 
+    const recentPosts = results.recentViews;
 
     const posts = recentPosts.map(item => ({
         postId: item.post.id,
@@ -107,15 +115,14 @@ export const getSearchedPostsList = async (word) => {
 
 // 스크랩한 게시물 조회
 export const ScrapPosts = async (data) => {
-    const scrapPosts = await getScrapPosts(data);
+    const results = await getScrapPosts(data);
     const userId = data.userId
 
-    const confirm = await getUserInfo(data);
-
     // 존재하는 사용자인지 검사
-    if (confirm === null)
+    if (!results)
         throw new NotExsistsUserError("유저가 존재하지 않음", data.userId)
 
+    const scrapPosts = results.scrapPosts;
     const posts = scrapPosts.map(item => ({
         postId: item.post.id,
         url: item.post.thumbnail

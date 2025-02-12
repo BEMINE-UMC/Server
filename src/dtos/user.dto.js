@@ -12,6 +12,7 @@ export const userToHistory = (user) =>{
 
 // 연혁 조회 전송 DTO
 export const responseFromHistory = (data) =>{
+    console.log(data)
     return {
         userId: data.userId,
         history: data.history
@@ -44,11 +45,14 @@ export const responseFromPatchUserProfile = (data) =>{
 }
 
 //연혁 수정 응답 DTO
-export const historyModifyDTO = (data) => ({
-    userId: parseInt(data.userId),
-    title: data.title,
-    body: data.body,
-    updatedAt: data.updated_at
+export const responseHistoryDTO = (data) => ({
+    userId: data.userId,
+    introduction: data.introduction,
+    histories: data.histories.map(history => ({
+        title: history.title,
+        body: history.body , 
+        updatedAt : history.updated_at
+    }))
 });
 
 // 연혁 생성 요청 DTO
@@ -57,7 +61,8 @@ export const historyCreateDTO = (user, body)=>{
         userId: parseInt(user.userId),
         introduction: body.introduction,
         title: body.title,
-        body: body.body
+        body: body.body , 
+        updatedAt : history.updated_at
     }
 }
 
