@@ -66,7 +66,7 @@ export const updateUserHistory = async (data) => {
 
 // 연혁 생성
 export const createUserHistory = async (data) => {
-    const history = await prisma.UserHistory.create({
+    const history = await prisma.userHistory.create({
         data:{
             userId: data.userId,
             title: data.title,
