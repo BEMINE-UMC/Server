@@ -18,7 +18,7 @@ import { handleGetPostLiked } from "./controllers/post.controller.js";
 import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail, handleVerifyData } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
-
+import { Server } from 'socket.io';
 dotenv.config();
 
 const app = express();
@@ -243,6 +243,8 @@ app.get('/myPage',authenticateJWT ,handlerShowUserInfo)
 // 템플릿 설문 작성
 app.post('/templates/:templateId/survey',authenticateJWT, handlerCreateTemplateSurvey)
 
+app.post('/chats/create',)
+
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
     if (res.headersSent) {
@@ -255,9 +257,12 @@ app.use((err, req, res, next) => {
         data: err.data || null,
     });
 });
+
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
-})
+});
+
+const io = new Server(server, { path: '/socket.io' });
