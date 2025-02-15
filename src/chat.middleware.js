@@ -34,9 +34,9 @@ export const socketMiddleware = (req, res, next) => {
     if (!io) {
         return res.status(500).send('소켓 서버가 아직 초기화되지 않았습니다.');
     }
-
+    console.log(req.user)
     // 이부분 지피티가 짜줬는데 미들웨어에서 이렇게 에러처리 해도 괜찮을라나..?
-    const userId = req.user?.id; // JWT 인증된 사용자 ID
+    const userId = req.user?.userId; // JWT 인증된 사용자 ID
     if (!userId) {
         return res.status(401).send('사용자 인증이 필요합니다.');
     }

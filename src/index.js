@@ -19,10 +19,34 @@ import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handle
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
 import { Server } from 'socket.io';
+import { createServer } from 'http';
+import {initSocket, socketMiddleware} from "./chat.middleware.js";
+
 dotenv.config();
 
 const app = express();
+
+// express와 http서버를 분리함, 이걸 통해서 소켓을 추가할 수 있게됨
+const server = createServer(app);
+
+initSocket(server);
+
+/*
+* http서버란?
+* - 클라이언트로부터 HTTP요청을받고 응답을 보내는 역할을 하는 프로그램
+*
+* Express란?
+* - get, post, use 같은 요청에 대한 라우팅 처리, 미들웨어 추가
+* - 즉, nodejs기반 HTTP요청을 더 쉽게 처리할 수 있게 도와주는 프레임 워크
+*
+* 소켓 추가하려면 어떻게 해야할까?
+* - HTTP서버를 더 개조해야함
+* - app.listen으로는 소켓 추가 불가
+* */
+
 const port = process.env.PORT;
+
+
 
 /*****************공통 응답을 사용할 수 있는 헬퍼 함수 등록*********************/
 app.use((req, res, next) => {
@@ -243,7 +267,18 @@ app.get('/myPage',authenticateJWT ,handlerShowUserInfo)
 // 템플릿 설문 작성
 app.post('/templates/:templateId/survey',authenticateJWT, handlerCreateTemplateSurvey)
 
-app.post('/chats/create',)
+// app.post('/chats/create',)
+
+app.post('/send-message',authenticateJWT, socketMiddleware, (req,res)=>{
+    const { message } = req.body
+
+    const socket = req.io.sockets.sockets.get(req.socketId);
+    if(socket){
+        socket.emit('newMessage', message);
+    }
+    
+    res.send({ success: true, message: '메시지 전송됨'})
+})
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
@@ -261,8 +296,7 @@ app.use((err, req, res, next) => {
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 
 
-const server = app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
 
-const io = new Server(server, { path: '/socket.io' });
