@@ -86,6 +86,7 @@ export const responseFromTemplateCreate = (data) =>{
         filePDF: data.filePDF,
         fileShareState: data.fileShareState,
         tCategoryId: data.tCategoryId,
+        status: data.status,
         thumbnail: data.thumbnail,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
