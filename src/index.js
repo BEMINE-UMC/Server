@@ -161,7 +161,7 @@ app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);
 app.patch('/myPage/history', authenticateJWT, handlerPatchUserHistory);
 
 //사용자가 작성한 다른 게시물 불러오기 API
-app.get('/users/posts/other', authenticateJWT, handleOtherPost);
+app.get('/users/posts/:postId/other', authenticateJWT, handleOtherPost);
 
 // 템플릿 상세 정보 조회 API (템플릿 올리기 화면)
 app.get('/templates/:templateId', handleDetailTemplateInfoLoad);
