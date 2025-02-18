@@ -1,5 +1,6 @@
 import { pool } from "../db.config.js";
 import { prisma } from "../db.config.js";
+import {DatabaseConnectionError} from "../errors/template.error.js";
 
 // 템플릿 존재 여부 확인하기
 export const checkTemplateExists = async (templateId) => {
@@ -202,6 +203,7 @@ export const newTempalteCreate = async(data) =>{
       filePDF: data.filePDF,
       fileShareState: data.fileShareState,
       tCategoryId: data.tCategoryId,
+      status: 'active',
       thumbnail: data.thumbnail,
       updatedAt: new Date()
     }
