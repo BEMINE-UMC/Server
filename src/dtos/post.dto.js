@@ -128,7 +128,8 @@ export const responseFromAllPosts = (posts) => {
       authorId: post.author_id,
       authorName: post.author_name,
       categoryId: post.category_id,
-      categoryName: post.category_name
+      categoryName: post.category_name,
+      totalLikes: post.total_like_count
     }
   });
 }
@@ -149,6 +150,7 @@ export const responseFromAllPostsLoggedIn = (posts) => {
       categoryName: post.category_name,
       likedStatus: post.liked_status === null ? false : Boolean(post.liked_status),  // liked_post 테이블에 없는 포스트는 null이므로 false으로 처리
       scrapStatus: post.scrap_status === null ? false : Boolean(post.scrap_status),  // scrap_post 테이블에 없는 포스트는 null이므로 false으로 처리
+      totalLikes: post.total_like_count
     }
   });
 }

@@ -329,10 +329,12 @@ export const getAllPostsInfo = async (categoryId, offset, limit) => {
                 u.id AS author_id,
                 u.name AS author_name,
                 c.id AS category_id,
-                c.name AS category_name
+                c.name AS category_name,
+                COUNT(CASE WHEN lp.status = true THEN 1 END) AS total_like_count
             FROM post AS p
             LEFT JOIN category AS c ON p.category_id = c.id
-            LEFT JOIN user AS u ON p.user_id = u.id`;
+            LEFT JOIN user AS u ON p.user_id = u.id
+            LEFT JOIN liked_post AS lp ON p.id = lp.post_id`;
 
         /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
         // 카테고리가 명시되지 않은 경우
@@ -340,6 +342,7 @@ export const getAllPostsInfo = async (categoryId, offset, limit) => {
             [posts] = await conn.query(
                 `${baseQuery}
                 WHERE p.status = 'active' OR p.status = '활성'
+                GROUP BY p.id
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [limit, offset]
@@ -356,6 +359,7 @@ export const getAllPostsInfo = async (categoryId, offset, limit) => {
             [posts] = await conn.query(
                 `${baseQuery}
                 WHERE (p.status = 'active' OR p.status = '활성') AND p.category_id = ?
+                GROUP BY p.id
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [categoryId, limit, offset]
@@ -392,12 +396,14 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
                 c.id AS category_id,
                 c.name AS category_name,
                 lp.status AS liked_status,
-                sp.status AS scrap_status
+                sp.status AS scrap_status,
+                COUNT(CASE WHEN lp_all.status = true THEN 1 END) AS total_like_count
             FROM post AS p
             LEFT JOIN category AS c ON p.category_id = c.id
             LEFT JOIN user AS u ON p.user_id = u.id
             LEFT JOIN liked_post AS lp ON p.id = lp.post_id AND lp.user_id = ? AND lp.status = true
-            LEFT JOIN scrap_post AS sp ON p.id = sp.post_id AND sp.user_id = ? AND sp.status = true`;
+            LEFT JOIN scrap_post AS sp ON p.id = sp.post_id AND sp.user_id = ? AND sp.status = true
+            LEFT JOIN liked_post AS lp_all ON p.id = lp_all.post_id`;
 
         /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
         // 카테고리가 명시되지 않은 경우
@@ -405,6 +411,7 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
             [posts] = await conn.query(
                 `${baseQuery}
                 WHERE p.status = 'active' OR p.status = '활성'
+                GROUP BY p.id, lp.status, sp.status
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [userId, userId, limit, offset]
@@ -421,6 +428,7 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
             [posts] = await conn.query(
                 `${baseQuery}
                 WHERE (p.status = 'active' OR p.status = '활성') AND p.category_id = ?
+                GROUP BY p.id, lp.status, sp.status
                 ORDER BY p.created_at DESC
                 LIMIT ? OFFSET ?`, 
                 [userId, userId, categoryId, limit, offset]

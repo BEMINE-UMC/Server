@@ -159,6 +159,7 @@ export const responseFromAllTemplates = (templates) => {
             surveyCountDesign: template.survey_count_design,
             surveyCountCredible: template.survey_count_credible,
             surveyCountUseful: template.survey_count_useful,
+            totalLikes: template.total_like_count
         }
     });
 }
@@ -191,6 +192,7 @@ export const responseFromAllTemplatesLoggedIn = (templates) => {
             surveyCountDesign: template.survey_count_design,
             surveyCountCredible: template.survey_count_credible,
             surveyCountUseful: template.survey_count_useful,
+            totalLikes: template.total_like_count
         }
     });
 }
