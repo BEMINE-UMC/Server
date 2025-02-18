@@ -181,3 +181,14 @@ export class NonexistentCategoryIdError extends Error {
         this.statusCode = 400;
     }
 }
+
+// 존재하지 않는 게시글 에러
+export class NonexistPostError extends Error {
+    errorCode = "P010";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.data = data;
+        this.statusCode = 400;
+    }
+}

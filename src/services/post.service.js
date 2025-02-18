@@ -55,8 +55,8 @@ export const createUserLike = async (userId, postId) => {
 };
 
 //사용자가 작성한 다른 게시물 조회
-export const getOtherPost = async (userId) => {
-    const userOtherPosts = await getUserOtherPost(userId);
+export const getOtherPost = async (postId) => {
+    const userOtherPosts = await getUserOtherPost(postId);
 
     // 게시물이 3개 초과 시, 첫 3개만 조회
     if (userOtherPosts.length > 3) {

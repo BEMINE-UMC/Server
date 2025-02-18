@@ -121,7 +121,7 @@ export const handleOtherPost = async (req, res, next) => {
 
   console.log("사용자가 작성한 다른 게시물 조회 요청");
 
-  const otherPost = await getOtherPost(req.user.userId);
+  const otherPost = await getOtherPost(req.params.postId);
 
   res.status(StatusCodes.OK).success(otherPost);
 
