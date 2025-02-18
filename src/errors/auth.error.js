@@ -141,6 +141,16 @@ export class UserIdNotExistError extends Error {
     }
 }
 
+export class UserNicknameExist extends Error {
+    errorCode = "A025";
+    constructor(reason, data) {
+        super(reason);
+        this.reason = reason;
+        this.statusCode = 400;
+        this.data = data;
+    }
+}
+
 //사용자가 입력한 정보와 일치한 이메일이 존재하지 않을 때,
 export class NoCorrectUserEmail extends Error {
     errorCode = "A030";

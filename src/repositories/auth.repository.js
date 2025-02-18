@@ -2,7 +2,7 @@ import { prisma } from "../db.config.js";
 import { pool } from "../db.config.js";
 import bcrypt from 'bcrypt';
 import { ExistEmailError, ExistNameError, UserNotExistError, InvalidPasswordError, PasswordLengthError, 
-    NameNotExistError, EmailNotExistError, SamePasswordError, UserIdNotExistError } from "../errors/auth.error.js";
+    NameNotExistError, EmailNotExistError, SamePasswordError, UserIdNotExistError, UserNicknameExist } from "../errors/auth.error.js";
 
 // 메모리 기반 임시 저장소
 const verificationStore = new Map();
@@ -168,6 +168,27 @@ export const verifyUserData = async (name, email) => {
 
     } catch (error) {
         console.error("Error in verifyUserData: ", error);
+        throw error;
+    } finally {
+        conn.release(); // 커넥션 반환
+    }
+};
+
+// 닉네임 중복 검사
+export const verifyName = async (name) => {
+    const conn = await pool.getConnection();
+
+    try {
+        const [nickName] = await conn.query("SELECT name FROM user WHERE name = ?", [name]);
+        if (nickName.length !== 0) {
+            throw new UserNicknameExist("중복되는 닉네임입니다.", { name: name });
+        }
+        if (nickName.length === 0) {
+            return {name: name};
+        }
+
+    } catch (error) {
+        console.error("Error in verifyName: ", error);
         throw error;
     } finally {
         conn.release(); // 커넥션 반환

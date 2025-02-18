@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { StatusCodes } from "http-status-codes";
-import { postUserInfo, getLoginInfo, handleTokenRefreshService, sendVerificationEmail, verifyEmailCode, patchNewPassword, userEmailGet, verifyData } from "../services/auth.service.js";
+import { postUserInfo, getLoginInfo, handleTokenRefreshService, sendVerificationEmail, verifyEmailCode, patchNewPassword, userEmailGet, verifyData, verifyNickname } from "../services/auth.service.js";
 import { PasswordLengthError, CodeNotValidateError } from "../errors/auth.error.js";
 import { userForEmail } from '../dtos/auth.dto.js';
 
@@ -885,6 +885,98 @@ export const handleVerifyData = async (req, res) => {
   res.status(StatusCodes.OK).success({
     data: userData,
     message: '닉네임, 이메일 검증 성공!',
+  });
+
+}
+
+// 닉네임 중복 검사
+export const handleSearchNickname = async (req, res) => {
+
+/*
+  #swagger.summary = '닉네임 중복 검사 API';
+  #swagger.tags = ['Auth']
+
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            name: { type: "string", example: "username" }
+          },
+          required: ["name"]
+        }
+      }
+    }
+  }
+
+  #swagger.responses[200] = {
+    description: "닉네임 중복 검사 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string", example: "username" }
+                  }
+                },
+                message: { type: "string", example: "사용가능한 닉네임입니다." }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #swagger.responses[400] = {
+    description: "닉네임 중복 검사 실패 응답 - 중복되는 닉네임",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "A025" },
+                reason: { type: "string", example: "중복되는 닉네임입니다." },
+                data: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string", example: "username" }
+                  }
+                }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  }
+*/
+
+
+  console.log("닉네임 중복 검사 요청");
+
+  const { name } = req.body;
+
+  const userData = await verifyNickname(name);
+
+  res.status(StatusCodes.OK).success({
+    data: userData,
+    message: '사용가능한 닉네임입니다.',
   });
 
 }

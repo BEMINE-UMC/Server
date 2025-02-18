@@ -74,3 +74,9 @@ export const createdUserDataDTO = (data) => {
     userId: data.id
   }
 };
+
+export const createdNicknameDTO = (data) => {
+  return {
+    name: data.name
+  }
+};

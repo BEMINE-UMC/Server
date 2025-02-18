@@ -15,7 +15,7 @@ import {handlerCreateTemplateLike, handlerGetTempleteView ,handlePopularTemplate
 import { handleViewAllPosts, handleViewAllPostsLoggedIn } from "./controllers/post.controller.js";
 import { handleDetailTemplateInfoLoad, handleTemplateDelete, handleTemplateCreateAndModify, handleGetTemplateFile } from "./controllers/template.controller.js";
 import { handleGetPostLiked } from "./controllers/post.controller.js";
-import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail, handleVerifyData } from "./controllers/auth.controller.js";
+import { handleSignUp, handleLogin, handlecheckEmail, handleTokenRefresh, handlesendEmail, handleNewPassword, handlerGetUserEmail, handleVerifyData, handleSearchNickname } from "./controllers/auth.controller.js";
 import { authenticateJWT } from "./auth.middleware.js";
 import { imageUploader } from "../middleware.js";
 
@@ -150,6 +150,9 @@ app.post('/users/search/data', handleVerifyData)
 
 // 비밀번호 재설정 API
 app.patch('/users/search/password', handleNewPassword)
+
+// 닉네임 중복 검사 API
+app.post('/users/search/nickname', handleSearchNickname)
 
 // 사용자 연혁 조회 API
 app.get('/myPage/history',authenticateJWT, handlerGetUserHistory);

@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { createdPostUserInfoDTO, createdGetLoginInfoDTO, createdGetRefreshTokenDTO, createdSendEmailDTO, createdVerifyEmailDTO, 
-    createdNewPasswordDTO, responseFromUserEmail, createdUserDataDTO } from "../dtos/auth.dto.js";
-import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw, getUserEmail, verifyUserData } from "../repositories/auth.repository.js";
+    createdNewPasswordDTO, responseFromUserEmail, createdUserDataDTO, createdNicknameDTO } from "../dtos/auth.dto.js";
+import { postUserInformation, getUserInfo, saveVerificationCode, getVerificationCode, patchNewPw, getUserEmail, verifyUserData, verifyName } from "../repositories/auth.repository.js";
 import { NoCorrectUserEmail, NonExistRefreshError } from "../errors/auth.error.js";
 
 dotenv.config();
@@ -128,4 +128,11 @@ export const verifyData = async (name, email) => {
     const userData = await verifyUserData(name, email);
 
     return createdUserDataDTO(userData);
+};
+
+// 닉네임 중복 검사
+export const verifyNickname = async (name) => {
+    const userData = await verifyName(name);
+
+    return createdNicknameDTO(userData);
 };
