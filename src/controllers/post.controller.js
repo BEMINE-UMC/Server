@@ -378,6 +378,7 @@ export const handleViewAllPosts = async (req, res, next) => {
                                           authorName: { type: "string", example: "Eve" },
                                           categoryId: { type: "integer", example: 4 },
                                           categoryName: { type: "string", example: "바이럴 마케터" },
+                                          totalLikes: { type: "integer", example: 0}
                                       }
                                   }
                               },
@@ -489,7 +490,8 @@ export const handleViewAllPostsLoggedIn = async (req, res, next) => {
                                             categoryId: { type: "integer", example: 4 },
                                             categoryName: { type: "string", example: "바이럴 마케터" },
                                             likedStatus: { type: "boolean", example: true },
-                                            scrapStatus: { type: "boolean", example: false }
+                                            scrapStatus: { type: "boolean", example: false },
+                                            totalLikes: { type: "integer", example: 0}
                                         }
                                     }
                                 },

@@ -288,10 +288,12 @@ export const getAllTemplatesInfo = async (categoryId, offset, limit) => {
               u.id AS author_id,
               u.name AS author_name,
               tc.id AS category_id,
-              tc.name AS category_name
+              tc.name AS category_name,
+              COUNT(CASE WHEN lt.status = true THEN 1 END) AS total_like_count
           FROM template AS t
           LEFT JOIN user AS u ON t.user_id = u.id
-          LEFT JOIN template_category AS tc ON t_categoryId = tc.id`; 
+          LEFT JOIN template_category AS tc ON t_categoryId = tc.id
+          LEFT JOIN liked_template AS lt ON t.id = lt.template_id`; 
 
       /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
       /* 공통 조건2: file_share_state이 비공개면 목록에 보이지 않음 */
@@ -300,6 +302,7 @@ export const getAllTemplatesInfo = async (categoryId, offset, limit) => {
           [templates] = await conn.query(
               `${baseQuery}
               WHERE (t.status = 'active' OR t.status = '활성') AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
+              GROUP BY t.id
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [limit, offset]
@@ -316,6 +319,7 @@ export const getAllTemplatesInfo = async (categoryId, offset, limit) => {
           [templates] = await conn.query(
               `${baseQuery}
               WHERE (t.status = 'active' OR t.status = '활성') AND t.t_categoryId = ?  AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
+              GROUP BY t.id
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [categoryId, limit, offset]
@@ -366,11 +370,13 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
               u.name AS author_name,
               lt.status AS liked_status,
               tc.id AS category_id,
-              tc.name AS category_name
+              tc.name AS category_name,
+              COUNT(CASE WHEN lt_all.status = true THEN 1 END) AS total_like_count
           FROM template AS t
           LEFT JOIN user AS u ON t.user_id = u.id
           LEFT JOIN liked_template AS lt ON t.id = lt.template_id AND lt.user_id = ? AND lt.status = true
-          LEFT JOIN template_category AS tc ON t_categoryId = tc.id`; 
+          LEFT JOIN template_category AS tc ON t_categoryId = tc.id
+          LEFT JOIN liked_template AS lt_all ON t.id = lt_all.template_id`; 
 
       /* 공통 조건1: soft-delete된 상태면 목록 조회에서 제외 */
       /* 공통 조건2: file_share_state이 비공개면 목록에 보이지 않음 */
@@ -379,6 +385,7 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
           [templates] = await conn.query(
               `${baseQuery}
               WHERE (t.status = 'active' OR t.status = '활성') AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
+              GROUP BY t.id, lt.status
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [userId, limit, offset]
@@ -395,6 +402,7 @@ export const getAllTemplatesInfoLoggedIn = async (userId, categoryId, offset, li
           [templates] = await conn.query(
               `${baseQuery}
               WHERE (t.status = 'active' OR t.status = '활성') AND t.t_categoryId = ? AND NOT (t.file_share_state = '비공개' OR t.file_share_state = 'private')
+              GROUP BY t.id, lt.status
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?`, 
               [userId, categoryId, limit, offset]
