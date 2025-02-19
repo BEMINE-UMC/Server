@@ -222,20 +222,32 @@ export const createOrUpdatePost = async (postData) => {
     
     // 1. 본문에서 이미지 URL 추출
     let newImage = null;
-    const imgMatch = postData.body.match(/<img[^>]*src=(['"])([^'"]+)\1[^>]*>/i);
+    let imgMatch = null;
+    imgMatch = postData.body.match(/<img[^>]*src=['"]([^'"]+)['"]/i);
+
+    // 첫번째 실패시 더 단순순
+    if (!imgMatch) {
+        imgMatch = postData.body.match(/<img[^>]+src="([^"]+)"/i);
+    }
     if (imgMatch) {
-        const originalUrl = imgMatch[2];
+        const url = imgMatch[1];
         
-        // 안전한 URL 디코딩
-        try {
-            newImage = decodeURIComponent(originalUrl);
-        } catch (decodingError) {
-            newImage = originalUrl; // 디코딩 실패 시 원본 URL 사용
-        }
-        // 이미지 URL 검증 - S3 버킷 규칙 준수 확인
-        if (!await validateS3ImageUrl(newImage)) {
+        if (url.includes('bemine-s3.s3.ap-northeast-2.amazonaws.com')) {
+            newImage = url;
+        } else {
             throw new InvalidImageFormatError("유효하지 않은 이미지 URL입니다.");
         }
+    
+        // 안전한 URL 디코딩 주석처리리
+        // try {
+        //     newImage = decodeURIComponent(originalUrl);
+        // } catch (decodingError) {
+        //     newImage = originalUrl; // 디코딩 실패 시 원본 URL 사용
+        // }
+        // 이미지 URL 검증 - S3 버킷 규칙 준수 확인
+        // if (!await validateS3ImageUrl(newImage)) {
+        //     throw new InvalidImageFormatError("유효하지 않은 이미지 URL입니다.");
+        // }
     }
 
     // 2. 기존 게시글 수정인 경우
