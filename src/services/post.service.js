@@ -222,9 +222,16 @@ export const createOrUpdatePost = async (postData) => {
     
     // 1. 본문에서 이미지 URL 추출
     let newImage = null;
-    const imgMatch = postData.body.match(/<img[^>]+src="([^"]+)"/);
+    const imgMatch = postData.body.match(/<img[^>]*src=(['"])([^'"]+)\1[^>]*>/i);
     if (imgMatch) {
-        newImage = imgMatch[1];
+        const originalUrl = imgMatch[2];
+        
+        // 안전한 URL 디코딩
+        try {
+            newImage = decodeURIComponent(originalUrl);
+        } catch (decodingError) {
+            newImage = originalUrl; // 디코딩 실패 시 원본 URL 사용
+        }
         // 이미지 URL 검증 - S3 버킷 규칙 준수 확인
         if (!await validateS3ImageUrl(newImage)) {
             throw new InvalidImageFormatError("유효하지 않은 이미지 URL입니다.");
