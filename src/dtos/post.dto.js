@@ -154,3 +154,22 @@ export const responseFromAllPostsLoggedIn = (posts) => {
     }
   });
 }
+
+export const responseFromMyPost = (posts) => {
+  return posts.map(post => ({
+    postId: post.id,
+    userId: post.userId,
+    categoryId: post.categoryId,
+    title: post.title,
+    body: post.body,
+    thumbnail: post.thumbnail,
+    image: post.image,
+    status: post.status,
+    inactiveDate: post.inactiveDate,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+    userName: post.user.name,
+  }));
+  
+
+}

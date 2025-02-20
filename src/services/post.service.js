@@ -4,7 +4,8 @@ import {
     responseFromRecentPost,
     responseFromScrapPost,
     responseFromSearchedPost,
-    responseFromLikePost
+    responseFromLikePost,
+    responseFromMyPost
 } from "../dtos/post.dto.js";
 import { createdGetOtherPostDTO, createPostDetailDTO, responseFromAllPosts, responseFromAllPostsLoggedIn, createGetLikePostDTO } from "../dtos/post.dto.js";
 import {
@@ -347,7 +348,7 @@ export const getUserOwnPosts = async (userId) => {
     try{
     const myposts = await handleGetUserOwnPosts(userId);
 
-    return myposts
+    return responseFromMyPost(myposts);
 
 }catch(error){
     throw error;

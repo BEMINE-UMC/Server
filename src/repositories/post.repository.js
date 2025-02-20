@@ -449,10 +449,18 @@ export const getAllPostsInfoLoggedIn = async (userId, categoryId, offset, limit)
 //사용자 자신이 작성한 게시물 조회
 export const handleGetUserOwnPosts = async(userId) => {
     const posts = await prisma.post.findMany({
-        where:{
-            userId: userId,
-        }
-    })
+        where: {
+          userId: userId,
+          status: 'active'
+        },
+        include: {
+          user: {
+            select: {
+              name: true, // user 테이블에서 username 가져오기
+            },
+          },
+        },
+      });
 
     return posts;
 }
