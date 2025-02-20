@@ -61,7 +61,9 @@ export const responsePopularTemplates = (templates) => {
     return templates.map(template => ({
         id: template.id,
         title: template.title,
-        thumbnail: template.thumbnail
+        thumbnail: template.thumbnail,
+        filePPT: template.file_ppt,
+        filePDF: template.file_pdf
     }));
 };
 
