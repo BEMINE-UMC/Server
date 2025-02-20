@@ -170,3 +170,15 @@ export const historyCreateAndUserIntroduction = async (data) =>{
 
     return {history,user}
 }
+
+// 자기소개 수정
+export const patchUserIntroduction = async(data) =>{
+    const user = await prisma.user.update({
+        where:{id: data.userId},
+        data:{
+            introduction : data.introduction
+        }
+    })
+
+    return user;
+}

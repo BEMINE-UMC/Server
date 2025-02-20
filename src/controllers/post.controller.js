@@ -153,12 +153,13 @@ export const handlerGetRecentPost = async (req, res) => {
                       type: "object",
                       properties: {
                         postId: { type: "number", example: 1 },
+                        userId: { type: "number", example: 1 },
                         url: { type: "string", example: "링크주소" }
                       }
                     },
                     example:[
-                      { postId: 1, url: "example1.png"},
-                      { postId: 2, url: "example2.png"}
+                      { postId: 1, userId: 1, url: "example1.png"},
+                      { postId: 2, userId: 3, url: "example2.png"}
                     ]
                   }
                 }
@@ -249,12 +250,13 @@ export const handlerGetScrapPost = async (req, res) => {
                       type: "object",
                       properties: {
                         postId: { type: "number", example: 1 },
+                        userId: { type: "number", example: 1 },
                         url: { type: "string", example: "링크주소" }
                       }
                     },
                     example:[
-                      { postId: 1, url: "example1.png"},
-                      { postId: 2, url: "example2.png"}
+                      { postId: 1, userId: 1, url: "example1.png"},
+                      { postId: 2, userId: 3, url: "example2.png"}
                     ]
                   }
                 }

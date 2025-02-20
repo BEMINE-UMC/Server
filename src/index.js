@@ -6,7 +6,7 @@ import swaggerAutogen from "swagger-autogen";
 import { handleOtherPost, handlerGetUserPost, handlerPostLike, handlerPostScrap, handlerPostSearch,getPostDetail ,handlePostWrite, handlePostDelete } from "./controllers/post.controller.js";
 import {
     handlerCreateUserHistory,
-    handlerGetUserHistory,
+    handlerGetUserHistory, handlerModifyIntroduction,
     handlerPatchMyProfile,
     handlerPatchUserHistory, handlerShowUserInfo
 } from "./controllers/user.controller.js";
@@ -245,6 +245,9 @@ app.post('/myPage/history/create',authenticateJWT, handlerCreateUserHistory)
 app.get('/myPage',authenticateJWT ,handlerShowUserInfo)
 // 템플릿 설문 작성
 app.post('/templates/:templateId/survey',authenticateJWT, handlerCreateTemplateSurvey)
+
+// 자기소개 수정 API
+app.patch('/myPage/introduction/modify', authenticateJWT, handlerModifyIntroduction)
 
 /****************전역 오류를 처리하기 위한 미들웨어*******************/
 app.use((err, req, res, next) => {
