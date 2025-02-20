@@ -31,7 +31,7 @@ export const getLoginInfo = async ({ email, password }) => {
     const accessToken = jwt.sign(
         { userId: user.id, name: user.name, email: user.email },
         JWT_ACCESS_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: '1d' }
     );
 
     const refreshToken = jwt.sign(
