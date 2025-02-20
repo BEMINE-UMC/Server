@@ -57,6 +57,7 @@ export const postToScrap = (user) =>{
 
 // 북마크한 게시물 조회 응답 DTO
 export const responseFromScrapPost = (userId,data) =>{
+  console.log(data)
   return{
     userId: userId,
     post: data
