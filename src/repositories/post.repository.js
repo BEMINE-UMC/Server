@@ -311,12 +311,13 @@ export const getUserLikePost = async (data) => {
             post:{
                 select:{
                     id: true,
+                    userId: true,
                     thumbnail: true
                 }
             }
         },
         orderBy:{
-            createdAt: 'desc'
+            updatedAt: 'desc'
         },
         take: 16
     })

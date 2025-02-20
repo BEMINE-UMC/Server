@@ -292,6 +292,7 @@ export const getLikePost = async (data) => {
 
     const posts = userLikePosts.map(item => ({
         postId: item.post.id,
+        userId: item.post.userId,
         url: item.post.thumbnail
     }))
 
