@@ -98,6 +98,7 @@ export const RecentViewPosts = async (data) => {
 
     const posts = recentPosts.map(item => ({
         postId: item.post.id,
+        userId: item.post.userId,
         url: item.post.thumbnail
     }))
 
@@ -126,9 +127,9 @@ export const ScrapPosts = async (data) => {
     const scrapPosts = results.scrapPosts;
     const posts = scrapPosts.map(item => ({
         postId: item.post.id,
+        userId: item.post.userId,
         url: item.post.thumbnail
     }))
-
     return responseFromScrapPost(userId, posts);
 }
 // 게시글 정보 (좋아요 여부 포함) 전달

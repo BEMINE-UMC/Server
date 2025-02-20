@@ -3,13 +3,13 @@ import {
     getUserHistory,
     getUserInfo, getUserPhoto, getUserProfile, historyCreateAndUserIntroduction,
     patchUserProfile,
-     updateUserIntroduction,
-     updateHistoryAndIntroduction
+    updateUserIntroduction,
+    updateHistoryAndIntroduction, patchUserIntroduction
 } from "../repositories/user.repository.js";
 import {
     responseFromAllUserInfo,
     responseFromCreateHistory,
-    responseFromHistory,
+    responseFromHistory, responseFromIntroductionModify,
     responseFromPatchUserProfile,
     responseHistoryDTO
 } from "../dtos/user.dto.js";
@@ -97,4 +97,16 @@ export const showUserInfo =async (data)=>{
     }
 
     return responseFromAllUserInfo(userProfile);
+}
+
+//자기소개 수정
+export const userIntroductionModify = async (data)=>{
+    const confirm = await getUserInfo(data)
+    console.log(confirm)
+    if(!confirm)
+        throw new NotExsistsUserError("존재하지 않는 사용자입니다.", {userId: data.userId})
+
+    const user = await patchUserIntroduction(data);
+    console.log(user)
+    return responseFromIntroductionModify(user);
 }

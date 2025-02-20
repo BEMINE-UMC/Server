@@ -1,11 +1,18 @@
 import { StatusCodes } from "http-status-codes";
-import { userToHistory, userToProfile, historyCreateDTO, userToInfo, responseHistoryDTO } from "../dtos/user.dto.js";
+import {
+  userToHistory,
+  userToProfile,
+  historyCreateDTO,
+  userToInfo,
+  responseHistoryDTO,
+  userToIntroduction
+} from "../dtos/user.dto.js";
 import {
   userHistory,
   userProfileModify,
   userHistoryModify,
   userHistoryCreate,
-  showUserInfo
+  showUserInfo, userIntroductionModify
 } from "../services/user.service.js";
 
 
@@ -82,7 +89,6 @@ export const handlerGetUserHistory = async (req, res) => {
   }
 }
 */
-
 }
 
 
@@ -479,4 +485,79 @@ export const handlerShowUserInfo = async (req, res) => {
     }
 */
 
+}
+
+// 자기소개 수정
+export const handlerModifyIntroduction = async (req,res) =>{
+  const user = await userIntroductionModify(userToIntroduction(req.user, req.body));
+  res.status(StatusCodes.OK).success(user);
+  /*
+    #swagger.summary = '마이페이지 자기소개 수정 API'
+    #swagger.tags = ['User']
+
+    #swagger.security = [{
+        "bearerAuth": []
+    }]
+
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              introduction: { type: "string", example: " 안녕하소." }
+            },
+            required: ["introduction"]
+          }
+        }
+      }
+    }
+
+    #swagger.responses[200] = {
+      description: "자기소개 수정 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "null", example: null },
+              userId: { type: "integer", example: 1 },
+              introduction: { type: "string", example: "안녕하소" }
+            }
+          }
+        }
+      }
+    }
+
+    #swagger.responses[400] = {
+      description: "잘못된 요청 (유효하지 않은 사용자 ID)",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "FAIL" },
+              error: {
+                type: "object",
+                properties: {
+                  errorCode: { type: "string", example: "U001" },
+                  reason: { type: "string", example: "존재하지 않는 사용자입니다." },
+                  data: {
+                    type: "object",
+                    properties: {
+                      userId: { type: "integer", example: 1 }
+                    }
+                  }
+                }
+              },
+              success: { type: "object", nullable: true, example: null }
+            }
+          }
+        }
+      }
+    }
+
+*/
 }

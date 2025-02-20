@@ -94,3 +94,19 @@ export const responseFromAllUserInfo = (data) =>{
     }
 }
 
+// 자기소개 수정 요청 DTO
+export const userToIntroduction = (user,body) =>{
+    return {
+        userId: parseInt(user.userId),
+        introduction: body.introduction,
+    }
+}
+
+// 자기소개 수정 응답 DTO
+export const responseFromIntroductionModify = (data)=>{
+    return{
+        userId: data.id,
+        introduction: data.introduction
+    }
+}
+
