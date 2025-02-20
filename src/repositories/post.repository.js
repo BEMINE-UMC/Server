@@ -147,6 +147,13 @@ export const getSearchPosts = async  (words)=> {
                 contains: words
             },
         },
+        include: {
+            user: {
+              select: {
+                name: true, // user 테이블에서 username 가져오기
+              },
+            },
+          },
     });
 
     return posts;
