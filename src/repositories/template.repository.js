@@ -176,6 +176,8 @@ export const findPopularTemplates = async () => {
               t.id,
               t.title,
               t.thumbnail,
+              t.file_ppt,
+              t.file_pdf,
               COUNT(CASE WHEN lt.status = true THEN 1 END) as like_count
           FROM template t
           LEFT JOIN liked_template lt ON t.id = lt.template_id

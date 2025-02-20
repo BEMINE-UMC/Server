@@ -574,12 +574,13 @@ export const handleGetPostLiked = async (req, res) => {
                       type: "object",
                       properties: {
                         postId: { type: "number", example: 1 },
+                        userId: { type: "number", example: 1 },
                         url: { type: "string", example: "링크주소" }
                       }
                     },
                     example: [
-                      { postId: 1, url: "thumbnail1.jpg" },
-                      { postId: 2, url: "thumbnail2.jpg" }
+                      { postId: 1,userId: 1, url: "thumbnail1.jpg" },
+                      { postId: 2,userId: 3, url: "thumbnail2.jpg" }
                     ]
                   }
                 }
