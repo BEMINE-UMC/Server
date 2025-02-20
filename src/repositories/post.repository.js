@@ -129,6 +129,7 @@ export const getRecentPosts = async (userId)=>{
                     post:{
                         select:{
                             id:true,
+                            userId: true,
                             thumbnail:true
                         }
                     }
@@ -136,6 +137,8 @@ export const getRecentPosts = async (userId)=>{
             }
         }
     })
+    console.log(posts)
+    console.log(posts.recentViews)
     return posts;
 }
 
@@ -173,13 +176,13 @@ export const getScrapPosts = async (data)=>{
                     post:{
                         select:{
                             id:true,
+                            userId: true,
                             thumbnail:true
                         }
                     }
                 }
             }
         }
-
     })
     return posts;
 }
