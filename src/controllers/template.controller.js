@@ -664,7 +664,7 @@ export const handleGetTemplateFile = async (req, res, next) => {
 }
 
 
-// 인기 템플릿 조회회
+// 인기 템플릿 조회
 export const handlePopularTemplates = async (req, res, next) => {
     try {
         // #swagger.tags = ['Template']
@@ -687,7 +687,9 @@ export const handlePopularTemplates = async (req, res, next) => {
                                     properties: {
                                         id: { type: "integer", example: 1 },
                                         title: { type: "string", example: "2024 마케팅 트렌드 분석" },
-                                        thumbnail: { type: "string", example: "thumbnail_url.jpg" }
+                                        thumbnail: { type: "string", example: "thumbnail_url.jpg" },
+                                        filePPT: { type: "string", example: "https://example.com/files/presentation.ppt" },
+                                        filePDF: { type: "string", example: "https://example.com/files/document.pdf" }
                                     }
                                 }
                             }
