@@ -65,9 +65,20 @@ export const responseFromScrapPost = (userId,data) =>{
 
 //검색 된 게시물 조회 응답 DTO
 export const responseFromSearchedPost = (posts) => {
-  return{
-    data: posts
-  }
+  return posts.map(post => ({
+    postId: post.id,
+    userId: post.userId,
+    categoryId: post.categoryId,
+    title: post.title,
+    body: post.body,
+    thumbnail: post.thumbnail,
+    image: post.image,
+    status: post.status,
+    inactiveDate: post.inactiveDate,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+    userName: post.user.name,
+  }));
   
 }
 // 게시글 상세조회 DTO
