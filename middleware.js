@@ -37,7 +37,7 @@ export const imageUploader = multer({
     acl: "public-read-write", // 파일 액세스 권한
   }),
   // 이미지 용량 제한 (5MB)
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 100 * 1024 * 1024 },
 });
 
 export const configureMiddleware = (app) => {
