@@ -60,7 +60,7 @@ export const responseFromScrapPost = (userId,data) =>{
   console.log(data)
   return{
     userId: userId,
-    posts: data
+    post: data
   }
 }
 
