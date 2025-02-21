@@ -220,7 +220,7 @@ export const deletePost = async (userId, postId) => {
 export const createOrUpdatePost = async (postData) => {
     const conn = await pool.getConnection();
     try {
-        await conn.beginTransaction
+        await conn.beginTransaction();
     
     // 1. 본문에서 이미지 URL 추출
     let newImage = null;
