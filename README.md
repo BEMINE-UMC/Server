@@ -2,6 +2,13 @@
 
 ![Image](https://github.com/user-attachments/assets/d7ab853d-8831-4b5f-9a0a-5fcc66f82e81)
 
+## 🦹‍ Team
+
+| <img src="https://avatars.githubusercontent.com/u/164743344?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/73399251?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/143832968?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/73830722?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/99378706?v=4" width="100" height="100"> |
+|:--:|:--:|:--:|:--:|:--:|
+| **버디/이병웅** <br> [@bulee5328](https://github.com/bulee5328) | **김매트/김규식** <br> [@kuchic0918](https://github.com/kuchic0918) | **옌찌/장예은** <br> [@jangyeeunee](https://github.com/jangyeeunee) | **깡태/강태훈** <br> [@skdl1936](https://github.com/skdl1936) | **차차/차가민** <br> [@gmcha](https://github.com/gmcha) |
+| 회원가입 및 로그인, 인증 기능(이메일 인증, 비밀번호 재설정), 게시물 조회(좋아요, 다른 게시물) | 회원가입 및 로그인 뷰 (이메일 인증), 온보딩 뷰 (예산 등록 및 닉네임 지정) | 회원가입 및 로그인 뷰 (이메일 인증), 온보딩 뷰 (예산 등록 및 닉네임 지정) | 회원가입 및 로그인 뷰 (이메일 인증), 온보딩 뷰 (예산 등록 및 닉네임 지정) | 회원가입 및 로그인 뷰 (이메일 인증), 온보딩 뷰 (예산 등록 및 닉네임 지정) |
+
 ## Stack
 
 ---
