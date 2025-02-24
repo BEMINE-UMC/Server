@@ -4,43 +4,49 @@
 
 ## 🦹‍ Team
 
-| <img src="https://avatars.githubusercontent.com/u/164743344?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/73399251?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/143832968?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/73830722?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/99378706?v=4" width="100" height="100"> |
-|:--:|:--:|:--:|:--:|:--:|
-| **버디/이병웅** <br> [@bulee5328](https://github.com/bulee5328) | **김매트/김규식** <br> [@kuchic0918](https://github.com/kuchic0918) | **옌찌/장예은** <br> [@jangyeeunee](https://github.com/jangyeeunee) | **깡태/강태훈** <br> [@skdl1936](https://github.com/skdl1936) | **차차/차가민** <br> [@gmcha](https://github.com/gmcha) |
-| 회원가입 및 로그인, 인증 기능(이메일 인증, 비밀번호 재설정), 게시물 조회(좋아요, 다른 게시물) | 기능2 | 기능3 | 기능4 | 기능5 |
+|  <img src="https://avatars.githubusercontent.com/u/164743344?v=4" width="100" height="100">   | <img src="https://avatars.githubusercontent.com/u/73399251?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/143832968?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/73830722?v=4" width="100" height="100"> |  <img src="https://avatars.githubusercontent.com/u/99378706?v=4" width="100" height="100">   |
+| :-------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: |
+|                **버디/이병웅** <br> [@bulee5328](https://github.com/bulee5328)                |            **김매트/김규식** <br> [@kuchic0918](https://github.com/kuchic0918)            |            **옌찌/장예은** <br> [@jangyeeunee](https://github.com/jangyeeunee)             |               **깡태/강태훈** <br> [@skdl1936](https://github.com/skdl1936)               |                   **차차/차가민** <br> [@gmcha](https://github.com/gmcha)                    |
+| 회원가입 및 로그인, 인증 기능(이메일 인증, 비밀번호 재설정), 게시물 조회(좋아요, 다른 게시물) |                                           기능2                                           |                                           기능3                                            |                                           기능4                                           | 게시물 목록 조회, 템플릿 목록 조회, 템플릿 단일 조회(업로드 화면, 파일 조회 창), 템플릿 삭제 |
 
 ## Stack
 
 ---
 
 NODE+EXPRESS
+
 - 크롬 V8엔진을 사용하여 만든 웹 서버 호스팅 런타임이다.
 
 JavaScript
+
 - 브라우저에서 실행되는 스크립트 언어로, 동적인 웹 페이지를 작성하는 데 사용됩니다. 현재는 Node.js를 통해 서버 측 프로그래밍까지 가능하며, 풀스택 개발에 널리 쓰이고 있습니다.
 
 Prisma
+
 - TypeScript 및 JavaScript 애플리케이션에서 사용하는 ORM(Object-Relational Mapping) 도구로, 데이터베이스와 상호작용을 간소화합니다.
 - 스키마를 기반으로 SQL 쿼리를 자동 생성하며, 직관적인 데이터 모델링이 가능합니다.
 
 AWS S3
+
 - 객체 스토리지 서비스로, 데이터를 안전하게 저장하고 관리할 수 있습니다. 이미지, 비디오, 문서와 같은 파일을 저장하고 HTTP를 통해 접근 가능합니다. 서버리스 애플리케이션에서 자주 사용됩니다.
 
 AWS RDS(MYSQL)
+
 - 관계형 데이터베이스를 클라우드 환경에서 관리할 수 있는 서비스입니다. MySQL, PostgreSQL, MariaDB, Oracle 등의 엔진을 지원하며, 자동 백업, 복구, 스케일링을 제공합니다.
 
 AWS EC2
+
 - 클라우드 환경에서 가상 서버를 제공하는 서비스입니다. 사용자는 필요한 용량에 따라 서버를 생성하고, 직접 운영 체제를 관리할 수 있습니다. 높은 유연성과 확장성을 제공합니다.
 
 Git Actions
 -CI/CD(Continuous Integration/Continuous Deployment) 자동화 도구로, 소프트웨어 개발 워크플로우를 간소화합니다. 코드 변경 시 테스트, 빌드, 배포와 같은 작업을 자동화할 수 있습니다.
 
 Swagger
+
 - RESTful API를 문서화하고 테스트하기 위한 도구입니다. API 명세를 OpenAPI Specification(OAS) 형식으로 작성하여, 클라이언트 및 개발자와의 협업을 효율적으로 만듭니다.
 
-
-
 # Convention
+
 ## Branch
 
 ---
@@ -52,6 +58,7 @@ Swagger
 ❗프로덕션 배포 가능한 상태 유지  
 ❗직접 작업 금지  
 ❗develop 브랜치에서 merge를 통해 업데이트
+
 </aside>
 
 ### Develop
@@ -69,7 +76,7 @@ Swagger
 <aside>
 
 ❗새로운 기능이나 변경 사항을 개발  
-❗이름 형식: feature/#이슈번호-기능명    
+❗이름 형식: feature/#이슈번호-기능명  
 ❗브랜치 상태 공유를 위해 주기적으로 develop rebase 하거나 병합
 
 </aside>
@@ -138,8 +145,8 @@ assignees: ''
 ## ETC
 
 ### Pull Request
----
 
+---
 ```
 
 ## Pull Request
@@ -181,7 +188,6 @@ PR이 다음 요구 사항을 충족하는지 확인하세요.
 
 - [ ] 커밋 메시지 컨벤션에 맞게 작성했습니다.
 - [ ] 변경 사항에 대한 테스트를 했습니다.(버그 수정/기능에 대한 테스트).
-
 
 ## Commit
 
@@ -242,4 +248,3 @@ Resolves: #123
 Ref: #456
 Related to: #48, #45
 ```
-
